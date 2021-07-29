@@ -11,7 +11,17 @@ config_version=4
 [application]
 
 config/name="C2 FIGHTER II"
-config/icon="res://icon.png"
+config/description="Le smash-like dont vous avez toujours rêvé avec les personnages les plus emblématiques de la légende du Royaume du C2 - puisse la babyboule vous protéger."
+run/main_scene="res://scenes/menus/Ecran titre.tscn"
+config/icon="res://ressources/menus/Logo small C2 F II.svg"
+
+[display]
+
+window/size/width=1920
+window/size/height=1080
+window/size/resizable=false
+window/size/fullscreen=true
+window/dpi/allow_hidpi=true
 
 [physics]
 
