@@ -4,27 +4,48 @@ var screen_size
 var on_ground
 var sprite
 var velocity
-export var walk_speed = 100
-export var air_acc = 200
+export var walk_speed = 130
+export var air_acc = 250
 export var ground_frott_quad = 0.3
 export var ground_frott_stat = 1
 var direction
 var last_pos
 var just_landed
+var radius
+var blocked_left
+var blocked_right
+var blocked_on
 
 func _land(plateforme):
 	var y0 = plateforme.position.y - plateforme.get_node("CollisionShape2D").shape.extents.y
 	if last_pos.y < y0 and not on_ground:
 		on_ground = true
 		velocity.y = 0
+		velocity.x = 0
 		position.y = y0
 		just_landed = true
 
 func _fall():
 	on_ground = false
 
-func _bump():
-	pass
+func _bump(plateforme):
+	var x0 = plateforme.position.x - plateforme.get_node("CollisionShape2D").shape.extents.x
+	var x1 = plateforme.position.x + plateforme.get_node("CollisionShape2D").shape.extents.x
+	if position.x + radius > x0 and last_pos.x + radius <= x0:
+		position.x = x0 - radius
+		velocity.x = 0
+		blocked_right = true
+		blocked_on = plateforme
+	if position.x - radius < x1 and last_pos.x - radius >= x1:
+		position.x = x1 + radius
+		velocity.x = 0
+		blocked_left = true
+		blocked_on = plateforme
+
+func _unbump(plateforme):
+	if blocked_on.name == plateforme.name:
+		blocked_right = false
+		blocked_left = false
 
 func _ready():
 	screen_size = get_viewport_rect().size
@@ -34,6 +55,24 @@ func _ready():
 	direction = 1
 	last_pos = position
 	just_landed = true
+	radius = $CollisionShape2D.shape.radius
+	blocked_left = false
+	blocked_right = false
+
+func _move(dr):
+	var dx = dr.x
+	var dy = dr.y
+	position.y += dy
+	if dx > 0:
+		if not blocked_right:
+			position.x += dx
+		if blocked_left:
+			blocked_left = false
+	if dx < 0:
+		if not blocked_left:
+			position.x += dx
+		if blocked_right:
+			blocked_right = false
 
 func _physics_process(delta):
 	if just_landed:
@@ -66,14 +105,14 @@ func _physics_process(delta):
 		direction = direction_new
 		scale.x = direction
 	if on_ground:
-		position += vel_walk*delta
+		_move(vel_walk*delta)
 		if vel_walk.length() > 0:
 			sprite.play("walk")
 		else:
 			sprite.play("idle")
 	else:
 		sprite.play("air")
-	position += velocity*delta
+	_move(velocity*delta)
 	# TEMP
 	if position.y > screen_size.y:
 		position.y = 0

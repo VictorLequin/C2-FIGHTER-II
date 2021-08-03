@@ -10,6 +10,8 @@ func _collide(area):
 func _stop_collision(area):
 	if area.get_parent().has_method("_fall"):
 		area.get_parent()._fall()
+	if area.has_method("_unbump"):
+		area._unbump(self)
 
 func _ready():
 	connect("area_entered", self, "_collide")
