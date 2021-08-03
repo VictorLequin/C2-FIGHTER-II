@@ -48,7 +48,12 @@ func _physics_process(delta):
 			force.x -= air_acc
 	if on_ground:
 		force.x -= ground_frott_quad*velocity.x*abs(velocity.x)
+		if velocity.x != 0:
+			force.x -= ground_frott_stat*velocity.x/abs(velocity.x)
+	var prev_velx = velocity.x
 	velocity += force*delta
+	if on_ground and velocity.x * prev_velx < 0:
+		velocity.x = 0
 	if direction * direction_new == -1:
 		direction = direction_new
 		scale.x = direction
