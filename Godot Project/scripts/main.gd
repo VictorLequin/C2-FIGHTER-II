@@ -234,6 +234,7 @@ func _on_joy_connection_changed(device: int, connected: bool):
 		joypad_plug(device)
 	else:
 		joypad_unplug(device)
+	players.debug_list_active()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
