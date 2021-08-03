@@ -12,7 +12,7 @@ config_version=4
 
 config/name="C2 FIGHTER II"
 config/description="Le smash-like dont vous avez toujours rêvé avec les personnages les plus emblématiques de la légende du Royaume du C2 - puisse la babyboule vous protéger."
-run/main_scene="res://scenes/main.tscn"
+run/main_scene="res://scenes/menus/Ecran titre.tscn"
 config/icon="res://ressources/menus/Logo small C2 F II.svg"
 
 [display]
