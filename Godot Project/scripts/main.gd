@@ -14,10 +14,10 @@ enum ControllerType {keyboard, joypad}
 
 # Global vars
 # TODO: start in a lobby stage
-var gamestate = GameState.stage
+var gamestate = GameState.lobby
 
 func playersLocked() -> bool:
-	return gamestate is GameState.stage
+	return gamestate == GameState.stage
 
 
 class Keyboard:
@@ -32,21 +32,21 @@ class Keyboard:
 
 
 class AJoypad:
-	var connected: bool = false
+	var plugged: bool = false
 	var active: bool = false
 
 class Joypads:
 	var _joypads: Array = []
 	
 	func exists(device: int) -> bool:
-		return device >= len(_joypads)
+		return device < len(_joypads)
 	
 	func create(device: int) -> void:
 		while !exists(device):
-			_joypads.append(AJoypad)
+			_joypads.append(AJoypad.new())
 	
 	func is_plugged(device: int) -> bool:
-		if exists(device): return false
+		if !exists(device): return false
 		return _joypads[device].plugged
 	
 	func is_active(device: int) -> bool:
@@ -82,7 +82,7 @@ class Players:
 	var _players: Array
 	
 	func exists(playerID: int) -> bool:
-		return playerID >= len(_players)
+		return playerID < len(_players)
 	
 	func is_controlled(playerID: int) -> bool:
 		return _players[playerID].controller.active
@@ -177,13 +177,14 @@ func joypad_join(device: int) -> void:
 		var playerID = players.get_free_player()
 		var controller = ControllerRef.new(true, ControllerType.joypad, device)
 		players.take_control(playerID, controller)
-		joypads.setActive(device, true)
+		joypads.set_active(device, true)
 
 func joypad_leave(device: int) -> void:
 	assert(!playersLocked())
 	if joypads.is_active(device):
 		var controller = ControllerRef.new(true, ControllerType.joypad, device)
 		var playerID = players.free_control(controller)
+		players.remove_player(playerID)
 		joypads.setActive(device, false)
 
 
@@ -193,13 +194,14 @@ func keyboard_join(layout: int) -> void:
 		var playerID = players.get_free_player()
 		var controller = ControllerRef.new(true, ControllerType.keyboard, layout)
 		players.take_control(playerID, controller)
-		keyboard.setActive(layout, true)
+		keyboard.set_active(layout, true)
 
 func keyboard_leave(layout: int) -> void:
 	assert(!playersLocked())
 	if keyboard.is_active(layout):
 		var controller = ControllerRef.new(true, ControllerType.keyboard, layout)
 		var playerID = players.free_control(controller)
+		players.remove_player(playerID)
 		keyboard.setActive(layout, false)
 
 func startup_plug() -> void:
