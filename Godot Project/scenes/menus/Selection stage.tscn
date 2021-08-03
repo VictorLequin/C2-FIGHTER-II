@@ -16,6 +16,8 @@ font_data = ExtResource( 1 )
 [node name="Control" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_left = 1.5874
+margin_right = 1.5874
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -27,6 +29,9 @@ margin_right = 548.122
 margin_bottom = 347.354
 custom_fonts/font = SubResource( 1 )
 text = "y'a qu'un stagelol"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Stage 1" type="Label" parent="."]
 margin_left = 879.419
