@@ -223,9 +223,7 @@ func _ready():
 	debug_join_all()
 	players.debug_list_active()
 	
-	var child_scene = preload("res://scenes/menus/Ecran titre.tscn")
-	child = child_scene.instance()
-	add_child(child)
+	add_child(preload("res://scenes/menus/Ecran titre.tscn").instance())
 	
 	
 	if Input.connect("joy_connection_changed", self, "_on_joy_connection_changed"):
@@ -244,4 +242,4 @@ func _on_joy_connection_changed(device: int, connected: bool):
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
-#	pass
+#	print(delta)

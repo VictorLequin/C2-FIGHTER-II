@@ -5,12 +5,16 @@ onready var boutStage2 = $VBoxContainer/HBoxContainer/BoutStage2
 onready var boutStage3 = $VBoxContainer/HBoxContainer/BoutStage3
 onready var boutStage4 = $VBoxContainer/HBoxContainer/BoutStage4
 
+func goto_scene(path):
+	Utils.change_scene(self, path)
+
 func _ready() :
 	boutStage1.grab_focus()
 
 
 func _on_BoutStage1_pressed():
-	get_tree().change_scene("res://scenes/stages/Stage 1/Stage 1.tscn")
+	#get_tree().change_scene("res://scenes/stages/Stage 1/Stage 1.tscn")
+	call_deferred("goto_scene", "res://scenes/stages/Stage 1/Stage 1.tscn")
 
 
 func _on_BoutStage1_focus_entered():
