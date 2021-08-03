@@ -10,6 +10,7 @@ export var ground_frott_quad = 0.3
 export var ground_frott_stat = 1
 var direction
 var last_pos
+var just_landed
 
 func _land(plateforme):
 	var y0 = plateforme.position.y - plateforme.get_node("CollisionShape2D").shape.extents.y
@@ -17,9 +18,13 @@ func _land(plateforme):
 		on_ground = true
 		velocity.y = 0
 		position.y = y0
+		just_landed = true
 
 func _fall():
 	on_ground = false
+
+func _bump():
+	pass
 
 func _ready():
 	screen_size = get_viewport_rect().size
@@ -28,8 +33,11 @@ func _ready():
 	velocity = Vector2()
 	direction = 1
 	last_pos = position
+	just_landed = true
 
 func _physics_process(delta):
+	if just_landed:
+		just_landed = false
 	last_pos = position
 	var force = Vector2()
 	var vel_walk = Vector2()

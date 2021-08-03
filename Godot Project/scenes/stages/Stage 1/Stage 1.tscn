@@ -9,5 +9,8 @@
 [node name="Perso" parent="." index="0" instance=ExtResource( 2 )]
 position = Vector2( 949.071, 614.026 )
 
-[node name="Plateforme" parent="." index="1" instance=ExtResource( 3 )]
+[node name="Plateforme 1" parent="." index="1" instance=ExtResource( 3 )]
 position = Vector2( 966.424, 690.112 )
+
+[node name="Plateforme 2" parent="." index="2" instance=ExtResource( 3 )]
+position = Vector2( 1324.16, 799.569 )
