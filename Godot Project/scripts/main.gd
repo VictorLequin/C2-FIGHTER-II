@@ -4,7 +4,7 @@ extends Node
 var DEBUG = true
 
 # Childs
-var stage: Node
+var child: Node
 
 
 # Enums
@@ -222,6 +222,11 @@ func _ready():
 	startup_plug()
 	debug_join_all()
 	players.debug_list_active()
+	
+	var child_scene = preload("res://scenes/menus/Ecran titre.tscn")
+	child = child_scene.instance()
+	add_child(child)
+	
 	
 	if Input.connect("joy_connection_changed", self, "_on_joy_connection_changed"):
 		print("")
