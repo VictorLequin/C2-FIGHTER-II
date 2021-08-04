@@ -1,13 +1,13 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://ressources/menus/Logo gros.png" type="Texture" id=1]
-[ext_resource path="res://ressources/polices/PoliceMenu.tres" type="DynamicFont" id=2]
-[ext_resource path="res://scenes/menus/MenuPr.gd" type="Script" id=3]
+[ext_resource path="res://ressources/polices/PoliceMenu.tres" type="DynamicFont" id=1]
+[ext_resource path="res://scenes/menus/MainMenu/MainMenu.gd" type="Script" id=2]
+[ext_resource path="res://ressources/menus/Logo_big.png" type="Texture" id=3]
 
 [node name="Menu" type="MarginContainer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-script = ExtResource( 3 )
+script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -59,7 +59,7 @@ margin_bottom = 170.0
 focus_neighbour_bottom = NodePath("../../HBoxContainer2/Parametres")
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.2
-custom_fonts/font = ExtResource( 2 )
+custom_fonts/font = ExtResource( 1 )
 text = "Jouer"
 
 [node name="MarginContainer4" type="MarginContainer" parent="HBoxContainer/VBoxContainer/HBoxContainer"]
@@ -91,7 +91,7 @@ focus_neighbour_top = NodePath("../../HBoxContainer/Jouer")
 focus_neighbour_bottom = NodePath("../../HBoxContainer3/Quitter")
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.4
-custom_fonts/font = ExtResource( 2 )
+custom_fonts/font = ExtResource( 1 )
 text = "Paramètres"
 
 [node name="MarginContainer4" type="MarginContainer" parent="HBoxContainer/VBoxContainer/HBoxContainer2"]
@@ -122,7 +122,7 @@ margin_bottom = 170.0
 focus_neighbour_top = NodePath("../../HBoxContainer2/Parametres")
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.2
-custom_fonts/font = ExtResource( 2 )
+custom_fonts/font = ExtResource( 1 )
 text = "Quitter"
 
 [node name="MarginContainer4" type="MarginContainer" parent="HBoxContainer/VBoxContainer/HBoxContainer3"]
@@ -159,7 +159,7 @@ margin_right = 675.0
 margin_bottom = 647.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-texture = ExtResource( 1 )
+texture = ExtResource( 3 )
 expand = true
 stretch_mode = 6
 

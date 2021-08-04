@@ -8,22 +8,12 @@
 
 config_version=4
 
-_global_script_classes=[ {
-"base": "Reference",
-"class": "Utils",
-"language": "GDScript",
-"path": "res://utils.gd"
-} ]
-_global_script_class_icons={
-"Utils": ""
-}
-
 [application]
 
 config/name="C2 FIGHTER II"
 config/description="Le smash-like dont vous avez toujours rêvé avec les personnages les plus emblématiques de la légende du Royaume du C2 - puisse la babyboule vous protéger."
 run/main_scene="res://scenes/main.tscn"
-config/icon="res://ressources/menus/Logo small C2 F II.svg"
+config/icon="res://ressources/menus/Logo_small.svg"
 
 [display]
 

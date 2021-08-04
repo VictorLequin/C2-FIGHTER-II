@@ -4,17 +4,14 @@ extends Node
 var DEBUG = true
 
 # Childs
+var gamestate: int
 var child: Node
 
-
 # Enums
-enum GameState {lobby, stage}
+enum GameState {title, menu, character_select, stage}
 enum KeyboardLayouts {none, wasd, arrows}
 enum ControllerType {keyboard, joypad}
 
-# Global vars
-# TODO: start in a lobby stage
-var gamestate = GameState.lobby
 
 func playersLocked() -> bool:
 	return gamestate == GameState.stage
@@ -237,18 +234,16 @@ func _ready():
 	if DEBUG:
 		print("Connected joypads: {j}".format({"j": Input.get_connected_joypads()}))
 	
+	change_scene("res://scenes/menus/TitleScreen/TitleScreen.tscn", false)
+	
+	gamestate = GameState.title
+	
 	startup_plug()
 	#debug_join_all()
 	#players.debug_list_active()
 	
-	add_child(preload("res://scenes/menus/Ecran titre.tscn").instance())
-	
 	
 	Input.connect("joy_connection_changed", self, "_on_joy_connection_changed")
-	
-	InputMap.add_action("join_wasd")
-	
-	
 
 func _on_joy_connection_changed(device: int, connected: bool):
 	if DEBUG:
@@ -260,37 +255,22 @@ func _on_joy_connection_changed(device: int, connected: bool):
 		joypad_unplug(device)
 	players.debug_list_active()
 
-func _input(event):
-	if Input.is_action_just_pressed("ui_accept"):
-		if event is InputEventJoypadButton:
-			if joypad_join(event.device): get_tree().set_input_as_handled()
-		
-		elif event is InputEventKey:
-			var layout = KeyboardLayouts.none
-			if event.scancode == KEY_SPACE:
-				layout = KeyboardLayouts.wasd
-			elif event.scancode == KEY_KP_ENTER:
-				layout = KeyboardLayouts.arrows
-			
-			if layout != KeyboardLayouts.none:
-				if keyboard_join(layout): get_tree().set_input_as_handled()
-		
-	
-	if Input.is_action_just_pressed("ui_cancel"):
-		if event is InputEventJoypadButton:
-			if joypad_leave(event.device): get_tree().set_input_as_handled()
-		
-		elif event is InputEventKey:
-			var layout = KeyboardLayouts.none
-			if event.scancode == KEY_ESCAPE:
-				layout = KeyboardLayouts.wasd
-			elif event.scancode == KEY_KP_PERIOD:
-				layout = KeyboardLayouts.arrows
-			
-			if layout != KeyboardLayouts.none:
-				if keyboard_leave(layout): get_tree().set_input_as_handled()
 
+func load_menu(path):
+	gamestate = GameState.menu
+	change_scene(path, true)
 
+func load_stage(path):
+	gamestate = GameState.stage
+	change_scene(path, true)
+
+func change_scene(path, free_old):
+	call_deferred("_change_scene", path, free_old)
+
+func _change_scene(path, free_old):
+	if free_old: child.queue_free()
+	child = load(path).instance()
+	add_child(child)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
