@@ -126,14 +126,11 @@ class Players:
 	
 	func clear_bindings(playerID: int) -> void:
 		assert(_lock)
-		if (InputMap.has_action("ui_jump_{k}".format({"k": playerID}))):
-			InputMap.action_erase_events("ui_jump_{k}".format({"k": playerID}))
+		if InputMap.has_action("ui_jump_{k}".format({"k": playerID})) and (len(InputMap.get_action_list("ui_jump_{k}".format({"k": playerID}))) > 0):
 			InputMap.erase_action("ui_jump_{k}".format({"k": playerID}))
 			
-			InputMap.action_erase_events("ui_left_{k}".format({"k": playerID}))
 			InputMap.erase_action("ui_left_{k}".format({"k": playerID}))
 			
-			InputMap.action_erase_events("ui_right_{k}".format({"k": playerID}))
 			InputMap.erase_action("ui_right_{k}".format({"k": playerID}))
 	
 	func set_bindings(playerID: int) -> void:
@@ -181,13 +178,16 @@ class Players:
 			event_right.axis = JOY_AXIS_0 # horizontal axis
 			event_right.axis_value =  1.0 # right
 		
-		InputMap.add_action("ui_jump_{k}".format({"k": playerID}))
+		if !InputMap.has_action("ui_jump_{k}".format({"k": playerID})):
+			InputMap.add_action("ui_jump_{k}".format({"k": playerID}))
 		InputMap.action_add_event("ui_jump_{k}".format({"k": playerID}), event_jump)
 		
-		InputMap.add_action("ui_left_{k}".format({"k": playerID}))
+		if !InputMap.has_action("ui_left_{k}".format({"k": playerID})):
+			InputMap.add_action("ui_left_{k}".format({"k": playerID}))
 		InputMap.action_add_event("ui_left_{k}".format({"k": playerID}), event_left)
 		
-		InputMap.add_action("ui_right_{k}".format({"k": playerID}))
+		if !InputMap.has_action("ui_right_{k}".format({"k": playerID})):
+			InputMap.add_action("ui_right_{k}".format({"k": playerID}))
 		InputMap.action_add_event("ui_right_{k}".format({"k": playerID}), event_right)
 	
 	func get_free_player() -> int:
