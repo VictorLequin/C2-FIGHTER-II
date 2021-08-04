@@ -12,18 +12,22 @@ var direction
 export var jump_speed = 400
 var jump_count
 export var air_speed = 100
-export var gravity = 1300
+export var gravity = 1500
 export var offsets = {
 	"idle": Vector2(-2.336, -0.65),
 	"air": Vector2(-0.434, -0.65),
 	"walk": Vector2(-1.489, -0.65),
 	"jump": Vector2(-1.435, -1.595),
-	"neutral": Vector2(2.254, -3.725)
+	"neutral": Vector2(2.254, -3.725),
+	"side": Vector2(28.702, -3.643)
 }
 var jumping
 var hitting
 var siding
 var playing
+var dmgBox
+var atk_time
+var atk
 
 var ui_jump: String = ""
 var ui_action: String = ""
@@ -45,6 +49,7 @@ func _ready():
 	screen_size = get_viewport_rect().size
 	on_ground = false
 	sprite = $AnimatedSprite
+	dmgBox = $DamageArea/CollisionShape2D
 	velocity = Vector2()
 	direction = 1
 	jump_count = 0
@@ -52,10 +57,23 @@ func _ready():
 	hitting = false
 	siding = false
 	playing = ""
+	atk = ""
+	atk_time = 0
 	sprite.connect("animation_finished", self, "animation_finished_handler")
+	$DamageArea.connect("body_entered", self, "enemy_hit")
+
+func enemy_hit(enemy):
+	if enemy.has_method("enemy_hit"): # Player object detection
+		if ui_jump != enemy.ui_jump:
+			enemy.position.y -= 250
 
 func end_hit():
 	hitting = false
+	dmgBox.set_deferred("disabled", true)
+	dmgBox.position.y = 0
+	dmgBox.position.x = 0
+	dmgBox.shape.extents.x = 0
+	dmgBox.shape.extents.y = 0
 
 func _input(event):
 	if event.is_action_pressed(ui_jump) and (on_ground or jump_count > 0):
@@ -66,11 +84,46 @@ func _input(event):
 		end_hit()
 		play("jump")
 	if event.is_action_pressed(ui_action):
+		hitting = true
 		if not siding:
-			hitting = true
 			play("neutral")
+			atk = "neutral"
+		else:
+			play("side")
+			atk = "side"
+		dmgBox.set_deferred("disabled", false)
+		atk_time = 0
+
+func cst_interpol(step_t, time):
+	var res = 0
+	if time >= step_t:
+		res = 1
+	return res
+
+func cst_lin_interpol(step_t, step, total, time):
+	var res = 0
+	if time >= step_t:
+		res = step + (1 - step)*(time-step_t)/(total-step_t)
+	return res
+
+func update_dmgBox(delta):
+	if hitting:
+		atk_time += delta
+		if atk == "side":
+			var f = cst_lin_interpol(0.2, 1/2, 0.8, atk_time)*direction
+			dmgBox.position.x = 61.714*f
+			dmgBox.position.y = -52.384
+			dmgBox.shape.extents.x = 54.39*f
+			dmgBox.shape.extents.y = 10.347*f
+		if atk == "neutral":
+			var f = cst_interpol(2.0/13.0, atk_time)*direction
+			dmgBox.position.x = 48*f
+			dmgBox.position.y = -64*f
+			dmgBox.shape.extents.x = 33.936*f
+			dmgBox.shape.extents.y = 71.656*f
 
 func _physics_process(delta):
+	update_dmgBox(delta)
 	if not on_ground and is_on_floor():
 		jump_count = 1
 		jumping = false
