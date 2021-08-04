@@ -18,10 +18,19 @@ var blocked_on
 export var jump_speed = 300
 var jump_count
 export var air_speed = 100
+export var offsets = {
+	"idle": Vector2(-2.336, -0.65),
+	"air": Vector2(-0.434, -0.65),
+	"walk": Vector2(-1.489, -0.65)
+}
 
 var ui_right: String = ""
 var ui_left: String = ""
 var ui_jump: String = ""
+
+func _play(anim):
+	sprite.play(anim)
+	sprite.offset = offsets[anim]
 
 func _land(plateforme):
 	var y0 = plateforme.position.y - plateforme.get_node("CollisionShape2D").shape.extents.y
@@ -127,12 +136,12 @@ func _physics_process(delta):
 	if on_ground:
 		_move(vel_walk*delta)
 		if vel_walk.length() > 0:
-			sprite.play("walk")
+			_play("walk")
 		else:
-			sprite.play("idle")
+			_play("idle")
 	else:
 		_move(vel_air*delta)
-		sprite.play("air")
+		_play("air")
 	_move(velocity*delta)
 	# TEMP
 	if position.y > screen_size.y:
