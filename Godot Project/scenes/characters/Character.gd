@@ -21,8 +21,13 @@ export var air_speed = 100
 export var offsets = {
 	"idle": Vector2(-2.336, -0.65),
 	"air": Vector2(-0.434, -0.65),
-	"walk": Vector2(-1.489, -0.65)
+	"walk": Vector2(-1.489, -0.65),
+	"jump": Vector2(-1.435, -1.595),
+	"neutral": Vector2(2.254, -3.725)
 }
+var jumping
+var hitting
+var siding
 
 var ui_right: String = ""
 var ui_left: String = ""
@@ -41,6 +46,7 @@ func _land(plateforme):
 		position.y = y0
 		just_landed = true
 		jump_count = 1
+		jumping = false
 
 func _fall():
 	on_ground = false
@@ -65,6 +71,10 @@ func _unbump(plateforme):
 			blocked_right = false
 			blocked_left = false
 
+func _animation_finished_handler():
+	jumping = false
+	_end_hit()
+
 func _ready():
 	screen_size = get_viewport_rect().size
 	on_ground = false
@@ -77,6 +87,10 @@ func _ready():
 	blocked_left = false
 	blocked_right = false
 	jump_count = 0
+	jumping = false
+	hitting = false
+	siding = false
+	sprite.connect("animation_finished", self, "_animation_finished_handler")
 
 func _move(dr):
 	var dx = dr.x
@@ -93,14 +107,26 @@ func _move(dr):
 		if blocked_right:
 			blocked_right = false
 
+func _end_hit():
+	hitting = false
+
 func _input(event):
 	if event.is_action_pressed(ui_jump) and (on_ground or jump_count > 0):
 		velocity.y = -jump_speed
 		if not on_ground:
 			jump_count -= 1
+		jumping = true
+		_end_hit()
+		_play("jump")
+	if event.is_action_pressed("ui_cancel"):
+		if not siding:
+			hitting = true
+			_play("neutral")
 
 
 func _physics_process(delta):
+	siding = false
+	var last_vel = velocity
 	if just_landed:
 		just_landed = false
 	last_pos = position
@@ -111,17 +137,19 @@ func _physics_process(delta):
 		force.y += gravity
 	var direction_new = 0
 	if Input.is_action_pressed(ui_right):
+		siding = true
 		direction_new = 1
 		vel_walk.x += walk_speed
+		vel_air.x += air_speed
 		if not on_ground:
 			force.x += air_acc
-			vel_air.x += air_speed
 	if Input.is_action_pressed(ui_left):
+		siding = true
 		vel_walk.x -= walk_speed
 		direction_new = -1
+		vel_air.x -= air_speed
 		if not on_ground:
 			force.x -= air_acc
-			vel_air.x -= air_speed
 	if on_ground:
 		force.x -= ground_frott_quad*velocity.x*abs(velocity.x)
 		if velocity.x != 0:
@@ -133,16 +161,23 @@ func _physics_process(delta):
 	if direction * direction_new == -1:
 		direction = direction_new
 		scale.x = direction
-	if on_ground:
-		_move(vel_walk*delta)
-		if vel_walk.length() > 0:
-			_play("walk")
+	if not hitting:
+		if on_ground:
+			_move(vel_walk*delta)
 		else:
-			_play("idle")
-	else:
-		_move(vel_air*delta)
-		_play("air")
-	_move(velocity*delta)
+			_move(vel_air*delta)
+	if not jumping and not hitting:
+		if on_ground:
+			if vel_walk.length() > 0:
+				_play("walk")
+			else:
+				_play("idle")
+		else:
+			if velocity.length() >= 350:
+				_play("air")
+			else:
+				_play("idle")
+	_move((velocity + last_vel)*delta/2)
 	# TEMP
 	if position.y > screen_size.y:
 		position.y = 0

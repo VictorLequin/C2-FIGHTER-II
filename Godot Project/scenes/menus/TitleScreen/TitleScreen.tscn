@@ -23,7 +23,7 @@ anchor_bottom = 1.0
 margin_top = -90.0
 custom_fonts/font = SubResource( 1 )
 custom_colors/font_color = Color( 0.7, 0.7, 0.7, 1 )
-text = "Appuyez sur une touche ou un bouton"
+text = "Appuyez sur le bouton A, espace ou entrée"
 align = 1
 __meta__ = {
 "_edit_use_anchors_": false
