@@ -21,6 +21,12 @@ window/size/width=1920
 window/size/height=1080
 window/dpi/allow_hidpi=true
 
+[importer_defaults]
+
+texture={
+"flags/filter": false
+}
+
 [input]
 
 ui_cancel={
