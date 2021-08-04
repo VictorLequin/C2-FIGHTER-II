@@ -14,7 +14,6 @@ func _ready():
 func _input(event):
 	var main = get_node("/root/Node")
 	
-	
 	if Input.is_action_just_pressed("ui_accept"):
 		if event is InputEventJoypadButton:
 			if main.joypad_join(event.device): get_tree().set_input_as_handled()

@@ -71,12 +71,27 @@ class ControllerRef:
 		active = a
 		type = t
 		id = i
+	
+	func debug() -> String:
+		if !active: return "Inactive"
+		elif type == ControllerType.keyboard: return "Keyboard layout {x}".format({"x": id})
+		elif type == ControllerType.joypad: return "Joypad {x}".format({"x": id})
+		
+		assert(false)
+		return ""
 
 class APlayer:
 	var controller: ControllerRef
 
 class Players:
 	var _players: Array
+	var _lock: bool = false
+	
+	func lock() -> void:
+		_lock = true
+	
+	func unlock() -> void:
+		_lock = false
 	
 	func exists(playerID: int) -> bool:
 		return playerID < len(_players)
@@ -93,19 +108,72 @@ class Players:
 	
 	# WARNING: invalidates all greater playerIDs
 	func remove_player(playerID: int) -> void:
-		# TODO: notify Character
+		assert(!_lock)
 		_players.remove(playerID)
 	
 	func take_control(playerID: int, controller: ControllerRef) -> void:
 		_players[playerID].controller = controller
+		if _lock: set_bindings(playerID)
 	
 	func free_control(controller: ControllerRef) -> int:
 		for playerID in range(len(_players)):
 			if (_players[playerID].controller.active) && (_players[playerID].controller.type == controller.type) && (_players[playerID].controller.id == controller.id):
 				_players[playerID].controller.active = false
+				if _lock: clear_bindings(playerID)
 				return playerID
 		assert(false)
 		return -1
+	
+	func clear_bindings(playerID: int) -> void:
+		assert(_lock)
+		InputMap.action_erase_events("ui_jump_{k}".format({"k": playerID}))
+		InputMap.erase_action("ui_jump_{k}".format({"k": playerID}))
+		
+		InputMap.action_erase_events("ui_left_{k}".format({"k": playerID}))
+		InputMap.erase_action("ui_left_{k}".format({"k": playerID}))
+		
+		InputMap.action_erase_events("ui_right_{k}".format({"k": playerID}))
+		InputMap.erase_action("ui_right_{k}".format({"k": playerID}))
+	
+	func set_bindings(playerID: int) -> void:
+		assert(_lock)
+		clear_bindings(playerID)
+		var controller = _players[playerID].controller
+		var event_jump
+		var event_left
+		var event_right
+		
+		if controller.type == ControllerType.keyboard:
+			if controller.id == KeyboardLayouts.wasd:
+				event_jump = InputEventKey.new()
+				event_jump.scancode = KEY_SPACE
+				
+				event_left = InputEventKey.new()
+				event_left.scancode = KEY_A
+				
+				event_right = InputEventKey.new()
+				event_right.scancode = KEY_D
+			
+			if controller.id == KeyboardLayouts.arrows:
+				event_jump = InputEventKey.new()
+				event_jump.scancode = KEY_KP_ENTER
+				
+				event_left = InputEventKey.new()
+				event_left.scancode = KEY_LEFT
+				
+				event_right = InputEventKey.new()
+				event_right.scancode = KEY_RIGHT
+			
+			else: print(controller.id)
+		
+		InputMap.add_action("ui_jump_{k}".format({"k": playerID}))
+		InputMap.action_add_event("ui_jump_{k}".format({"k": playerID}), event_jump)
+		
+		InputMap.add_action("ui_left_{k}".format({"k": playerID}))
+		InputMap.action_add_event("ui_left_{k}".format({"k": playerID}), event_left)
+		
+		InputMap.add_action("ui_right_{k}".format({"k": playerID}))
+		InputMap.action_add_event("ui_right_{k}".format({"k": playerID}), event_right)
 	
 	func get_free_player() -> int:
 		var playerID=0
@@ -134,6 +202,22 @@ class Players:
 			if _players[playerID].controller.active:
 				t.append(playerID)
 		print("Active players: {t}".format({"t": t}))
+		
+	func get_characters():
+		var character_scene = preload("res://scenes/characters/Character.tscn")
+		var characters: Array = []
+		for k in range(len(_players)):
+			var character = character_scene.instance()
+			character.ui_jump = "ui_jump_{k}".format({"k": k})
+			character.ui_left = "ui_left_{k}".format({"k": k})
+			character.ui_right = "ui_right_{k}".format({"k": k})
+			characters.append(character)
+			
+			print(_players[k].controller.debug())
+			set_bindings(k)
+
+		return characters
+
 
 
 var keyboard: Keyboard = Keyboard.new()
@@ -198,7 +282,7 @@ func joypad_leave(device: int) -> bool:
 func keyboard_join(layout: int) -> bool:
 	assert(!playersLocked())
 	if keyboard.is_active(layout): return false
-		
+	
 	var playerID = players.get_free_player()
 	var controller = ControllerRef.new(true, ControllerType.keyboard, layout)
 	players.take_control(playerID, controller)
@@ -234,7 +318,8 @@ func _ready():
 	if DEBUG:
 		print("Connected joypads: {j}".format({"j": Input.get_connected_joypads()}))
 	
-	change_scene("res://scenes/menus/TitleScreen/TitleScreen.tscn", false)
+	change_child(load("res://scenes/menus/TitleScreen/TitleScreen.tscn").instance(), false)
+	#add_child(load("res://scenes/menus/TitleScreen/TitleScreen.tscn").instance())
 	
 	gamestate = GameState.title
 	
@@ -244,6 +329,7 @@ func _ready():
 	
 	
 	Input.connect("joy_connection_changed", self, "_on_joy_connection_changed")
+
 
 func _on_joy_connection_changed(device: int, connected: bool):
 	if DEBUG:
@@ -258,19 +344,20 @@ func _on_joy_connection_changed(device: int, connected: bool):
 
 func load_menu(path):
 	gamestate = GameState.menu
-	change_scene(path, true)
+	players.unlock()
+	change_child(load(path).instance(), true)
 
 func load_stage(path):
 	gamestate = GameState.stage
-	change_scene(path, true)
+	players.lock()
+	var stage = load(path).instance()
+	stage.characters = players.get_characters()
+	change_child(stage, true)
 
-func change_scene(path, free_old):
-	call_deferred("_change_scene", path, free_old)
-
-func _change_scene(path, free_old):
+func change_child(c, free_old):
 	if free_old: child.queue_free()
-	child = load(path).instance()
-	add_child(child)
+	child = c
+	call_deferred("add_child", c)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

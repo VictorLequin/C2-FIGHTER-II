@@ -19,6 +19,10 @@ export var jump_speed = 300
 var jump_count
 export var air_speed = 100
 
+var ui_right: String = ""
+var ui_left: String = ""
+var ui_jump: String = ""
+
 func _land(plateforme):
 	var y0 = plateforme.position.y - plateforme.get_node("CollisionShape2D").shape.extents.y
 	if last_pos.y < y0 and not on_ground:
@@ -81,10 +85,11 @@ func _move(dr):
 			blocked_right = false
 
 func _input(event):
-	if Input.is_action_just_pressed("ui_accept") and (on_ground or jump_count > 0):
+	if event.is_action_pressed(ui_jump) and (on_ground or jump_count > 0):
 		velocity.y = -jump_speed
 		if not on_ground:
 			jump_count -= 1
+
 
 func _physics_process(delta):
 	if just_landed:
@@ -96,13 +101,13 @@ func _physics_process(delta):
 	if not on_ground:
 		force.y += gravity
 	var direction_new = 0
-	if Input.is_action_pressed("ui_right"):
+	if Input.is_action_pressed(ui_right):
 		direction_new = 1
 		vel_walk.x += walk_speed
 		if not on_ground:
 			force.x += air_acc
 			vel_air.x += air_speed
-	if Input.is_action_pressed("ui_left"):
+	if Input.is_action_pressed(ui_left):
 		vel_walk.x -= walk_speed
 		direction_new = -1
 		if not on_ground:
