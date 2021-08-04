@@ -5,11 +5,29 @@ extends Control
 # var a = 2
 # var b = "text"
 
+var select_box_scene = preload("res://scenes/menus/CharacterSelect/SelectBox.tscn")
+
+func recreate_boxes():
+	print("updated boxes")
+	var main = get_node("/root/Node")
+	var grid = get_child(0)
+	
+	for box in grid.get_children():
+		grid.remove_child(box)
+		box.queue_free()
+	
+	grid.columns = ceil(sqrt(main.players.count()))
+	
+	for k in range(main.players.count()):
+		var box = select_box_scene.instance()
+		box.player = main.players._players[k]
+		box.ui_left = "ui_left_{k}".format({"k": k})
+		box.ui_right = "ui_right_{k}".format({"k": k})
+		grid.add_child(box)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
-
+	recreate_boxes()
 
 func _input(event):
 	var main = get_node("/root/Node")
