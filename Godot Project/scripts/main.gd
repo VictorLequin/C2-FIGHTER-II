@@ -167,6 +167,7 @@ class Players:
 		if controller.type == ControllerType.joypad:
 			event_jump = InputEventJoypadButton.new()
 			event_jump.button_index = JOY_BUTTON_0
+			event_jump.device = controller.id
 			
 			event_left = InputEventJoypadMotion.new()
 			event_left.device = controller.id
