@@ -1,0 +1,73 @@
+[gd_scene load_steps=20 format=2]
+
+[ext_resource path="res://ressources/persos/Champion/idle/idle2.png" type="Texture" id=1]
+[ext_resource path="res://ressources/persos/Champion/idle/idle3.png" type="Texture" id=2]
+[ext_resource path="res://ressources/persos/Champion/idle/idle1.png" type="Texture" id=3]
+[ext_resource path="res://scenes/persos/Character.gd" type="Script" id=4]
+[ext_resource path="res://ressources/persos/Champion/walk/walk2.png" type="Texture" id=5]
+[ext_resource path="res://ressources/persos/Champion/walk/walk3.png" type="Texture" id=6]
+[ext_resource path="res://ressources/persos/Champion/walk/walk4.png" type="Texture" id=7]
+[ext_resource path="res://ressources/persos/Champion/walk/walk1.png" type="Texture" id=8]
+[ext_resource path="res://ressources/persos/Champion/air/air1.png" type="Texture" id=9]
+[ext_resource path="res://ressources/persos/Champion/air/air3.png" type="Texture" id=10]
+[ext_resource path="res://ressources/persos/Champion/air/air2.png" type="Texture" id=11]
+[ext_resource path="res://ressources/persos/Champion/air/air4.png" type="Texture" id=12]
+[ext_resource path="res://ressources/persos/Champion/jump/jump1.png" type="Texture" id=13]
+[ext_resource path="res://ressources/persos/Champion/jump/jump4.png" type="Texture" id=14]
+[ext_resource path="res://ressources/persos/Champion/jump/jump3.png" type="Texture" id=15]
+[ext_resource path="res://ressources/persos/Champion/jump/jump2.png" type="Texture" id=16]
+
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 3 ), ExtResource( 1 ), ExtResource( 2 ) ],
+"loop": true,
+"name": "idle",
+"speed": 3.0
+}, {
+"frames": [ ExtResource( 9 ), ExtResource( 11 ), ExtResource( 10 ), ExtResource( 12 ) ],
+"loop": true,
+"name": "air",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 8 ), ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ) ],
+"loop": true,
+"name": "walk",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 13 ), ExtResource( 16 ), ExtResource( 15 ), ExtResource( 14 ) ],
+"loop": true,
+"name": "jump",
+"speed": 5.0
+} ]
+
+[sub_resource type="CapsuleShape2D" id=2]
+radius = 19.9491
+height = 61.071
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 14.9395, 2.04933 )
+
+[node name="Perso" type="Area2D"]
+gravity = 500.0
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+position = Vector2( 0.0067296, -49.0491 )
+scale = Vector2( 3, 3 )
+frames = SubResource( 1 )
+animation = "idle"
+offset = Vector2( -2.33558, -0.650284 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0.132431, -50.5892 )
+shape = SubResource( 2 )
+
+[node name="Ground_test" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground_test"]
+position = Vector2( 0, 2 )
+shape = SubResource( 3 )
