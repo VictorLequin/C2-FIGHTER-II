@@ -13,34 +13,33 @@ func _ready():
 
 func _input(event):
 	var main = get_node("/root/Node")
+
+	if event is InputEventJoypadButton and event.button_index == JOY_BUTTON_0 :
+		if main.joypad_join(event.device): get_tree().set_input_as_handled()
 	
-	if Input.is_action_just_pressed("ui_accept"):
-		if event is InputEventJoypadButton:
-			if main.joypad_join(event.device): get_tree().set_input_as_handled()
+	elif event is InputEventKey:
+		var layout = main.KeyboardLayouts.none
+		if event.scancode == KEY_SPACE:
+			layout = main.KeyboardLayouts.wasd
+		elif event.scancode == KEY_KP_ENTER:
+			layout = main.KeyboardLayouts.arrows
 		
-		elif event is InputEventKey:
-			var layout = main.KeyboardLayouts.none
-			if event.scancode == KEY_SPACE:
-				layout = main.KeyboardLayouts.wasd
-			elif event.scancode == KEY_KP_ENTER:
-				layout = main.KeyboardLayouts.arrows
-			
-			if layout != main.KeyboardLayouts.none:
-				if main.keyboard_join(layout): get_tree().set_input_as_handled()
+		if layout != main.KeyboardLayouts.none:
+			if main.keyboard_join(layout): get_tree().set_input_as_handled()
 	
-	if Input.is_action_just_pressed("ui_cancel"):
-		if event is InputEventJoypadButton:
-			if main.joypad_leave(event.device): get_tree().set_input_as_handled()
+	
+	if event is InputEventJoypadButton and event.button_index == JOY_BUTTON_1 :
+		if main.joypad_leave(event.device): get_tree().set_input_as_handled()
+	
+	elif event is InputEventKey:
+		var layout = main.KeyboardLayouts.none
+		if event.scancode == KEY_ESCAPE:
+			layout = main.KeyboardLayouts.wasd
+		elif event.scancode == KEY_KP_PERIOD:
+			layout = main.KeyboardLayouts.arrows
 		
-		elif event is InputEventKey:
-			var layout = main.KeyboardLayouts.none
-			if event.scancode == KEY_ESCAPE:
-				layout = main.KeyboardLayouts.wasd
-			elif event.scancode == KEY_KP_PERIOD:
-				layout = main.KeyboardLayouts.arrows
-			
-			if layout != main.KeyboardLayouts.none:
-				if main.keyboard_leave(layout): get_tree().set_input_as_handled()
+		if layout != main.KeyboardLayouts.none:
+			if main.keyboard_leave(layout): get_tree().set_input_as_handled()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
