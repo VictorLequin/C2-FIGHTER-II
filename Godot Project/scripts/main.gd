@@ -244,10 +244,6 @@ func _ready():
 	
 	
 	Input.connect("joy_connection_changed", self, "_on_joy_connection_changed")
-	
-	InputMap.add_action("join_wasd")
-	
-	
 
 func _on_joy_connection_changed(device: int, connected: bool):
 	if DEBUG:
