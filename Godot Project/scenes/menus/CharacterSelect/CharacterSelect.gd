@@ -16,7 +16,7 @@ func recreate_boxes():
 		grid.remove_child(box)
 		box.queue_free()
 	
-	grid.columns = ceil(sqrt(main.players.count()))
+	grid.columns = ceil(sqrt(main.players.count()+1))
 	
 	for k in range(main.players.count()):
 		var box = select_box_scene.instance()
@@ -24,6 +24,8 @@ func recreate_boxes():
 		box.ui_left = "ui_left_{k}".format({"k": k})
 		box.ui_right = "ui_right_{k}".format({"k": k})
 		grid.add_child(box)
+	
+	grid.add_child(preload("res://scenes/menus/CharacterSelect/PressAccept.tscn").instance())
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
