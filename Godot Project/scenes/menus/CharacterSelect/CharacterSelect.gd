@@ -13,7 +13,15 @@ func _ready():
 
 func _input(event):
 	var main = get_node("/root/Node")
-
+	
+	if event is InputEventMouseButton and event.pressed and event.button_index == BUTTON_LEFT:
+		var bounds = Rect2(rect_position, rect_size)
+		if bounds.has_point(event.position):
+			if main.players.count() > 0:
+				main.load_menu("res://scenes/menus/StageSelect/StageSelect.tscn")
+			else:
+				print("Argh! No players joined!")
+	
 	if event is InputEventJoypadButton and event.button_index == JOY_BUTTON_0 :
 		if main.joypad_join(event.device): get_tree().set_input_as_handled()
 	

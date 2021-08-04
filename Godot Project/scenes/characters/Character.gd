@@ -25,9 +25,10 @@ var hitting
 var siding
 var playing
 
+var ui_jump: String = ""
+var ui_action: String = ""
 var ui_right: String = ""
 var ui_left: String = ""
-var ui_jump: String = ""
 
 func play(anim):
 	if not playing == anim:
@@ -64,7 +65,7 @@ func _input(event):
 		jumping = true
 		end_hit()
 		play("jump")
-	if event.is_action_pressed("ui_cancel"):
+	if event.is_action_pressed(ui_action):
 		if not siding:
 			hitting = true
 			play("neutral")
