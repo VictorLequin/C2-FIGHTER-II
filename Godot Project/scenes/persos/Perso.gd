@@ -4,7 +4,7 @@ var screen_size
 var on_ground
 var sprite
 var velocity
-export var walk_speed = 170
+export var walk_speed = 200
 export var air_acc = 200
 export var ground_frott_quad = 0.3
 export var ground_frott_stat = 1
