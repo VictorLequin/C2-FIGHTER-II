@@ -241,7 +241,7 @@ class Players:
 			
 			var character = character_scene.instance()
 			character.ui_jump = "ui_jump_{k}".format({"k": k})
-			character.ui_jump = "ui_action_{k}".format({"k": k})
+			character.ui_action = "ui_action_{k}".format({"k": k})
 			character.ui_left = "ui_left_{k}".format({"k": k})
 			character.ui_right = "ui_right_{k}".format({"k": k})
 			characters.append(character)

@@ -119,7 +119,7 @@ func _input(event):
 		jumping = true
 		_end_hit()
 		_play("jump")
-	if event.is_action_pressed("ui_cancel"):
+	if event.is_action_pressed(ui_action):
 		if not siding:
 			hitting = true
 			_play("neutral")
