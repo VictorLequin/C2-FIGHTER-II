@@ -215,8 +215,11 @@ class Players:
 			
 			print(_players[k].controller.debug())
 			set_bindings(k)
-
+		
 		return characters
+	
+	func count() -> int:
+		return len(_players)
 
 
 
