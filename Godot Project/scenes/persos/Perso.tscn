@@ -20,6 +20,11 @@ animations = [ {
 "name": "idle",
 "speed": 3.0
 }, {
+"frames": [  ],
+"loop": true,
+"name": "neutral",
+"speed": 5.0
+}, {
 "frames": [ ExtResource( 9 ), ExtResource( 11 ), ExtResource( 10 ), ExtResource( 12 ) ],
 "loop": true,
 "name": "air",
@@ -39,7 +44,7 @@ height = 61.071
 extents = Vector2( 14.9395, 2.04933 )
 
 [node name="Perso" type="Area2D"]
-gravity = 250.0
+gravity = 500.0
 script = ExtResource( 4 )
 __meta__ = {
 "_edit_group_": true
