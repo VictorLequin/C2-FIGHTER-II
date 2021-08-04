@@ -9,7 +9,7 @@ var child: Node
 
 # Enums
 enum GameState {lobby, stage}
-enum KeyboardLayouts {wasd}
+enum KeyboardLayouts {none, wasd, arrows}
 enum ControllerType {keyboard, joypad}
 
 # Global vars
@@ -97,7 +97,7 @@ class Players:
 	# WARNING: invalidates all greater playerIDs
 	func remove_player(playerID: int) -> void:
 		# TODO: notify Character
-		_players.erase(playerID)
+		_players.remove(playerID)
 	
 	func take_control(playerID: int, controller: ControllerRef) -> void:
 		_players[playerID].controller = controller
@@ -132,9 +132,11 @@ class Players:
 			else: playerID+=1
 	
 	func debug_list_active() -> void:
+		var t = []
 		for playerID in range(len(_players)):
 			if _players[playerID].controller.active:
-				print("Player {x} is active".format({"x": playerID}))
+				t.append(playerID)
+		print("Active players: {t}".format({"t": t}))
 
 
 var keyboard: Keyboard = Keyboard.new()
@@ -155,7 +157,7 @@ func joypad_plug(device: int) -> void:
 		var playerID = players.get_free_player()
 		var controller = ControllerRef.new(true, ControllerType.joypad, device)
 		players.take_control(playerID, controller)
-		joypads.setActive(device, true)
+		joypads.set_active(device, true)
 
 func joypad_unplug(device: int) -> void:
 	if DEBUG: print("Connected joypads: {j}".format({"j": Input.get_connected_joypads()}))
@@ -171,38 +173,54 @@ func joypad_unplug(device: int) -> void:
 	
 	joypads.unplug(device)
 
-func joypad_join(device: int) -> void:
+func joypad_join(device: int) -> bool:
 	assert(!playersLocked())
-	if not joypads.is_active(device):
-		var playerID = players.get_free_player()
-		var controller = ControllerRef.new(true, ControllerType.joypad, device)
-		players.take_control(playerID, controller)
-		joypads.set_active(device, true)
+	if joypads.is_active(device): return false
+	
+	var playerID = players.get_free_player()
+	var controller = ControllerRef.new(true, ControllerType.joypad, device)
+	players.take_control(playerID, controller)
+	joypads.set_active(device, true)
+	
+	if DEBUG: players.debug_list_active()
+	return true
 
-func joypad_leave(device: int) -> void:
+func joypad_leave(device: int) -> bool:
 	assert(!playersLocked())
-	if joypads.is_active(device):
-		var controller = ControllerRef.new(true, ControllerType.joypad, device)
-		var playerID = players.free_control(controller)
-		players.remove_player(playerID)
-		joypads.setActive(device, false)
+	if not joypads.is_active(device): return false
+	
+	var controller = ControllerRef.new(true, ControllerType.joypad, device)
+	var playerID = players.free_control(controller)
+	players.remove_player(playerID)
+	joypads.set_active(device, false)
+	
+	if DEBUG: players.debug_list_active()
+	return true
 
 
-func keyboard_join(layout: int) -> void:
+func keyboard_join(layout: int) -> bool:
 	assert(!playersLocked())
-	if not keyboard.is_active(layout):
-		var playerID = players.get_free_player()
-		var controller = ControllerRef.new(true, ControllerType.keyboard, layout)
-		players.take_control(playerID, controller)
-		keyboard.set_active(layout, true)
+	if keyboard.is_active(layout): return false
+		
+	var playerID = players.get_free_player()
+	var controller = ControllerRef.new(true, ControllerType.keyboard, layout)
+	players.take_control(playerID, controller)
+	keyboard.set_active(layout, true)
+	
+	if DEBUG: players.debug_list_active()
+	return true
 
-func keyboard_leave(layout: int) -> void:
+func keyboard_leave(layout: int) -> bool:
 	assert(!playersLocked())
-	if keyboard.is_active(layout):
-		var controller = ControllerRef.new(true, ControllerType.keyboard, layout)
-		var playerID = players.free_control(controller)
-		players.remove_player(playerID)
-		keyboard.setActive(layout, false)
+	if not keyboard.is_active(layout): return false
+	
+	var controller = ControllerRef.new(true, ControllerType.keyboard, layout)
+	var playerID = players.free_control(controller)
+	players.remove_player(playerID)
+	keyboard.set_active(layout, false)
+	
+	if DEBUG: players.debug_list_active()
+	return true
 
 func startup_plug() -> void:
 	for device in Input.get_connected_joypads():
@@ -220,14 +238,17 @@ func _ready():
 		print("Connected joypads: {j}".format({"j": Input.get_connected_joypads()}))
 	
 	startup_plug()
-	debug_join_all()
-	players.debug_list_active()
+	#debug_join_all()
+	#players.debug_list_active()
 	
 	add_child(preload("res://scenes/menus/Ecran titre.tscn").instance())
 	
 	
-	if Input.connect("joy_connection_changed", self, "_on_joy_connection_changed"):
-		print("")
+	Input.connect("joy_connection_changed", self, "_on_joy_connection_changed")
+	
+	InputMap.add_action("join_wasd")
+	
+	
 
 func _on_joy_connection_changed(device: int, connected: bool):
 	if DEBUG:
@@ -238,6 +259,38 @@ func _on_joy_connection_changed(device: int, connected: bool):
 	else:
 		joypad_unplug(device)
 	players.debug_list_active()
+
+func _input(event):
+	if Input.is_action_just_pressed("ui_accept"):
+		if event is InputEventJoypadButton:
+			if joypad_join(event.device): get_tree().set_input_as_handled()
+		
+		elif event is InputEventKey:
+			var layout = KeyboardLayouts.none
+			if event.scancode == KEY_SPACE:
+				layout = KeyboardLayouts.wasd
+			elif event.scancode == KEY_KP_ENTER:
+				layout = KeyboardLayouts.arrows
+			
+			if layout != KeyboardLayouts.none:
+				if keyboard_join(layout): get_tree().set_input_as_handled()
+		
+	
+	if Input.is_action_just_pressed("ui_cancel"):
+		if event is InputEventJoypadButton:
+			if joypad_leave(event.device): get_tree().set_input_as_handled()
+		
+		elif event is InputEventKey:
+			var layout = KeyboardLayouts.none
+			if event.scancode == KEY_ESCAPE:
+				layout = KeyboardLayouts.wasd
+			elif event.scancode == KEY_KP_PERIOD:
+				layout = KeyboardLayouts.arrows
+			
+			if layout != KeyboardLayouts.none:
+				if keyboard_leave(layout): get_tree().set_input_as_handled()
+
+
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
