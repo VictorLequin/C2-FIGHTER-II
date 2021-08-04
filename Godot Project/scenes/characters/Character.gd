@@ -29,9 +29,10 @@ var jumping
 var hitting
 var siding
 
+var ui_jump: String = ""
+var ui_action: String = ""
 var ui_right: String = ""
 var ui_left: String = ""
-var ui_jump: String = ""
 
 func _play(anim):
 	sprite.play(anim)
