@@ -9,7 +9,7 @@ export var air_acc = 200
 export var ground_frott_quad = 0.3
 export var ground_frott_stat = 1
 var direction
-export var jump_speed = 400
+export var jump_speed = 300
 var jump_count
 export var air_speed = 100
 export var gravity = 1300
@@ -63,9 +63,15 @@ func _input(event):
 		if not on_ground:
 			jump_count -= 1
 		jumping = true
+<<<<<<< HEAD
 		end_hit()
 		play("jump")
+	if event.is_action_pressed("ui_cancel"):
+=======
+		_end_hit()
+		_play("jump")
 	if event.is_action_pressed(ui_action):
+>>>>>>> 901ece46522f488eef47fc3855ad89a6f4fc2ce3
 		if not siding:
 			hitting = true
 			play("neutral")
@@ -74,7 +80,6 @@ func _physics_process(delta):
 	if not on_ground and is_on_floor():
 		jump_count = 1
 		jumping = false
-		velocity.x = 0
 	on_ground = is_on_floor()
 	siding = false
 	var last_vel = velocity
@@ -129,11 +134,7 @@ func _physics_process(delta):
 	var snap = Vector2(0, 5)
 	if jumping:
 		snap = Vector2.ZERO
-	velocity = move_and_slide_with_snap((velocity + last_vel)/2.0 + vel_add, snap, Vector2(0, -1))
-	if abs(velocity.x) >= abs(vel_add.x):
-		velocity.x -= vel_add.x
-	if abs(velocity.y) >= abs(vel_add.y):
-		velocity.y -= vel_add.y
+	velocity = move_and_slide_with_snap((velocity + last_vel)/2.0 + vel_add, snap, Vector2(0, -1)) - vel_add
 	# TEMP
 	if position.y > screen_size.y:
 		position.y = 0
