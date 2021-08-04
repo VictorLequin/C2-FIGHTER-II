@@ -241,7 +241,8 @@ func _ready():
 	#debug_join_all()
 	#players.debug_list_active()
 	
-	add_child(preload("res://scenes/menus/Ecran titre.tscn").instance())
+	child=preload("res://scenes/menus/Ecran titre.tscn").instance()
+	add_child(child)
 	
 	
 	Input.connect("joy_connection_changed", self, "_on_joy_connection_changed")
@@ -274,7 +275,6 @@ func _input(event):
 			
 			if layout != KeyboardLayouts.none:
 				if keyboard_join(layout): get_tree().set_input_as_handled()
-		
 	
 	if Input.is_action_just_pressed("ui_cancel"):
 		if event is InputEventJoypadButton:
@@ -290,8 +290,20 @@ func _input(event):
 			if layout != KeyboardLayouts.none:
 				if keyboard_leave(layout): get_tree().set_input_as_handled()
 
+func load_menu(path):
+	change_scene(path, true)
 
+func load_stage(path):
+	change_scene(path, true)
 
+func change_scene(path, free_old):
+	call_deferred("_change_scene", path, free_old)
+
+func _change_scene(path, free_old):
+	if free_old: child.queue_free()
+	child = load(path).instance()
+	add_child(child)
+	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):

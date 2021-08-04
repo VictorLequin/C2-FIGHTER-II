@@ -4,17 +4,12 @@ onready var boutJouer = get_node("HBoxContainer/VBoxContainer/HBoxContainer/Joue
 onready var boutParam = get_node("HBoxContainer/VBoxContainer/HBoxContainer2/Parametres")
 onready var boutQuit = get_node("HBoxContainer/VBoxContainer/HBoxContainer3/Quitter")
 
-func goto_scene(path):
-	Utils.change_scene(self, path)
-
 func _ready():
 	boutJouer.grab_focus()
 
 
-
 func _on_Jouer_pressed():
-	#get_tree().change_scene("res://scenes/menus/Lobby.tscn")
-	call_deferred("goto_scene", "res://scenes/menus/Lobby.tscn")
+	get_node("/root/Node").load_menu("res://scenes/menus/Lobby.tscn")
 
 
 func _on_Parametres_pressed():
