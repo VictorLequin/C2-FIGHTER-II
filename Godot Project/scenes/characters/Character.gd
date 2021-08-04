@@ -1,4 +1,4 @@
-extends Area2D
+extends KinematicBody2D
 
 var screen_size
 var on_ground
@@ -9,15 +9,10 @@ export var air_acc = 200
 export var ground_frott_quad = 0.3
 export var ground_frott_stat = 1
 var direction
-var last_pos
-var just_landed
-var radius
-var blocked_left
-var blocked_right
-var blocked_on
 export var jump_speed = 300
 var jump_count
 export var air_speed = 100
+export var gravity = 1300
 export var offsets = {
 	"idle": Vector2(-2.336, -0.65),
 	"air": Vector2(-0.434, -0.65),
@@ -28,52 +23,22 @@ export var offsets = {
 var jumping
 var hitting
 var siding
+var playing
 
 var ui_right: String = ""
 var ui_left: String = ""
 var ui_jump: String = ""
 
-func _play(anim):
-	sprite.play(anim)
-	sprite.offset = offsets[anim]
+func play(anim):
+	if not playing == anim:
+		playing = anim
+		sprite.play(anim)
+		sprite.offset = offsets[anim]
 
-func _land(plateforme):
-	var y0 = plateforme.position.y - plateforme.get_node("CollisionShape2D").shape.extents.y
-	if last_pos.y < y0 and not on_ground:
-		on_ground = true
-		velocity.y = 0
-		velocity.x = 0
-		position.y = y0
-		just_landed = true
-		jump_count = 1
-		jumping = false
-
-func _fall():
-	on_ground = false
-
-func _bump(plateforme):
-	var x0 = plateforme.position.x - plateforme.get_node("CollisionShape2D").shape.extents.x
-	var x1 = plateforme.position.x + plateforme.get_node("CollisionShape2D").shape.extents.x
-	if position.x + radius > x0 and last_pos.x + radius <= x0:
-		position.x = x0 - radius
-		velocity.x = 0
-		blocked_right = true
-		blocked_on = plateforme
-	if position.x - radius < x1 and last_pos.x - radius >= x1:
-		position.x = x1 + radius
-		velocity.x = 0
-		blocked_left = true
-		blocked_on = plateforme
-
-func _unbump(plateforme):
-	if blocked_on:
-		if blocked_on.name == plateforme.name:
-			blocked_right = false
-			blocked_left = false
-
-func _animation_finished_handler():
+func animation_finished_handler():
+	playing = ""
 	jumping = false
-	_end_hit()
+	end_hit()
 
 func _ready():
 	screen_size = get_viewport_rect().size
@@ -81,33 +46,14 @@ func _ready():
 	sprite = $AnimatedSprite
 	velocity = Vector2()
 	direction = 1
-	last_pos = position
-	just_landed = true
-	radius = $CollisionShape2D.shape.radius
-	blocked_left = false
-	blocked_right = false
 	jump_count = 0
 	jumping = false
 	hitting = false
 	siding = false
-	sprite.connect("animation_finished", self, "_animation_finished_handler")
+	playing = ""
+	sprite.connect("animation_finished", self, "animation_finished_handler")
 
-func _move(dr):
-	var dx = dr.x
-	var dy = dr.y
-	position.y += dy
-	if dx > 0:
-		if not blocked_right:
-			position.x += dx
-		if blocked_left:
-			blocked_left = false
-	if dx < 0:
-		if not blocked_left:
-			position.x += dx
-		if blocked_right:
-			blocked_right = false
-
-func _end_hit():
+func end_hit():
 	hitting = false
 
 func _input(event):
@@ -116,20 +62,20 @@ func _input(event):
 		if not on_ground:
 			jump_count -= 1
 		jumping = true
-		_end_hit()
-		_play("jump")
+		end_hit()
+		play("jump")
 	if event.is_action_pressed("ui_cancel"):
 		if not siding:
 			hitting = true
-			_play("neutral")
-
+			play("neutral")
 
 func _physics_process(delta):
+	if not on_ground and is_on_floor():
+		jump_count = 1
+		jumping = false
+	on_ground = is_on_floor()
 	siding = false
 	var last_vel = velocity
-	if just_landed:
-		just_landed = false
-	last_pos = position
 	var force = Vector2()
 	var vel_walk = Vector2()
 	var vel_air = Vector2()
@@ -160,24 +106,28 @@ func _physics_process(delta):
 		velocity.x = 0
 	if direction * direction_new == -1:
 		direction = direction_new
-		scale.x = direction
+		sprite.scale.x = 3*direction
+	var vel_add = Vector2()
 	if not hitting:
 		if on_ground:
-			_move(vel_walk*delta)
+			vel_add += vel_walk
 		else:
-			_move(vel_air*delta)
+			vel_add += vel_air
 	if not jumping and not hitting:
 		if on_ground:
 			if vel_walk.length() > 0:
-				_play("walk")
+				play("walk")
 			else:
-				_play("idle")
+				play("idle")
 		else:
 			if velocity.length() >= 350:
-				_play("air")
+				play("air")
 			else:
-				_play("idle")
-	_move((velocity + last_vel)*delta/2)
+				play("idle")
+	var snap = Vector2(0, 5)
+	if jumping:
+		snap = Vector2.ZERO
+	velocity = move_and_slide_with_snap((velocity + last_vel)/2.0 + vel_add, snap, Vector2(0, -1)) - vel_add
 	# TEMP
 	if position.y > screen_size.y:
 		position.y = 0

@@ -11,7 +11,7 @@ var characters: Array = []
 func _ready():
 	var main = get_node("/root/Node")
 	
-	var spawn = get_viewport_rect().size/2 + Vector2.LEFT * (70*(len(characters)-1)/2)
+	var spawn = get_viewport_rect().size/2.0 + Vector2.LEFT * (70*(len(characters)-1)/2.0)
 	
 	for character in characters:
 		character.position = spawn
