@@ -16,7 +16,6 @@ var blocked_left
 var blocked_right
 var blocked_on
 export var jump_speed = 300
-var walking
 var jump_count
 export var air_speed = 100
 
@@ -32,8 +31,6 @@ func _land(plateforme):
 
 func _fall():
 	on_ground = false
-	if walking:
-		velocity.x += direction * walk_speed
 
 func _bump(plateforme):
 	var x0 = plateforme.position.x - plateforme.get_node("CollisionShape2D").shape.extents.x
@@ -66,7 +63,6 @@ func _ready():
 	radius = $CollisionShape2D.shape.radius
 	blocked_left = false
 	blocked_right = false
-	walking = false
 	jump_count = 0
 
 func _move(dr):
@@ -91,7 +87,6 @@ func _input(event):
 			jump_count -= 1
 
 func _physics_process(delta):
-	walking = false
 	if just_landed:
 		just_landed = false
 	last_pos = position
@@ -107,16 +102,12 @@ func _physics_process(delta):
 		if not on_ground:
 			force.x += air_acc
 			vel_air.x += air_speed
-		else:
-			walking = true
 	if Input.is_action_pressed("ui_left"):
 		vel_walk.x -= walk_speed
 		direction_new = -1
 		if not on_ground:
 			force.x -= air_acc
 			vel_air.x -= air_speed
-		else:
-			walking = true
 	if on_ground:
 		force.x -= ground_frott_quad*velocity.x*abs(velocity.x)
 		if velocity.x != 0:

@@ -1,10 +1,12 @@
 extends Area2D
 
+export var transparent = true
+
 func _collide(area):
 	if area.get_parent().has_method("_land"):
 		area.get_parent()._land(self)
 	if area.has_method("_bump"):
-		if not area.just_landed:
+		if not area.just_landed and not transparent:
 			area._bump(self)
 
 func _stop_collision(area):
