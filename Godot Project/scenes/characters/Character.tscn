@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=2]
+[gd_scene load_steps=33 format=2]
 
 [ext_resource path="res://ressources/persos/Champion/idle/idle2.png" type="Texture" id=1]
 [ext_resource path="res://ressources/persos/Champion/idle/idle3.png" type="Texture" id=2]
@@ -13,7 +13,7 @@
 [ext_resource path="res://ressources/persos/Champion/air/air2.png" type="Texture" id=11]
 [ext_resource path="res://ressources/persos/Champion/air/air4.png" type="Texture" id=12]
 [ext_resource path="res://ressources/persos/Champion/jump/jump1.png" type="Texture" id=13]
-[ext_resource path="res://ressources/persos/Champion/jump/jump4.png" type="Texture" id=14]
+[ext_resource path="res://ressources/persos/Champion/atkside/sid6.png" type="Texture" id=14]
 [ext_resource path="res://ressources/persos/Champion/jump/jump3.png" type="Texture" id=15]
 [ext_resource path="res://ressources/persos/Champion/jump/jump2.png" type="Texture" id=16]
 [ext_resource path="res://ressources/persos/Champion/atkneutral/neu1.png" type="Texture" id=17]
@@ -22,6 +22,13 @@
 [ext_resource path="res://ressources/persos/Champion/atkneutral/neu5.png" type="Texture" id=20]
 [ext_resource path="res://ressources/persos/Champion/atkneutral/neu2.png" type="Texture" id=21]
 [ext_resource path="res://ressources/persos/Champion/atkneutral/neu3.png" type="Texture" id=22]
+[ext_resource path="res://ressources/persos/Champion/atkside/sid1.png" type="Texture" id=23]
+[ext_resource path="res://ressources/persos/Champion/atkside/sid5.png" type="Texture" id=24]
+[ext_resource path="res://ressources/persos/Champion/atkside/sid7.png" type="Texture" id=25]
+[ext_resource path="res://ressources/persos/Champion/atkside/sid8.png" type="Texture" id=26]
+[ext_resource path="res://ressources/persos/Champion/atkside/sid4.png" type="Texture" id=27]
+[ext_resource path="res://ressources/persos/Champion/atkside/sid3.png" type="Texture" id=28]
+[ext_resource path="res://ressources/persos/Champion/atkside/sid2.png" type="Texture" id=29]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -30,15 +37,15 @@ animations = [ {
 "name": "idle",
 "speed": 3.0
 }, {
+"frames": [ ExtResource( 23 ), ExtResource( 29 ), ExtResource( 28 ), ExtResource( 27 ), ExtResource( 24 ), ExtResource( 14 ), ExtResource( 25 ), ExtResource( 26 ) ],
+"loop": true,
+"name": "side",
+"speed": 10.0
+}, {
 "frames": [ ExtResource( 9 ), ExtResource( 11 ), ExtResource( 10 ), ExtResource( 12 ) ],
 "loop": true,
 "name": "air",
 "speed": 5.0
-}, {
-"frames": [ ExtResource( 13 ), ExtResource( 16 ), ExtResource( 15 ), ExtResource( 14 ) ],
-"loop": false,
-"name": "jump",
-"speed": 10.0
 }, {
 "frames": [ ExtResource( 8 ), ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ) ],
 "loop": true,
@@ -49,11 +56,19 @@ animations = [ {
 "loop": true,
 "name": "neutral",
 "speed": 13.0
+}, {
+"frames": [ ExtResource( 13 ), ExtResource( 15 ), ExtResource( 16 ) ],
+"loop": true,
+"name": "jump",
+"speed": 8.0
 } ]
 
 [sub_resource type="CapsuleShape2D" id=2]
 radius = 19.9491
 height = 61.071
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 0, 0 )
 
 [node name="Character" type="KinematicBody2D"]
 script = ExtResource( 4 )
@@ -71,3 +86,9 @@ offset = Vector2( -2.336, -0.65 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( 0.132431, -50.5892 )
 shape = SubResource( 2 )
+
+[node name="DamageArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DamageArea"]
+shape = SubResource( 3 )
+disabled = true
