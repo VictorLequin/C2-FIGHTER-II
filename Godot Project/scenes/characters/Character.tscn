@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=26 format=2]
 
 [ext_resource path="res://ressources/persos/Champion/idle/idle2.png" type="Texture" id=1]
 [ext_resource path="res://ressources/persos/Champion/idle/idle3.png" type="Texture" id=2]
@@ -16,6 +16,12 @@
 [ext_resource path="res://ressources/persos/Champion/jump/jump4.png" type="Texture" id=14]
 [ext_resource path="res://ressources/persos/Champion/jump/jump3.png" type="Texture" id=15]
 [ext_resource path="res://ressources/persos/Champion/jump/jump2.png" type="Texture" id=16]
+[ext_resource path="res://ressources/persos/Champion/atkneutral/neu1.png" type="Texture" id=17]
+[ext_resource path="res://ressources/persos/Champion/atkneutral/neu4.png" type="Texture" id=18]
+[ext_resource path="res://ressources/persos/Champion/atkneutral/neu6.png" type="Texture" id=19]
+[ext_resource path="res://ressources/persos/Champion/atkneutral/neu5.png" type="Texture" id=20]
+[ext_resource path="res://ressources/persos/Champion/atkneutral/neu2.png" type="Texture" id=21]
+[ext_resource path="res://ressources/persos/Champion/atkneutral/neu3.png" type="Texture" id=22]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -30,14 +36,19 @@ animations = [ {
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 13 ), ExtResource( 16 ), ExtResource( 15 ), ExtResource( 14 ) ],
-"loop": true,
+"loop": false,
 "name": "jump",
-"speed": 5.0
+"speed": 10.0
 }, {
 "frames": [ ExtResource( 8 ), ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ) ],
 "loop": true,
 "name": "walk",
 "speed": 5.0
+}, {
+"frames": [ ExtResource( 17 ), ExtResource( 21 ), ExtResource( 22 ), ExtResource( 18 ), ExtResource( 20 ), ExtResource( 19 ) ],
+"loop": true,
+"name": "neutral",
+"speed": 13.0
 } ]
 
 [sub_resource type="CapsuleShape2D" id=2]
