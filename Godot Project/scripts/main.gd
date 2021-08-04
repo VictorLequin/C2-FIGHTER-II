@@ -126,14 +126,15 @@ class Players:
 	
 	func clear_bindings(playerID: int) -> void:
 		assert(_lock)
-		InputMap.action_erase_events("ui_jump_{k}".format({"k": playerID}))
-		InputMap.erase_action("ui_jump_{k}".format({"k": playerID}))
-		
-		InputMap.action_erase_events("ui_left_{k}".format({"k": playerID}))
-		InputMap.erase_action("ui_left_{k}".format({"k": playerID}))
-		
-		InputMap.action_erase_events("ui_right_{k}".format({"k": playerID}))
-		InputMap.erase_action("ui_right_{k}".format({"k": playerID}))
+		if (InputMap.has_action("ui_jump_{k}".format({"k": playerID}))):
+			InputMap.action_erase_events("ui_jump_{k}".format({"k": playerID}))
+			InputMap.erase_action("ui_jump_{k}".format({"k": playerID}))
+			
+			InputMap.action_erase_events("ui_left_{k}".format({"k": playerID}))
+			InputMap.erase_action("ui_left_{k}".format({"k": playerID}))
+			
+			InputMap.action_erase_events("ui_right_{k}".format({"k": playerID}))
+			InputMap.erase_action("ui_right_{k}".format({"k": playerID}))
 	
 	func set_bindings(playerID: int) -> void:
 		assert(_lock)
@@ -221,14 +222,13 @@ class Players:
 		var character_scene = preload("res://scenes/characters/Character.tscn")
 		var characters: Array = []
 		for k in range(len(_players)):
+			set_bindings(k)
+			
 			var character = character_scene.instance()
 			character.ui_jump = "ui_jump_{k}".format({"k": k})
 			character.ui_left = "ui_left_{k}".format({"k": k})
 			character.ui_right = "ui_right_{k}".format({"k": k})
 			characters.append(character)
-			
-			print(_players[k].controller.debug())
-			set_bindings(k)
 		
 		return characters
 	
