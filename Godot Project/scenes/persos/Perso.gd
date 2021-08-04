@@ -18,6 +18,7 @@ var blocked_on
 export var jump_speed = 300
 var walking
 var jump_count
+export var air_speed = 100
 
 func _land(plateforme):
 	var y0 = plateforme.position.y - plateforme.get_node("CollisionShape2D").shape.extents.y
@@ -96,6 +97,7 @@ func _physics_process(delta):
 	last_pos = position
 	var force = Vector2()
 	var vel_walk = Vector2()
+	var vel_air = Vector2()
 	if not on_ground:
 		force.y += gravity
 	var direction_new = 0
@@ -104,6 +106,7 @@ func _physics_process(delta):
 		vel_walk.x += walk_speed
 		if not on_ground:
 			force.x += air_acc
+			vel_air.x += air_speed
 		else:
 			walking = true
 	if Input.is_action_pressed("ui_left"):
@@ -111,6 +114,7 @@ func _physics_process(delta):
 		direction_new = -1
 		if not on_ground:
 			force.x -= air_acc
+			vel_air.x -= air_speed
 		else:
 			walking = true
 	if on_ground:
@@ -131,6 +135,7 @@ func _physics_process(delta):
 		else:
 			sprite.play("idle")
 	else:
+		_move(vel_air*delta)
 		sprite.play("air")
 	_move(velocity*delta)
 	# TEMP
