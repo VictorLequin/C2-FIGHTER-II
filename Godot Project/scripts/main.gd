@@ -126,14 +126,15 @@ class Players:
 	
 	func clear_bindings(playerID: int) -> void:
 		assert(_lock)
-		InputMap.action_erase_events("ui_jump_{k}".format({"k": playerID}))
-		InputMap.erase_action("ui_jump_{k}".format({"k": playerID}))
-		
-		InputMap.action_erase_events("ui_left_{k}".format({"k": playerID}))
-		InputMap.erase_action("ui_left_{k}".format({"k": playerID}))
-		
-		InputMap.action_erase_events("ui_right_{k}".format({"k": playerID}))
-		InputMap.erase_action("ui_right_{k}".format({"k": playerID}))
+		if (InputMap.has_action("ui_jump_{k}".format({"k": playerID}))):
+			InputMap.action_erase_events("ui_jump_{k}".format({"k": playerID}))
+			InputMap.erase_action("ui_jump_{k}".format({"k": playerID}))
+			
+			InputMap.action_erase_events("ui_left_{k}".format({"k": playerID}))
+			InputMap.erase_action("ui_left_{k}".format({"k": playerID}))
+			
+			InputMap.action_erase_events("ui_right_{k}".format({"k": playerID}))
+			InputMap.erase_action("ui_right_{k}".format({"k": playerID}))
 	
 	func set_bindings(playerID: int) -> void:
 		assert(_lock)
@@ -154,7 +155,7 @@ class Players:
 				event_right = InputEventKey.new()
 				event_right.scancode = KEY_D
 			
-			if controller.id == KeyboardLayouts.arrows:
+			elif controller.id == KeyboardLayouts.arrows:
 				event_jump = InputEventKey.new()
 				event_jump.scancode = KEY_KP_ENTER
 				
@@ -164,7 +165,21 @@ class Players:
 				event_right = InputEventKey.new()
 				event_right.scancode = KEY_RIGHT
 			
-			else: print(controller.id)
+			else: assert(false)
+		
+		if controller.type == ControllerType.joypad:
+			event_jump = InputEventJoypadButton.new()
+			event_jump.button_index = JOY_BUTTON_0
+			
+			event_left = InputEventJoypadMotion.new()
+			event_left.device = controller.id
+			event_left.axis = JOY_AXIS_0 # horizontal axis
+			event_left.axis_value =  -1.0 # left
+			
+			event_right = InputEventJoypadMotion.new()
+			event_right.device = controller.id
+			event_right.axis = JOY_AXIS_0 # horizontal axis
+			event_right.axis_value =  1.0 # right
 		
 		InputMap.add_action("ui_jump_{k}".format({"k": playerID}))
 		InputMap.action_add_event("ui_jump_{k}".format({"k": playerID}), event_jump)
@@ -207,14 +222,13 @@ class Players:
 		var character_scene = preload("res://scenes/characters/Character.tscn")
 		var characters: Array = []
 		for k in range(len(_players)):
+			set_bindings(k)
+			
 			var character = character_scene.instance()
 			character.ui_jump = "ui_jump_{k}".format({"k": k})
 			character.ui_left = "ui_left_{k}".format({"k": k})
 			character.ui_right = "ui_right_{k}".format({"k": k})
 			characters.append(character)
-			
-			print(_players[k].controller.debug())
-			set_bindings(k)
 		
 		return characters
 	
