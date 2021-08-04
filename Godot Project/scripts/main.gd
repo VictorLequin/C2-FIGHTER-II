@@ -1,5 +1,7 @@
 extends Node
 
+signal players_changed
+
 # Debug print
 var DEBUG = true
 
@@ -81,11 +83,15 @@ class ControllerRef:
 		return ""
 
 class APlayer:
-	var controller: ControllerRef
+	var controller: ControllerRef = ControllerRef.new()
 
 class Players:
 	var _players: Array
 	var _lock: bool = false
+	var main
+	
+	func _init(m):
+		main = m
 	
 	func lock() -> void:
 		_lock = true
@@ -105,27 +111,38 @@ class Players:
 	func create_player(playerID: int) -> void:
 		while !exists(playerID):
 			_players.append(APlayer.new())
+			set_bindings(playerID)
 	
 	# WARNING: invalidates all greater playerIDs
 	func remove_player(playerID: int) -> void:
-		assert(!_lock)
 		_players.remove(playerID)
+		set_all_bindings()
+		main.emit_signal("players_changed")
 	
 	func take_control(playerID: int, controller: ControllerRef) -> void:
 		_players[playerID].controller = controller
-		if _lock: set_bindings(playerID)
+		set_bindings(playerID)
+		main.emit_signal("players_changed")
 	
 	func free_control(controller: ControllerRef) -> int:
 		for playerID in range(len(_players)):
 			if (_players[playerID].controller.active) && (_players[playerID].controller.type == controller.type) && (_players[playerID].controller.id == controller.id):
 				_players[playerID].controller.active = false
-				if _lock: clear_bindings(playerID)
+				clear_bindings(playerID)
+				main.emit_signal("players_changed")
 				return playerID
 		assert(false)
 		return -1
 	
+	func clear_all_bindings():
+		for k in range(len(_players)):
+			clear_bindings(k)
+	
+	func set_all_bindings():
+		for k in range(len(_players)):
+			set_bindings(k)
+	
 	func clear_bindings(playerID: int) -> void:
-		assert(_lock)
 		if InputMap.has_action("ui_jump_{k}".format({"k": playerID})) and (len(InputMap.get_action_list("ui_jump_{k}".format({"k": playerID}))) > 0):
 			InputMap.action_erase_events("ui_jump_{k}".format({"k": playerID}))
 			InputMap.action_erase_events("ui_action_{k}".format({"k": playerID}))
@@ -133,9 +150,11 @@ class Players:
 			InputMap.action_erase_events("ui_right_{k}".format({"k": playerID}))
 	
 	func set_bindings(playerID: int) -> void:
-		assert(_lock)
 		clear_bindings(playerID)
 		var controller = _players[playerID].controller
+		
+		if !controller.active: return
+		
 		var event_jump
 		var event_action
 		var event_left
@@ -255,7 +274,7 @@ class Players:
 
 var keyboard: Keyboard = Keyboard.new()
 var joypads: Joypads = Joypads.new()
-var players: Players = Players.new()
+var players: Players = Players.new(self)
 
 
 func joypad_plug(device: int) -> void:
@@ -379,6 +398,11 @@ func load_menu(path):
 	gamestate = GameState.menu
 	players.unlock()
 	change_child(load(path).instance(), true)
+
+func load_character_select():
+	gamestate = GameState.character_select
+	load_menu("res://scenes/menus/CharacterSelect/CharacterSelect.tscn")
+	connect("players_changed", child, "recreate_boxes")
 
 func load_stage(path):
 	gamestate = GameState.stage

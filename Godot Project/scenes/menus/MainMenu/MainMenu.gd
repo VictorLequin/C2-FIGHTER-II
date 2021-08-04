@@ -9,7 +9,8 @@ func _ready():
 
 
 func _on_Jouer_pressed():
-	get_node("/root/Node").load_menu("res://scenes/menus/CharacterSelect/CharacterSelect.tscn")
+	#get_node("/root/Node").load_menu("res://scenes/menus/CharacterSelect/CharacterSelect.tscn")
+	get_node("/root/Node").load_character_select()
 
 
 func _on_Parametres_pressed():
