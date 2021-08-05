@@ -279,7 +279,7 @@ class Players:
 			set_bindings(k)
 			
 			var character
-			if randi() % 2 == 0:
+			if randi() % 2 == 1:
 				character = champion_scene.instance()
 			else:
 				character = young_champion_scene.instance()

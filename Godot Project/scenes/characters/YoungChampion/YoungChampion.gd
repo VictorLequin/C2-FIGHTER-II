@@ -14,6 +14,24 @@ func _ready():
 	air_acc = 200
 	jump_speed = 450
 	air_speed = 170
+	attacks = {
+		"neutral": {
+			"knockback": Vector2(400, 200),
+			"cancelable": true,
+			"locking": true
+		},
+		"side": {
+			"knockback": Vector2(600, 200),
+			"cancelable": false,
+			"locking": true
+		},
+		"up": {
+			"knockback": Vector2(0, 300),
+			"cancelable": true,
+			"locking": false
+		}
+	}
+	mass = 0.9
 
 func update_dmgBox(delta):
 	if hitting:

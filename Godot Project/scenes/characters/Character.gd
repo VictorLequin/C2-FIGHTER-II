@@ -13,6 +13,7 @@ export var jump_speed = 350
 var jump_count
 export var air_speed = 100
 export var gravity = 1500
+export var mass = 1.6
 export var offsets = {
 	"idle": Vector2(-2.336, -0.65),
 	"air": Vector2(-0.434, -0.65),
@@ -83,7 +84,7 @@ func _ready():
 	atk = ""
 	atk_time = 0
 	unsnapped = false
-	players_hit = []
+	players_hit = [ui_jump]
 	sprite.connect("animation_finished", self, "animation_finished_handler")
 	$DamageArea.connect("body_entered", self, "enemy_hit")
 
@@ -91,8 +92,8 @@ func enemy_hit(enemy):
 	if enemy.has_method("enemy_hit"): # Player object detection
 		if not players_hit.has(enemy.ui_jump):
 			players_hit.append(enemy.ui_jump)
-			enemy.velocity.x += attacks[atk].knockback.x*direction
-			enemy.velocity.y -= attacks[atk].knockback.y
+			enemy.velocity.x += attacks[atk].knockback.x*direction/enemy.mass
+			enemy.velocity.y -= attacks[atk].knockback.y/enemy.mass
 			enemy.unsnapped = true
 
 func end_hit():
