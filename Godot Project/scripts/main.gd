@@ -270,12 +270,17 @@ class Players:
 		print("Active players: {t}".format({"t": t}))
 		
 	func get_characters():
-		var character_scene = preload("res://scenes/characters/Character.tscn")
+		var champion_scene = preload("res://scenes/characters/Champion/Champion.tscn")
+		var young_champion_scene = preload("res://scenes/characters/YoungChampion/YoungChampion.tscn")
 		var characters: Array = []
 		for k in range(len(_players)):
 			set_bindings(k)
 			
-			var character = character_scene.instance()
+			var character
+			if randi() % 2 == 0:
+				character = champion_scene.instance()
+			else:
+				character = young_champion_scene.instance()
 			character.ui_jump = "ui_jump_{k}".format({"k": k})
 			character.ui_action = "ui_action_{k}".format({"k": k})
 			character.ui_left = "ui_left_{k}".format({"k": k})

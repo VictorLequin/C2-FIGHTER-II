@@ -5,11 +5,11 @@ var on_ground
 var sprite
 var velocity
 export var walk_speed = 200
-export var air_acc = 200
+export var air_acc = 100
 export var ground_frott_quad = 0.3
 export var ground_frott_stat = 1
 var direction
-export var jump_speed = 400
+export var jump_speed = 350
 var jump_count
 export var air_speed = 100
 export var gravity = 1500
@@ -22,10 +22,22 @@ export var offsets = {
 	"side": Vector2(28.702, -3.643),
 	"up": Vector2(0.621, -25.622)
 }
-export var knockbacks = {
-	"neutral": Vector2(600, 300),
-	"side": Vector2(900, 300),
-	"up": Vector2(0, 500)
+export var attacks = {
+	"neutral": {
+		"knockback": Vector2(600, 300),
+		"cancelable": true,
+		"locking": true # peut-on tourner pdt l'attaque ?
+	},
+	"side": {
+		"knockback": Vector2(900, 300),
+		"cancelable": false,
+		"locking": true
+	},
+	"up": {
+		"knockback": Vector2(0, 500),
+		"cancelable": true,
+		"locking": false
+	}
 }
 var jumping
 var hitting
@@ -77,8 +89,8 @@ func enemy_hit(enemy):
 	if enemy.has_method("enemy_hit"): # Player object detection
 		if ui_jump != enemy.ui_jump:
 			var s = sign(enemy.position.x - position.x)
-			enemy.velocity.x += knockbacks[atk].x*s
-			enemy.velocity.y -= knockbacks[atk].y
+			enemy.velocity.x += attacks[atk].knockback.x*s
+			enemy.velocity.y -= attacks[atk].knockback.y
 			enemy.unsnapped = true
 
 func end_hit():
@@ -91,14 +103,23 @@ func end_hit():
 
 func _input(event):
 	if event.is_action_pressed(ui_jump) and (on_ground or jump_count > 0):
-		velocity.y = -jump_speed
-		if not on_ground:
-			jump_count -= 1
-		jumping = true
-		end_hit()
-		play("jump")
+		var allowed_to_jump = not hitting
+		if hitting:
+			if attacks[atk].cancelable:
+				allowed_to_jump = true
+		if allowed_to_jump:
+			velocity.y = -jump_speed
+			if not on_ground:
+				jump_count -= 1
+			jumping = true
+			end_hit()
+			play("jump")
 	if event.is_action_pressed(ui_action):
-		if not hitting:
+		var allowed_to_hit = not hitting
+		if hitting:
+			if attacks[atk].cancelable:
+				allowed_to_hit = true
+		if allowed_to_hit:
 			hitting = true
 			if holding_up:
 				play("up")
@@ -185,14 +206,14 @@ func _physics_process(delta):
 		vel_walk.x += walk_speed
 		vel_air.x += air_speed
 		if not on_ground:
-			force.x += air_acc
+			force.x += air_acc/max(1, velocity.length()/200)
 	if Input.is_action_pressed(ui_left):
 		siding = true
 		vel_walk.x -= walk_speed
 		direction_new = -1
 		vel_air.x -= air_speed
 		if not on_ground:
-			force.x -= air_acc
+			force.x -= air_acc/max(1, velocity.length()/200)
 	if on_ground:
 		force.x -= ground_frott_quad*velocity.x*abs(velocity.x)
 		if velocity.x != 0:
@@ -202,8 +223,13 @@ func _physics_process(delta):
 	if on_ground and velocity.x * prev_velx < 0:
 		velocity.x = 0
 	if direction * direction_new == -1:
-		direction = direction_new
-		sprite.scale.x = 3*direction
+		if not hitting:
+			direction = direction_new
+			sprite.scale.x = 3*direction
+		else:
+			if not attacks[atk].locking:
+				direction = direction_new
+				sprite.scale.x = 3*direction
 	var vel_add = Vector2()
 	if not hitting:
 		if on_ground:
