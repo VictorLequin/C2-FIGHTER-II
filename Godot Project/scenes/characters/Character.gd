@@ -19,7 +19,13 @@ export var offsets = {
 	"walk": Vector2(-1.489, -0.65),
 	"jump": Vector2(-1.435, -1.595),
 	"neutral": Vector2(2.254, -3.725),
-	"side": Vector2(28.702, -3.643)
+	"side": Vector2(28.702, -3.643),
+	"up": Vector2(0.621, -25.622)
+}
+export var knockbacks = {
+	"neutral": Vector2(600, 300),
+	"side": Vector2(900, 300),
+	"up": Vector2(0, 500)
 }
 var jumping
 var hitting
@@ -29,6 +35,7 @@ var dmgBox
 var atk_time
 var atk
 var holding_up
+var unsnapped
 
 var ui_jump: String = ""
 var ui_up: String = ""
@@ -62,13 +69,17 @@ func _ready():
 	playing = ""
 	atk = ""
 	atk_time = 0
+	unsnapped = false
 	sprite.connect("animation_finished", self, "animation_finished_handler")
 	$DamageArea.connect("body_entered", self, "enemy_hit")
 
 func enemy_hit(enemy):
 	if enemy.has_method("enemy_hit"): # Player object detection
 		if ui_jump != enemy.ui_jump:
-			enemy.position.y -= 250
+			var s = sign(enemy.position.x - position.x)
+			enemy.velocity.x += knockbacks[atk].x*s
+			enemy.velocity.y -= knockbacks[atk].y
+			enemy.unsnapped = true
 
 func end_hit():
 	hitting = false
@@ -87,18 +98,20 @@ func _input(event):
 		end_hit()
 		play("jump")
 	if event.is_action_pressed(ui_action):
-		hitting = true
-		if holding_up:
-			atk = "up"
-		else:
-			if not siding:
-				play("neutral")
-				atk = "neutral"
+		if not hitting:
+			hitting = true
+			if holding_up:
+				play("up")
+				atk = "up"
 			else:
-				play("side")
-				atk = "side"
-		dmgBox.set_deferred("disabled", false)
-		atk_time = 0
+				if not siding:
+					play("neutral")
+					atk = "neutral"
+				else:
+					play("side")
+					atk = "side"
+			dmgBox.set_deferred("disabled", false)
+			atk_time = 0
 	if event.is_action_pressed(ui_up):
 		holding_up = true
 	if event.is_action_released(ui_up):
@@ -110,27 +123,46 @@ func cst_interpol(step_t, time):
 		res = 1
 	return res
 
+func cst_cst_interpol(step1_t, step2_t, time):
+	var res = 0
+	if time >= step1_t and time < step2_t:
+		res = 1
+	return res
+
 func cst_lin_interpol(step_t, step, total, time):
 	var res = 0
 	if time >= step_t:
 		res = step + (1 - step)*(time-step_t)/(total-step_t)
 	return res
 
+func cst_sqrt_interpol(step_t, step, total, time):
+	var res = 0
+	if time >= step_t:
+		res = step + (1 - step)*sqrt((time-step_t)/(total-step_t))
+	return res
+
 func update_dmgBox(delta):
 	if hitting:
 		atk_time += delta
 		if atk == "side":
-			var f = cst_lin_interpol(0.2, 1/2, 0.8, atk_time)*direction
-			dmgBox.position.x = 61.714*f
+			var f = cst_sqrt_interpol(0.2, 1/2, 0.7, atk_time)
+			dmgBox.position.x = 61.714*f*direction
 			dmgBox.position.y = -52.384
 			dmgBox.shape.extents.x = 54.39*f
 			dmgBox.shape.extents.y = 10.347*f
 		if atk == "neutral":
-			var f = cst_interpol(2.0/13.0, atk_time)*direction
-			dmgBox.position.x = 48*f
+			var f = cst_interpol(3.0/13.0, atk_time)
+			dmgBox.position.x = 48*f*direction
 			dmgBox.position.y = -64*f
 			dmgBox.shape.extents.x = 33.936*f
 			dmgBox.shape.extents.y = 71.656*f
+		if atk == "up":
+			var f = cst_cst_interpol(2.0/15.0, 4.5/15.0, atk_time)
+			dmgBox.position.x = 9.27*f*direction
+			dmgBox.position.y = -119.19*f
+			dmgBox.shape.extents.x = 46.445*f
+			dmgBox.shape.extents.y = 37.715*f
+			
 
 func _physics_process(delta):
 	update_dmgBox(delta)
@@ -189,9 +221,11 @@ func _physics_process(delta):
 				play("air")
 			else:
 				play("idle")
-	var snap = Vector2(0, 5)
-	if jumping:
+	var snap = Vector2(0, 1)
+	if jumping or unsnapped:
 		snap = Vector2.ZERO
+	if not on_ground:
+		unsnapped = false
 	velocity = move_and_slide_with_snap((velocity + last_vel)/2.0 + vel_add, snap, Vector2(0, -1))
 	if abs(velocity.x) >= abs(vel_add.x):
 		velocity.x -= vel_add.x
