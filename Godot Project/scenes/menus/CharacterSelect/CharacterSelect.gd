@@ -16,7 +16,10 @@ func recreate_boxes():
 		grid.remove_child(box)
 		box.queue_free()
 	
-	grid.columns = ceil(sqrt(main.players.count()+1))
+	if main.players.count() < 9:
+		grid.columns = [1,2,3,2,3,3,4,4,3][main.players.count()]
+	else:
+		grid.columns = 4
 	
 	for k in range(main.players.count()):
 		var box = select_box_scene.instance()
