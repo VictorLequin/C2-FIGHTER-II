@@ -145,6 +145,7 @@ class Players:
 	func clear_bindings(playerID: int) -> void:
 		if InputMap.has_action("ui_jump_{k}".format({"k": playerID})) and (len(InputMap.get_action_list("ui_jump_{k}".format({"k": playerID}))) > 0):
 			InputMap.action_erase_events("ui_jump_{k}".format({"k": playerID}))
+			InputMap.action_erase_events("ui_up_{k}".format({"k": playerID}))
 			InputMap.action_erase_events("ui_action_{k}".format({"k": playerID}))
 			InputMap.action_erase_events("ui_left_{k}".format({"k": playerID}))
 			InputMap.action_erase_events("ui_right_{k}".format({"k": playerID}))
@@ -159,6 +160,7 @@ class Players:
 		var event_action
 		var event_left
 		var event_right
+		var event_up
 		
 		if controller.type == ControllerType.keyboard:
 			if controller.id == KeyboardLayouts.wasd:
@@ -173,6 +175,9 @@ class Players:
 				
 				event_right = InputEventKey.new()
 				event_right.scancode = KEY_D
+				
+				event_up = InputEventKey.new()
+				event_up.scancode = KEY_W
 			
 			elif controller.id == KeyboardLayouts.arrows:
 				event_jump = InputEventKey.new()
@@ -186,6 +191,9 @@ class Players:
 				
 				event_right = InputEventKey.new()
 				event_right.scancode = KEY_RIGHT
+				
+				event_up = InputEventKey.new()
+				event_up.scancode = KEY_UP
 			
 			else: assert(false)
 		
@@ -207,6 +215,11 @@ class Players:
 			event_right.device = controller.id
 			event_right.axis = JOY_AXIS_0 # horizontal axis
 			event_right.axis_value =  1.0 # right
+			
+			event_up = InputEventJoypadMotion.new()
+			event_up.device = controller.id
+			event_up.axis = JOY_AXIS_1
+			event_up.axis_value = -1.0
 		
 		if !InputMap.has_action("ui_jump_{k}".format({"k": playerID})):
 			InputMap.add_action("ui_jump_{k}".format({"k": playerID}))
@@ -223,6 +236,10 @@ class Players:
 		if !InputMap.has_action("ui_right_{k}".format({"k": playerID})):
 			InputMap.add_action("ui_right_{k}".format({"k": playerID}))
 		InputMap.action_add_event("ui_right_{k}".format({"k": playerID}), event_right)
+		
+		if !InputMap.has_action("ui_up_{k}".format({"k": playerID})):
+			InputMap.add_action("ui_up_{k}".format({"k": playerID}))
+		InputMap.action_add_event("ui_up_{k}".format({"k": playerID}), event_up)
 	
 	func get_free_player() -> int:
 		var playerID=0
@@ -263,6 +280,7 @@ class Players:
 			character.ui_action = "ui_action_{k}".format({"k": k})
 			character.ui_left = "ui_left_{k}".format({"k": k})
 			character.ui_right = "ui_right_{k}".format({"k": k})
+			character.ui_up = "ui_up_{k}".format({"k": k})
 			characters.append(character)
 		
 		return characters

@@ -28,8 +28,10 @@ var playing
 var dmgBox
 var atk_time
 var atk
+var holding_up
 
 var ui_jump: String = ""
+var ui_up: String = ""
 var ui_action: String = ""
 var ui_right: String = ""
 var ui_left: String = ""
@@ -56,6 +58,7 @@ func _ready():
 	jumping = false
 	hitting = false
 	siding = false
+	holding_up = true
 	playing = ""
 	atk = ""
 	atk_time = 0
@@ -85,14 +88,21 @@ func _input(event):
 		play("jump")
 	if event.is_action_pressed(ui_action):
 		hitting = true
-		if not siding:
-			play("neutral")
-			atk = "neutral"
+		if holding_up:
+			atk = "up"
 		else:
-			play("side")
-			atk = "side"
+			if not siding:
+				play("neutral")
+				atk = "neutral"
+			else:
+				play("side")
+				atk = "side"
 		dmgBox.set_deferred("disabled", false)
 		atk_time = 0
+	if event.is_action_pressed(ui_up):
+		holding_up = true
+	if event.is_action_released(ui_up):
+		holding_up = false
 
 func cst_interpol(step_t, time):
 	var res = 0

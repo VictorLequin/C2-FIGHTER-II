@@ -47,20 +47,20 @@ animations = [ {
 "name": "air",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 8 ), ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ) ],
+"frames": [ ExtResource( 13 ), ExtResource( 15 ), ExtResource( 16 ) ],
 "loop": true,
-"name": "walk",
-"speed": 5.0
+"name": "jump",
+"speed": 8.0
 }, {
 "frames": [ ExtResource( 17 ), ExtResource( 21 ), ExtResource( 22 ), ExtResource( 18 ), ExtResource( 20 ), ExtResource( 19 ) ],
 "loop": true,
 "name": "neutral",
 "speed": 13.0
 }, {
-"frames": [ ExtResource( 13 ), ExtResource( 15 ), ExtResource( 16 ) ],
+"frames": [ ExtResource( 8 ), ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ) ],
 "loop": true,
-"name": "jump",
-"speed": 8.0
+"name": "walk",
+"speed": 5.0
 } ]
 
 [sub_resource type="CapsuleShape2D" id=2]
