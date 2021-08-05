@@ -52,7 +52,7 @@ animations = [ {
 "frames": [ ExtResource( 21 ), ExtResource( 11 ), ExtResource( 13 ), ExtResource( 20 ) ],
 "loop": true,
 "name": "air",
-"speed": 5.0
+"speed": 7.0
 }, {
 "frames": [ ExtResource( 23 ), ExtResource( 24 ) ],
 "loop": false,

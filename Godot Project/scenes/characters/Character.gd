@@ -48,6 +48,7 @@ var atk_time
 var atk
 var holding_up
 var unsnapped
+var players_hit
 
 var ui_jump: String = ""
 var ui_up: String = ""
@@ -82,14 +83,15 @@ func _ready():
 	atk = ""
 	atk_time = 0
 	unsnapped = false
+	players_hit = []
 	sprite.connect("animation_finished", self, "animation_finished_handler")
 	$DamageArea.connect("body_entered", self, "enemy_hit")
 
 func enemy_hit(enemy):
 	if enemy.has_method("enemy_hit"): # Player object detection
-		if ui_jump != enemy.ui_jump:
-			var s = sign(enemy.position.x - position.x)
-			enemy.velocity.x += attacks[atk].knockback.x*s
+		if not players_hit.has(enemy.ui_jump):
+			players_hit.append(enemy.ui_jump)
+			enemy.velocity.x += attacks[atk].knockback.x*direction
 			enemy.velocity.y -= attacks[atk].knockback.y
 			enemy.unsnapped = true
 
@@ -100,6 +102,7 @@ func end_hit():
 	dmgBox.position.x = 0
 	dmgBox.shape.extents.x = 0
 	dmgBox.shape.extents.y = 0
+	players_hit = [ui_jump]
 
 func _input(event):
 	if event.is_action_pressed(ui_jump) and (on_ground or jump_count > 0):
@@ -183,7 +186,6 @@ func update_dmgBox(delta):
 			dmgBox.position.y = -119.19*f
 			dmgBox.shape.extents.x = 46.445*f
 			dmgBox.shape.extents.y = 37.715*f
-			
 
 func _physics_process(delta):
 	update_dmgBox(delta)

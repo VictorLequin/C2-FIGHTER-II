@@ -273,6 +273,8 @@ class Players:
 		var champion_scene = preload("res://scenes/characters/Champion/Champion.tscn")
 		var young_champion_scene = preload("res://scenes/characters/YoungChampion/YoungChampion.tscn")
 		var characters: Array = []
+		if len(_players) > 20:
+			print("Too many players! Expect collision problems.")
 		for k in range(len(_players)):
 			set_bindings(k)
 			
@@ -286,6 +288,10 @@ class Players:
 			character.ui_left = "ui_left_{k}".format({"k": k})
 			character.ui_right = "ui_right_{k}".format({"k": k})
 			character.ui_up = "ui_up_{k}".format({"k": k})
+			character.set_collision_layer_bit(0, false)
+			character.set_collision_mask_bit(0, false)
+			character.set_collision_layer_bit(k, true)
+			character.set_collision_mask_bit(k, true)
 			characters.append(character)
 		
 		return characters
