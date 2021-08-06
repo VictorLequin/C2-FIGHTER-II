@@ -8,7 +8,10 @@ func _ready():
 		"jump": Vector2(-2.445, -1.703),
 		"neutral": Vector2(21.605, -7.719),
 		"side": Vector2(14.528, -2.762),
-		"up": Vector2(2.552, -20.704)
+		"up": Vector2(2.552, -20.704),
+		"spe_neutral": Vector2(0.524, 4.331),
+		"spe_side": Vector2(22.493, -1.742),
+		"spe_up": Vector2(2.577, -30.621)
 	}
 	walk_speed = 350
 	air_acc = 200
@@ -27,6 +30,18 @@ func _ready():
 		},
 		"up": {
 			"knockback": Vector2(0, 300),
+			"cancelable": true,
+			"locking": false
+		},
+		"spe_neutral": {
+			"cancelable": false,
+			"locking": true
+		},
+		"spe_side": {
+			"cancelable": false,
+			"locking": true
+		},
+		"spe_up": {
 			"cancelable": true,
 			"locking": false
 		}

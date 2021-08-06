@@ -21,7 +21,10 @@ export var offsets = {
 	"jump": Vector2(-1.435, -1.595),
 	"neutral": Vector2(2.254, -3.725),
 	"side": Vector2(28.702, -3.643),
-	"up": Vector2(0.621, -25.622)
+	"up": Vector2(0.621, -25.622),
+	"spe_neutral": Vector2(-0.44, -2.713),
+	"spe_side": Vector2(25.579, -3.76),
+	"spe_up": Vector2(-0.499, 14.328)
 }
 export var attacks = {
 	"neutral": {
@@ -38,6 +41,18 @@ export var attacks = {
 		"knockback": Vector2(0, 500),
 		"cancelable": true,
 		"locking": false
+	},
+	"spe_neutral": {
+		"cancelable": false,
+		"locking": true
+	},
+	"spe_side": {
+		"cancelable": false,
+		"locking": true
+	},
+	"spe_up": {
+		"cancelable": true,
+		"locking": false
 	}
 }
 var jumping
@@ -50,23 +65,22 @@ var atk
 var holding_up
 var unsnapped
 var players_hit
+var end_anim
 
 var ui_jump: String = ""
 var ui_up: String = ""
 var ui_action: String = ""
 var ui_right: String = ""
 var ui_left: String = ""
+var ui_spe: String = ""
 
 func play(anim):
-	if not playing == anim:
-		playing = anim
-		sprite.play(anim)
-		sprite.offset = offsets[anim]
+	playing = anim
+	sprite.play(anim)
+	sprite.offset = offsets[anim]
 
 func animation_finished_handler():
-	playing = ""
-	jumping = false
-	end_hit()
+	end_anim = true
 
 func _ready():
 	screen_size = get_viewport_rect().size
@@ -79,7 +93,8 @@ func _ready():
 	jumping = false
 	hitting = false
 	siding = false
-	holding_up = true
+	holding_up = false
+	end_anim = false
 	playing = ""
 	atk = ""
 	atk_time = 0
@@ -105,6 +120,15 @@ func end_hit():
 	dmgBox.shape.extents.y = 0
 	players_hit = [ui_jump]
 
+func spe_up():
+	pass
+
+func spe_neutral():
+	pass
+
+func spe_side():
+	pass
+
 func _input(event):
 	if event.is_action_pressed(ui_jump) and (on_ground or jump_count > 0):
 		var allowed_to_jump = not hitting
@@ -119,28 +143,52 @@ func _input(event):
 			end_hit()
 			play("jump")
 	if event.is_action_pressed(ui_action):
+		var wanted_atk
+		if holding_up:
+			wanted_atk = "up"
+		else:
+			if not siding:
+				wanted_atk = "neutral"
+			else:
+				wanted_atk = "side"
 		var allowed_to_hit = not hitting
-		if hitting:
+		if hitting and wanted_atk != atk:
 			if attacks[atk].cancelable:
 				allowed_to_hit = true
 		if allowed_to_hit:
 			hitting = true
-			if holding_up:
-				play("up")
-				atk = "up"
-			else:
-				if not siding:
-					play("neutral")
-					atk = "neutral"
-				else:
-					play("side")
-					atk = "side"
+			play(wanted_atk)
+			atk = wanted_atk
 			dmgBox.set_deferred("disabled", false)
 			atk_time = 0
 	if event.is_action_pressed(ui_up):
 		holding_up = true
 	if event.is_action_released(ui_up):
 		holding_up = false
+	if event.is_action_pressed(ui_spe):
+		var wanted_atk
+		if holding_up:
+			wanted_atk = "spe_up"
+		else:
+			if not siding:
+				wanted_atk = "spe_neutral"
+			else:
+				wanted_atk = "spe_side"
+		var allowed_to_hit = not hitting
+		if hitting and wanted_atk != atk:
+			if attacks[atk].cancelable:
+				allowed_to_hit = true
+		if allowed_to_hit:
+			hitting = true
+			atk = wanted_atk
+			play(wanted_atk)
+			if holding_up:
+				spe_up()
+			else:
+				if not siding:
+					spe_neutral()
+				else:
+					spe_side()
 
 func cst_interpol(step_t, time):
 	var res = 0
@@ -189,6 +237,11 @@ func update_dmgBox(delta):
 			dmgBox.shape.extents.y = 37.715*f
 
 func _physics_process(delta):
+	if end_anim:
+		end_anim = false
+		playing = ""
+		jumping = false
+		end_hit()
 	update_dmgBox(delta)
 	if not on_ground and is_on_floor():
 		jump_count = 1

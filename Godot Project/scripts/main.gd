@@ -149,6 +149,7 @@ class Players:
 			InputMap.action_erase_events("ui_action_{k}".format({"k": playerID}))
 			InputMap.action_erase_events("ui_left_{k}".format({"k": playerID}))
 			InputMap.action_erase_events("ui_right_{k}".format({"k": playerID}))
+			InputMap.action_erase_events("ui_spe_{k}".format({"k": playerID}))
 	
 	func set_bindings(playerID: int) -> void:
 		clear_bindings(playerID)
@@ -161,6 +162,7 @@ class Players:
 		var event_left
 		var event_right
 		var event_up
+		var event_spe
 		
 		if controller.type == ControllerType.keyboard:
 			if controller.id == KeyboardLayouts.wasd:
@@ -178,6 +180,9 @@ class Players:
 				
 				event_up = InputEventKey.new()
 				event_up.scancode = KEY_W
+				
+				event_spe = InputEventKey.new()
+				event_spe.scancode = KEY_CONTROL
 			
 			elif controller.id == KeyboardLayouts.arrows:
 				event_jump = InputEventKey.new()
@@ -194,6 +199,9 @@ class Players:
 				
 				event_up = InputEventKey.new()
 				event_up.scancode = KEY_UP
+				
+				event_spe = InputEventKey.new()
+				event_spe.scancode = KEY_KP_0
 			
 			else: assert(false)
 		
@@ -220,6 +228,10 @@ class Players:
 			event_up.device = controller.id
 			event_up.axis = JOY_AXIS_1
 			event_up.axis_value = -1.0
+			
+			event_spe = InputEventJoypadButton.new()
+			event_spe.device = controller.id
+			event_spe.button_index = JOY_BUTTON_3
 		
 		if !InputMap.has_action("ui_jump_{k}".format({"k": playerID})):
 			InputMap.add_action("ui_jump_{k}".format({"k": playerID}))
@@ -240,6 +252,10 @@ class Players:
 		if !InputMap.has_action("ui_up_{k}".format({"k": playerID})):
 			InputMap.add_action("ui_up_{k}".format({"k": playerID}))
 		InputMap.action_add_event("ui_up_{k}".format({"k": playerID}), event_up)
+		
+		if !InputMap.has_action("ui_spe_{k}".format({"k": playerID})):
+			InputMap.add_action("ui_spe_{k}".format({"k": playerID}))
+		InputMap.action_add_event("ui_spe_{k}".format({"k": playerID}), event_spe)
 	
 	func get_free_player() -> int:
 		var playerID=0
@@ -272,6 +288,7 @@ class Players:
 	func get_characters():
 		var champion_scene = preload("res://scenes/characters/Champion/Champion.tscn")
 		var young_champion_scene = preload("res://scenes/characters/YoungChampion/YoungChampion.tscn")
+		var damage_area_shape = preload("res://scenes/characters/DamageAreaShape.tres")
 		var characters: Array = []
 		if len(_players) > 20:
 			print("Too many players! Expect collision problems.")
@@ -288,10 +305,12 @@ class Players:
 			character.ui_left = "ui_left_{k}".format({"k": k})
 			character.ui_right = "ui_right_{k}".format({"k": k})
 			character.ui_up = "ui_up_{k}".format({"k": k})
+			character.ui_spe = "ui_spe_{k}".format({"k": k})
 			character.set_collision_layer_bit(0, false)
 			character.set_collision_mask_bit(0, false)
 			character.set_collision_layer_bit(k, true)
 			character.set_collision_mask_bit(k, true)
+			character.get_node("DamageArea/CollisionShape2D").set_shape(damage_area_shape.duplicate())
 			characters.append(character)
 		
 		return characters
