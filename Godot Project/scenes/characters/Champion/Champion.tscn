@@ -67,18 +67,8 @@
 [ext_resource path="res://ressources/persos/Champion/atkspedown/intro5.png" type="Texture" id=65]
 [ext_resource path="res://ressources/persos/Champion/atkspedown/intro6.png" type="Texture" id=66]
 
-[sub_resource type="SpriteFrames" id=2]
+[sub_resource type="SpriteFrames" id=1]
 animations = [ {
-"frames": [ ExtResource( 63 ), ExtResource( 64 ), ExtResource( 61 ), ExtResource( 62 ), ExtResource( 65 ), ExtResource( 66 ) ],
-"loop": false,
-"name": "spe_down",
-"speed": 10.0
-}, {
-"frames": [ ExtResource( 11 ), ExtResource( 3 ), ExtResource( 12 ) ],
-"loop": true,
-"name": "spe_down_idle",
-"speed": 3.0
-}, {
 "frames": [ ExtResource( 31 ), ExtResource( 47 ), ExtResource( 33 ), ExtResource( 22 ), ExtResource( 59 ), ExtResource( 37 ), ExtResource( 48 ) ],
 "loop": false,
 "name": "up",
@@ -94,25 +84,25 @@ animations = [ {
 "name": "side",
 "speed": 10.0
 }, {
-"frames": [ ExtResource( 17 ), ExtResource( 18 ), ExtResource( 5 ), ExtResource( 4 ) ],
+"frames": [ ExtResource( 63 ), ExtResource( 64 ), ExtResource( 61 ), ExtResource( 62 ), ExtResource( 65 ), ExtResource( 66 ) ],
+"loop": false,
+"name": "spe_down",
+"speed": 10.0
+}, {
+"frames": [ ExtResource( 11 ), ExtResource( 3 ), ExtResource( 12 ) ],
 "loop": true,
-"name": "air",
-"speed": 5.0
+"name": "spe_down_idle",
+"speed": 3.0
 }, {
 "frames": [ ExtResource( 6 ), ExtResource( 20 ), ExtResource( 44 ) ],
 "loop": false,
 "name": "jump",
 "speed": 8.0
 }, {
-"frames": [ ExtResource( 16 ), ExtResource( 9 ), ExtResource( 14 ), ExtResource( 15 ) ],
-"loop": true,
-"name": "walk",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 28 ), ExtResource( 24 ), ExtResource( 60 ), ExtResource( 19 ), ExtResource( 57 ), ExtResource( 45 ) ],
+"frames": [ ExtResource( 34 ), ExtResource( 39 ), ExtResource( 32 ), ExtResource( 23 ), ExtResource( 40 ), ExtResource( 58 ), ExtResource( 41 ) ],
 "loop": false,
-"name": "neutral",
-"speed": 13.0
+"name": "spe_side",
+"speed": 8.0
 }, {
 "frames": [ ExtResource( 30 ), ExtResource( 54 ), ExtResource( 25 ), ExtResource( 55 ), ExtResource( 52 ) ],
 "loop": false,
@@ -124,13 +114,23 @@ animations = [ {
 "name": "spe_up",
 "speed": 10.0
 }, {
-"frames": [ ExtResource( 34 ), ExtResource( 39 ), ExtResource( 32 ), ExtResource( 23 ), ExtResource( 40 ), ExtResource( 58 ), ExtResource( 41 ) ],
+"frames": [ ExtResource( 17 ), ExtResource( 18 ), ExtResource( 5 ), ExtResource( 4 ) ],
+"loop": true,
+"name": "air",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 28 ), ExtResource( 24 ), ExtResource( 60 ), ExtResource( 19 ), ExtResource( 57 ), ExtResource( 45 ) ],
 "loop": false,
-"name": "spe_side",
-"speed": 8.0
+"name": "neutral",
+"speed": 13.0
+}, {
+"frames": [ ExtResource( 16 ), ExtResource( 9 ), ExtResource( 14 ), ExtResource( 15 ) ],
+"loop": true,
+"name": "walk",
+"speed": 5.0
 } ]
 
-[sub_resource type="CapsuleShape2D" id=1]
+[sub_resource type="CapsuleShape2D" id=2]
 radius = 20.0
 height = 62.6851
 
@@ -138,13 +138,14 @@ height = 62.6851
 extents = Vector2( 4.45091, 36.5392 )
 
 [node name="Champion" instance=ExtResource( 1 )]
+position = Vector2( 0, 0.187286 )
 script = ExtResource( 2 )
 
 [node name="AnimatedSprite" parent="." index="0"]
-frames = SubResource( 2 )
+frames = SubResource( 1 )
 
 [node name="CollisionShape2D" parent="." index="1"]
-shape = SubResource( 1 )
+shape = SubResource( 2 )
 
 [node name="ShieldArea" type="Area2D" parent="." index="3"]
 collision_layer = 8

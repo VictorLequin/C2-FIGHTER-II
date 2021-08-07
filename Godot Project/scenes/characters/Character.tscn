@@ -66,11 +66,6 @@
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
-"frames": [ ExtResource( 60 ), ExtResource( 61 ), ExtResource( 58 ), ExtResource( 59 ), ExtResource( 62 ), ExtResource( 63 ) ],
-"loop": false,
-"name": "spe_down",
-"speed": 10.0
-}, {
 "frames": [ ExtResource( 34 ), ExtResource( 32 ), ExtResource( 36 ), ExtResource( 37 ), ExtResource( 30 ), ExtResource( 31 ), ExtResource( 38 ) ],
 "loop": false,
 "name": "up",
@@ -86,25 +81,20 @@ animations = [ {
 "name": "side",
 "speed": 10.0
 }, {
-"frames": [ ExtResource( 9 ), ExtResource( 11 ), ExtResource( 10 ), ExtResource( 12 ) ],
-"loop": true,
-"name": "air",
-"speed": 5.0
+"frames": [ ExtResource( 60 ), ExtResource( 61 ), ExtResource( 58 ), ExtResource( 59 ), ExtResource( 62 ), ExtResource( 63 ) ],
+"loop": false,
+"name": "spe_down",
+"speed": 10.0
 }, {
 "frames": [ ExtResource( 13 ), ExtResource( 15 ), ExtResource( 16 ) ],
 "loop": false,
 "name": "jump",
 "speed": 8.0
 }, {
-"frames": [ ExtResource( 8 ), ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ) ],
-"loop": true,
-"name": "walk",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 17 ), ExtResource( 21 ), ExtResource( 22 ), ExtResource( 18 ), ExtResource( 20 ), ExtResource( 19 ) ],
+"frames": [ ExtResource( 42 ), ExtResource( 43 ), ExtResource( 46 ), ExtResource( 44 ), ExtResource( 45 ), ExtResource( 47 ), ExtResource( 48 ) ],
 "loop": false,
-"name": "neutral",
-"speed": 13.0
+"name": "spe_side",
+"speed": 8.0
 }, {
 "frames": [ ExtResource( 33 ), ExtResource( 35 ), ExtResource( 41 ), ExtResource( 40 ), ExtResource( 39 ) ],
 "loop": false,
@@ -116,10 +106,20 @@ animations = [ {
 "name": "spe_up",
 "speed": 10.0
 }, {
-"frames": [ ExtResource( 42 ), ExtResource( 43 ), ExtResource( 46 ), ExtResource( 44 ), ExtResource( 45 ), ExtResource( 47 ), ExtResource( 48 ) ],
+"frames": [ ExtResource( 9 ), ExtResource( 11 ), ExtResource( 10 ), ExtResource( 12 ) ],
+"loop": true,
+"name": "air",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 17 ), ExtResource( 21 ), ExtResource( 22 ), ExtResource( 18 ), ExtResource( 20 ), ExtResource( 19 ) ],
 "loop": false,
-"name": "spe_side",
-"speed": 8.0
+"name": "neutral",
+"speed": 13.0
+}, {
+"frames": [ ExtResource( 8 ), ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ) ],
+"loop": true,
+"name": "walk",
+"speed": 5.0
 } ]
 
 [sub_resource type="CapsuleShape2D" id=2]
