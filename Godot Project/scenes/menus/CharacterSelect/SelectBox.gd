@@ -7,14 +7,15 @@ var ui_right: String
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	reload()
 
 func _input(event):
 	if event.is_action_pressed(ui_left):
-		pass
+		player.prevCharacter()
+		reload()
 	if event.is_action_pressed(ui_right):
-		pass
+		player.nextCharacter()
+		reload()
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+func reload():
+	get_node("Control/TextureRect").texture = load(player.picPath())
