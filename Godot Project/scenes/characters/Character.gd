@@ -86,6 +86,7 @@ func _ready():
 	screen_size = get_viewport_rect().size
 	on_ground = false
 	sprite = $AnimatedSprite
+	get_node("DamageArea/CollisionShape2D").set_shape(preload("res://scenes/characters/DamageAreaShape.tres").duplicate())
 	dmgBox = $DamageArea/CollisionShape2D
 	velocity = Vector2()
 	direction = 1
