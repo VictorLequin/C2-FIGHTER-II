@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://scenes/menus/CharacterSelect/SelectBox.gd" type="Script" id=1]
+[ext_resource path="res://ressources/persos/Champion/idle/idle1.png" type="Texture" id=2]
+[ext_resource path="res://ressources/menus/Right.png" type="Texture" id=3]
+[ext_resource path="res://ressources/menus/Left.png" type="Texture" id=4]
 
 [node name="Container" type="AspectRatioContainer"]
 anchor_right = 1.0
@@ -21,9 +24,31 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TextureRect" type="TextureRect" parent="Control"]
+[node name="CharacterPic" type="TextureRect" parent="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+texture = ExtResource( 2 )
+expand = true
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Left" type="TextureRect" parent="Control"]
+anchor_right = 0.2
+anchor_bottom = 1.0
+texture = ExtResource( 4 )
+expand = true
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Right" type="TextureRect" parent="Control"]
+anchor_left = 0.8
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource( 3 )
 expand = true
 stretch_mode = 6
 __meta__ = {

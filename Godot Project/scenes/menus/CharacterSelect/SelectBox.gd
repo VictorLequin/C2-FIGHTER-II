@@ -18,4 +18,4 @@ func _input(event):
 		reload()
 
 func reload():
-	get_node("Control/TextureRect").texture = load(player.picPath())
+	get_node("Control/CharacterPic").texture = load(player.picPath())
