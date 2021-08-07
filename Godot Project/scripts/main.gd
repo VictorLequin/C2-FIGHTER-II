@@ -313,8 +313,7 @@ class Players:
 		
 	func get_characters():
 		var characters: Array = []
-		if len(_players) > 20:
-			print("Too many players! Expect collision problems.")
+		
 		for k in range(len(_players)):
 			set_bindings(k)
 			
