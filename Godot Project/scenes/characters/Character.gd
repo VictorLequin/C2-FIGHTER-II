@@ -26,23 +26,27 @@ var offsets = {
 	"spe_neutral": Vector2(-0.44, -2.713),
 	"spe_side": Vector2(25.579, -3.76),
 	"spe_up": Vector2(-0.499, 14.328),
-	"spe_down": Vector2(2.58, 0.226)
+	"spe_down": Vector2(2.58, 0.226),
+	"stun": Vector2(0.528, -1.744)
 }
 var attacks = {
 	"neutral": {
 		"knockback": Vector2(600, 300),
 		"cancelable": true,
-		"locking": true # peut-on tourner pdt l'attaque ?
+		"locking": true, # peut-on tourner pdt l'attaque ?
+		"percent": 6
 	},
 	"side": {
 		"knockback": Vector2(900, 300),
 		"cancelable": false,
-		"locking": true
+		"locking": true,
+		"percent": 6
 	},
 	"up": {
 		"knockback": Vector2(0, 500),
 		"cancelable": true,
-		"locking": false
+		"locking": false,
+		"percent": 6
 	},
 	"spe_neutral": {
 		"cancelable": false,
@@ -51,12 +55,14 @@ var attacks = {
 	"spe_side": {
 		"knockback": Vector2(700, 200),
 		"cancelable": false,
-		"locking": true
+		"locking": true,
+		"percent": 9
 	},
 	"spe_up": {
 		"knockback": Vector2(0, 300),
 		"cancelable": true,
-		"locking": false
+		"locking": false,
+		"percent": 9
 	},
 	"spe_down": {
 		"cancelable": true,
@@ -75,10 +81,13 @@ var holding_down
 var unsnapped
 var players_hit
 var end_anim
-var pending_kbs
+var pending_hits
 var id
 var blocked
 var atk_id
+var percent
+var stunned
+var red_highlight_time
 
 var ui_jump: String = ""
 var ui_up: String = ""
@@ -110,13 +119,16 @@ func _ready():
 	holding_up = false
 	holding_down = false
 	end_anim = false
+	stunned = 0
 	playing = ""
 	atk = ""
 	atk_time = 0
 	atk_id = 0
 	unsnapped = false
-	pending_kbs = []
+	pending_hits = []
 	blocked = []
+	percent = 0
+	red_highlight_time = 0
 	sprite.connect("animation_finished", self, "animation_finished_handler")
 	$DamageArea.connect("body_entered", self, "enemy_hit")
 
@@ -135,9 +147,10 @@ func enemy_hit(enemy):
 	if enemy.has_method("enemy_hit"): # Player object detection
 		if not players_hit.has(enemy.id):
 			players_hit.append(enemy.id)
-			enemy.pending_kbs.append({
-				"knockback": Vector2(attacks[atk].knockback.x*direction/enemy.mass, -attacks[atk].knockback.y/enemy.mass),
-				"dealer": str(id) + "." + str(atk_id)
+			enemy.pending_hits.append({
+				"knockback": Vector2(attacks[atk].knockback.x*direction/enemy.mass*(1 + enemy.percent/100), -attacks[atk].knockback.y/enemy.mass*(1 + enemy.percent/100)),
+				"dealer": str(id) + "." + str(atk_id),
+				"percent": attacks[atk].percent/enemy.mass
 			})
 
 func end_hit():
@@ -192,7 +205,7 @@ func _input(event):
 		if hitting:
 			if attacks[atk].cancelable:
 				allowed_to_jump = true
-		if allowed_to_jump:
+		if allowed_to_jump and stunned <= 0:
 			velocity.y = -jump_speed
 			if not on_ground:
 				jump_count -= 1
@@ -212,7 +225,7 @@ func _input(event):
 		if hitting and wanted_atk != atk:
 			if attacks[atk].cancelable:
 				allowed_to_hit = true
-		if allowed_to_hit:
+		if allowed_to_hit and stunned <= 0:
 			atk_id += 1
 			if hitting:
 				end_hit()
@@ -244,7 +257,7 @@ func _input(event):
 		if hitting and wanted_atk != atk:
 			if attacks[atk].cancelable:
 				allowed_to_hit = true
-		if allowed_to_hit:
+		if allowed_to_hit and stunned <= 0:
 			atk_id += 1
 			if hitting:
 				end_hit()
@@ -321,15 +334,43 @@ func end_anim_fn():
 	jumping = false
 	end_hit()
 
+func get_atk_percent():
+	if atk == "":
+		return 0
+	else:
+		return attacks[atk].percent
+
+func stun(time):
+	end_hit()
+	play("stun")
+	stunned = time
+	pass
+
 func _physics_process(delta):
+	if stunned > 0:
+		stunned -= delta
+	if red_highlight_time > 0:
+		red_highlight_time -= delta
+		if red_highlight_time <= 0:
+			sprite.set_modulate(Color(1,1,1,1))
 	if end_anim:
 		end_anim = false
 		end_anim_fn()
 	update_dmgBox(delta)
-	for boost in pending_kbs:
-		if not boost.dealer in blocked:
-			velocity += boost.knockback
-	pending_kbs = []
+	var is_hit = false
+	for hit in pending_hits:
+		if not hit.dealer in blocked:
+			is_hit = true
+	if is_hit:
+		velocity /= 2
+		sprite.set_modulate(Color(2,1,1,1))
+		red_highlight_time = 0.1
+	for hit in pending_hits:
+		if not hit.dealer in blocked:
+			velocity += hit.knockback
+			percent += hit.percent
+	pending_hits = []
+	$Percent.text = str(int(percent)) + "%"
 	var vel_add = Vector2()
 	var force = Vector2()
 	if hitting:
@@ -388,12 +429,12 @@ func _physics_process(delta):
 			if not attacks[atk].locking:
 				direction = direction_new
 				sprite.scale.x = 3*direction
-	if not hitting:
+	if not hitting and stunned <= 0:
 		if on_ground:
 			vel_add += vel_walk
 		else:
 			vel_add += vel_air
-	if not jumping and not hitting:
+	if not jumping and not hitting and stunned <=0:
 		if on_ground:
 			if vel_walk.length() > 0:
 				play("walk")

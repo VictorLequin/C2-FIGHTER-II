@@ -5,6 +5,10 @@ var spe_side_count
 var spe_up_count
 var spe_up_speed = 300
 var shieldBox
+var hitBox
+var percentsBlocked
+var maxPercentsBlocked = 30
+var stunBlockedTime = 2
 
 func update_dmgBox(delta):
 	if hitting:
@@ -55,15 +59,22 @@ func _ready():
 		"spe_side": Vector2(25.579, -3.76),
 		"spe_up": Vector2(-0.499, 14.328),
 		"spe_down": Vector2(2.58, 0.226),
-		"spe_down_idle": Vector2(2.58, 0.226)
+		"spe_down_idle": Vector2(2.58, 0.226),
+		"stun": Vector2(0.528, -1.744)
 	}
+	percentsBlocked = 0
+	hitBox = $CollisionShape2D
 	shieldBox = $ShieldArea/CollisionShape2D
-	$ShieldArea.connect("body_entered", self, "block")
+	$ShieldArea.connect("area_entered", self, "block")
 
-func block(body):
-	print("h")
-	if body.get_parent().has_method("enemy_hit"):
-		blocked.append(str(body.get_parent().id) + "." + str(body.get_parent().atk_id))
+func block(area):
+	var areaP = area.get_parent()
+	if areaP.has_method("enemy_hit"):
+		blocked.append(str(areaP.id) + "." + str(areaP.atk_id))
+		percentsBlocked += areaP.get_atk_percent()
+		if percentsBlocked >= maxPercentsBlocked:
+			end_hit()
+			stun(stunBlockedTime)
 
 func land():
 	spe_side_count = 1
@@ -101,8 +112,15 @@ func spe_up_start():
 	else:
 		end_hit()
 
+func spe_down_start():
+	hitBox.position.y = -46.016
+	hitBox.scale.y = 0.89
+
 func end_hit():
+	hitBox.position.y = -50
+	hitBox.scale.y = 1
 	shieldBox.set_deferred("disabled", true)
+	percentsBlocked = 0
 	blocked = []
 	.end_hit()
 
