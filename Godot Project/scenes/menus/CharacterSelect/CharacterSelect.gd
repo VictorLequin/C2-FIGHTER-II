@@ -7,17 +7,21 @@ extends Control
 
 var select_box_scene = preload("res://scenes/menus/CharacterSelect/SelectBox.tscn")
 
+onready var main = get_node("/root/Node")
+
 func recreate_boxes():
-	print("updated boxes")
-	var main = get_node("/root/Node")
 	var grid = get_child(0)
 	
 	for box in grid.get_children():
 		grid.remove_child(box)
 		box.queue_free()
 	
-	if main.players.count() < 9:
-		grid.columns = [1,2,3,2,3,3,4,4,3][main.players.count()]
+	var item_count = main.players.count()
+	var some_inactive = !main.list_inactive().empty()
+	if some_inactive: item_count += 1
+	
+	if item_count < 10 :
+		grid.columns = [1,1,2,3,2,3,3,4,4,3][item_count]
 	else:
 		grid.columns = 4
 	
@@ -28,7 +32,8 @@ func recreate_boxes():
 		box.ui_right = "ui_right_{k}".format({"k": k})
 		grid.add_child(box)
 	
-	grid.add_child(preload("res://scenes/menus/CharacterSelect/PressAccept.tscn").instance())
+	if some_inactive:
+		grid.add_child(preload("res://scenes/menus/CharacterSelect/PressAccept.tscn").instance())
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

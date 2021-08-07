@@ -438,6 +438,13 @@ func debug_join_all() -> void:
 	for device in Input.get_connected_joypads():
 		joypad_join(device)
 
+func list_inactive() -> Array:
+	var ret = []
+	for layout in [KeyboardLayouts.wasd, KeyboardLayouts.arrows]:
+		if not keyboard.is_active(layout): ret.append(ControllerRef.new(true, ControllerType.keyboard, layout))
+	for device in Input.get_connected_joypads():
+		if not joypads.is_active(device): ret.append(ControllerRef.new(true, ControllerType.joypad, device))
+	return ret
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
