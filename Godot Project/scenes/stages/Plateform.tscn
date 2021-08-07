@@ -8,8 +8,7 @@ extents = Vector2( 191.989, 23.9745 )
 
 [node name="Plateform" type="StaticBody2D"]
 z_index = -1
-collision_layer = 1048575
-collision_mask = 1048575
+collision_mask = 3
 physics_material_override = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]

@@ -93,6 +93,7 @@ func _ready():
 	screen_size = get_viewport_rect().size
 	on_ground = false
 	sprite = $AnimatedSprite
+	get_node("DamageArea/CollisionShape2D").set_shape(preload("res://scenes/characters/DamageAreaShape.tres").duplicate())
 	dmgBox = $DamageArea/CollisionShape2D
 	velocity = Vector2()
 	direction = 1
@@ -109,6 +110,14 @@ func _ready():
 	players_hit = [ui_jump]
 	sprite.connect("animation_finished", self, "animation_finished_handler")
 	$DamageArea.connect("body_entered", self, "enemy_hit")
+
+func setup_id(k):
+	ui_jump = "ui_jump_{k}".format({"k": k})
+	ui_action = "ui_action_{k}".format({"k": k})
+	ui_left = "ui_left_{k}".format({"k": k})
+	ui_right = "ui_right_{k}".format({"k": k})
+	ui_up = "ui_up_{k}".format({"k": k})
+	ui_spe = "ui_spe_{k}".format({"k": k})
 
 func enemy_hit(enemy):
 	if enemy.has_method("enemy_hit"): # Player object detection

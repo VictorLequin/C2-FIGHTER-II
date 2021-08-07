@@ -9,8 +9,6 @@ var characters: Array = []
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	var main = get_node("/root/Node")
-	
 	var spawn = get_viewport_rect().size/2.0 + Vector2.LEFT * (70*(len(characters)-1)/2.0)
 	
 	for character in characters:
