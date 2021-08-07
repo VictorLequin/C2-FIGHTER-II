@@ -147,6 +147,7 @@ frames = SubResource( 2 )
 shape = SubResource( 1 )
 
 [node name="ShieldArea" type="Area2D" parent="." index="3"]
+collision_layer = 8
 collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ShieldArea" index="0"]

@@ -77,6 +77,8 @@ var players_hit
 var end_anim
 var pending_kbs
 var id
+var blocked
+var atk_id
 
 var ui_jump: String = ""
 var ui_up: String = ""
@@ -111,8 +113,10 @@ func _ready():
 	playing = ""
 	atk = ""
 	atk_time = 0
+	atk_id = 0
 	unsnapped = false
 	pending_kbs = []
+	blocked = []
 	sprite.connect("animation_finished", self, "animation_finished_handler")
 	$DamageArea.connect("body_entered", self, "enemy_hit")
 
@@ -133,7 +137,7 @@ func enemy_hit(enemy):
 			players_hit.append(enemy.id)
 			enemy.pending_kbs.append({
 				"knockback": Vector2(attacks[atk].knockback.x*direction/enemy.mass, -attacks[atk].knockback.y/enemy.mass),
-				"dealer": id
+				"dealer": str(id) + "." + str(atk_id)
 			})
 
 func end_hit():
@@ -209,6 +213,7 @@ func _input(event):
 			if attacks[atk].cancelable:
 				allowed_to_hit = true
 		if allowed_to_hit:
+			atk_id += 1
 			if hitting:
 				end_hit()
 			hitting = true
@@ -240,6 +245,7 @@ func _input(event):
 			if attacks[atk].cancelable:
 				allowed_to_hit = true
 		if allowed_to_hit:
+			atk_id += 1
 			if hitting:
 				end_hit()
 			hitting = true
@@ -321,7 +327,8 @@ func _physics_process(delta):
 		end_anim_fn()
 	update_dmgBox(delta)
 	for boost in pending_kbs:
-		velocity += boost.knockback
+		if not boost.dealer in blocked:
+			velocity += boost.knockback
 	pending_kbs = []
 	var vel_add = Vector2()
 	var force = Vector2()
@@ -341,6 +348,8 @@ func _physics_process(delta):
 	if not on_ground and is_on_floor():
 		land()
 	on_ground = is_on_floor()
+	if on_ground and abs(velocity.x) <= 10:
+		velocity.x = 0
 	siding = false
 	var last_vel = velocity
 	var vel_walk = Vector2()

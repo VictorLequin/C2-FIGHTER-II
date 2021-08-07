@@ -58,6 +58,12 @@ func _ready():
 		"spe_down_idle": Vector2(2.58, 0.226)
 	}
 	shieldBox = $ShieldArea/CollisionShape2D
+	$ShieldArea.connect("body_entered", self, "block")
+
+func block(body):
+	print("h")
+	if body.get_parent().has_method("enemy_hit"):
+		blocked.append(str(body.get_parent().id) + "." + str(body.get_parent().atk_id))
 
 func land():
 	spe_side_count = 1
@@ -97,6 +103,7 @@ func spe_up_start():
 
 func end_hit():
 	shieldBox.set_deferred("disabled", true)
+	blocked = []
 	.end_hit()
 
 func end_anim_fn():
