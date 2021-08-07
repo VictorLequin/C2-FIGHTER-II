@@ -117,7 +117,6 @@ height = 64.6226
 
 [node name="YoungChampion" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
-gravity = 1200
 
 [node name="AnimatedSprite" parent="." index="0"]
 frames = SubResource( 1 )

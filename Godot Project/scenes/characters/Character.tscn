@@ -83,7 +83,7 @@ animations = [ {
 "frames": [ ExtResource( 49 ), ExtResource( 52 ), ExtResource( 50 ), ExtResource( 51 ), ExtResource( 53 ), ExtResource( 56 ), ExtResource( 55 ), ExtResource( 54 ) ],
 "loop": false,
 "name": "spe_up",
-"speed": 8.0
+"speed": 10.0
 }, {
 "frames": [ ExtResource( 33 ), ExtResource( 35 ), ExtResource( 41 ), ExtResource( 40 ), ExtResource( 39 ) ],
 "loop": false,
@@ -120,7 +120,6 @@ script = ExtResource( 4 )
 __meta__ = {
 "_edit_group_": true
 }
-gravity = 1800
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 position = Vector2( 0, -49.049 )

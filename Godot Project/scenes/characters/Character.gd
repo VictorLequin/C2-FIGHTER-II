@@ -4,17 +4,18 @@ var screen_size
 var on_ground
 var sprite
 var velocity
-export var walk_speed = 200
-export var air_acc = 100
-export var ground_frott_quad = 0.3
-export var ground_frott_stat = 1
+var walk_speed = 200
+var air_acc = 100
+var ground_frott_quad = 0.3
+var ground_frott_stat = 1
+var air_frott_lin = 0.5
 var direction
-export var jump_speed = 350
+var jump_speed = 350
 var jump_count
-export var air_speed = 100
-export var gravity = 1500
-export var mass = 1.6
-export var offsets = {
+var air_speed = 100
+var gravity = 1500
+var mass = 1.6
+var offsets = {
 	"idle": Vector2(-2.336, -0.65),
 	"air": Vector2(-0.434, -0.65),
 	"walk": Vector2(-1.489, -0.65),
@@ -26,7 +27,7 @@ export var offsets = {
 	"spe_side": Vector2(25.579, -3.76),
 	"spe_up": Vector2(-0.499, 14.328)
 }
-export var attacks = {
+var attacks = {
 	"neutral": {
 		"knockback": Vector2(600, 300),
 		"cancelable": true,
@@ -47,12 +48,18 @@ export var attacks = {
 		"locking": true
 	},
 	"spe_side": {
+		"knockback": Vector2(700, 200),
 		"cancelable": false,
 		"locking": true
 	},
 	"spe_up": {
+		"knockback": Vector2(0, 300),
 		"cancelable": true,
 		"locking": false
+	},
+	"spe_down": {
+		"cancelable": true,
+		"locking": true
 	}
 }
 var jumping
@@ -120,14 +127,23 @@ func end_hit():
 	dmgBox.shape.extents.y = 0
 	players_hit = [ui_jump]
 
-func spe_up():
+func spe_up_start():
 	pass
 
-func spe_neutral():
+func spe_neutral_start():
 	pass
 
-func spe_side():
+func spe_side_start():
 	pass
+
+func spe_up_tick(delta):
+	return Vector2()
+
+func spe_neutral_tick(delta):
+	return Vector2()
+
+func spe_side_tick(delta):
+	return Vector2()
 
 func _input(event):
 	if event.is_action_pressed(ui_jump) and (on_ground or jump_count > 0):
@@ -182,13 +198,14 @@ func _input(event):
 			hitting = true
 			atk = wanted_atk
 			play(wanted_atk)
+			atk_time = 0
 			if holding_up:
-				spe_up()
+				spe_up_start()
 			else:
 				if not siding:
-					spe_neutral()
+					spe_neutral_start()
 				else:
-					spe_side()
+					spe_side_start()
 
 func cst_interpol(step_t, time):
 	var res = 0
@@ -201,6 +218,9 @@ func cst_cst_interpol(step1_t, step2_t, time):
 	if time >= step1_t and time < step2_t:
 		res = 1
 	return res
+
+func lin_interpol(total, time):
+	return time/total
 
 func cst_lin_interpol(step_t, step, total, time):
 	var res = 0
@@ -222,7 +242,7 @@ func update_dmgBox(delta):
 			dmgBox.position.x = 61.714*f*direction
 			dmgBox.position.y = -52.384
 			dmgBox.shape.extents.x = 54.39*f
-			dmgBox.shape.extents.y = 10.347*f
+			dmgBox.shape.extents.y = 10.347
 		if atk == "neutral":
 			var f = cst_interpol(3.0/13.0, atk_time)
 			dmgBox.position.x = 48*f*direction
@@ -236,6 +256,11 @@ func update_dmgBox(delta):
 			dmgBox.shape.extents.x = 46.445*f
 			dmgBox.shape.extents.y = 37.715*f
 
+func land():
+	jump_count = 1
+	jumping = false
+	velocity.x = 0
+
 func _physics_process(delta):
 	if end_anim:
 		end_anim = false
@@ -243,10 +268,16 @@ func _physics_process(delta):
 		jumping = false
 		end_hit()
 	update_dmgBox(delta)
+	var vel_add = Vector2()
+	if hitting:
+		if atk == "spe_neutral":
+			vel_add += spe_neutral_tick(delta)
+		elif atk == "spe_side":
+			vel_add += spe_side_tick(delta)
+		elif atk == "spe_up":
+			vel_add += spe_up_tick(delta)
 	if not on_ground and is_on_floor():
-		jump_count = 1
-		jumping = false
-		velocity.x = 0
+		land()
 	on_ground = is_on_floor()
 	siding = false
 	var last_vel = velocity
@@ -255,6 +286,7 @@ func _physics_process(delta):
 	var vel_air = Vector2()
 	if not on_ground:
 		force.y += gravity
+		force -= air_frott_lin*velocity
 	var direction_new = 0
 	if Input.is_action_pressed(ui_right):
 		siding = true
@@ -286,7 +318,6 @@ func _physics_process(delta):
 			if not attacks[atk].locking:
 				direction = direction_new
 				sprite.scale.x = 3*direction
-	var vel_add = Vector2()
 	if not hitting:
 		if on_ground:
 			vel_add += vel_walk
