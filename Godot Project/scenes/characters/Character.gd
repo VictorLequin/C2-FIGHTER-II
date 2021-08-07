@@ -365,9 +365,5 @@ func _physics_process(delta):
 	if abs(velocity.y) >= abs(vel_add.y):
 		velocity.y -= vel_add.y
 	# TEMP
-	if position.y > screen_size.y:
-		position.y = 0
-	if position.x > screen_size.x + 100:
-		position.x = 0
-	if position.x < -1000:
-		position.x = screen_size.x
+	if position.y > 1000:
+		position = Vector2(0, 0)
