@@ -1,5 +1,6 @@
 extends Camera2D
 
+const initial = 1000
 const margins = 400
 const min_margins = margins / 2
 const cam_offset = 50*Vector2.UP
@@ -17,7 +18,7 @@ func calc_start() -> Vector2:
 		new_start.x = min(new_start.x, character.position.x)
 		new_start.y = min(new_start.y, character.position.y)
 	if ok: return new_start
-	else: return -Vector2.ONE * margins * 10
+	else: return -Vector2.ONE * initial
 
 func calc_end() -> Vector2:
 	var ok = false
@@ -27,7 +28,7 @@ func calc_end() -> Vector2:
 		new_end.x = max(new_end.x, character.position.x)
 		new_end.y = max(new_end.y, character.position.y)
 	if ok: return new_end
-	else: return Vector2.ONE * margins * 10
+	else: return Vector2.ONE * initial
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
