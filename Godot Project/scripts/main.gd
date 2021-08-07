@@ -176,6 +176,7 @@ class Players:
 			InputMap.action_erase_events("ui_left_{k}".format({"k": playerID}))
 			InputMap.action_erase_events("ui_right_{k}".format({"k": playerID}))
 			InputMap.action_erase_events("ui_spe_{k}".format({"k": playerID}))
+			InputMap.action_erase_events("ui_down_{k}".format({"k": playerID}))
 	
 	func set_bindings(playerID: int) -> void:
 		clear_bindings(playerID)
@@ -189,6 +190,7 @@ class Players:
 		var event_right
 		var event_up
 		var event_spe
+		var event_down
 		
 		if controller.type == ControllerType.keyboard:
 			if controller.id == KeyboardLayouts.wasd:
@@ -209,6 +211,9 @@ class Players:
 				
 				event_spe = InputEventKey.new()
 				event_spe.scancode = KEY_CONTROL
+				
+				event_down = InputEventKey.new()
+				event_down.scancode = KEY_S
 			
 			elif controller.id == KeyboardLayouts.arrows:
 				event_jump = InputEventKey.new()
@@ -228,6 +233,9 @@ class Players:
 				
 				event_spe = InputEventKey.new()
 				event_spe.scancode = KEY_KP_0
+				
+				event_down = InputEventKey.new()
+				event_down.scancode = KEY_DOWN
 			
 			else: assert(false)
 		
@@ -258,6 +266,11 @@ class Players:
 			event_spe = InputEventJoypadButton.new()
 			event_spe.device = controller.id
 			event_spe.button_index = JOY_BUTTON_3
+			
+			event_down = InputEventJoypadMotion.new()
+			event_down.device = controller.id
+			event_down.axis = JOY_AXIS_1
+			event_down.axis_value = 1.0
 		
 		if !InputMap.has_action("ui_jump_{k}".format({"k": playerID})):
 			InputMap.add_action("ui_jump_{k}".format({"k": playerID}))
@@ -282,6 +295,10 @@ class Players:
 		if !InputMap.has_action("ui_spe_{k}".format({"k": playerID})):
 			InputMap.add_action("ui_spe_{k}".format({"k": playerID}))
 		InputMap.action_add_event("ui_spe_{k}".format({"k": playerID}), event_spe)
+		
+		if !InputMap.has_action("ui_down_{k}".format({"k": playerID})):
+			InputMap.add_action("ui_down_{k}".format({"k": playerID}))
+		InputMap.action_add_event("ui_down_{k}".format({"k": playerID}), event_down)
 	
 	func get_free_player() -> int:
 		var playerID=0

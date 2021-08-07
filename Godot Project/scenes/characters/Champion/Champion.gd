@@ -4,6 +4,7 @@ var spe_side_speed = 300
 var spe_side_count
 var spe_up_count
 var spe_up_speed = 300
+var shieldBox
 
 func update_dmgBox(delta):
 	if hitting:
@@ -42,6 +43,21 @@ func update_dmgBox(delta):
 func _ready():
 	spe_side_count = 0
 	spe_up_count = 0
+	offsets = {
+		"idle": Vector2(-2.336, -0.65),
+		"air": Vector2(-0.434, -0.65),
+		"walk": Vector2(-1.489, -0.65),
+		"jump": Vector2(-1.435, -1.595),
+		"neutral": Vector2(2.254, -3.725),
+		"side": Vector2(28.702, -3.643),
+		"up": Vector2(0.621, -25.622),
+		"spe_neutral": Vector2(-0.44, -2.713),
+		"spe_side": Vector2(25.579, -3.76),
+		"spe_up": Vector2(-0.499, 14.328),
+		"spe_down": Vector2(2.58, 0.226),
+		"spe_down_idle": Vector2(2.58, 0.226)
+	}
+	shieldBox = $ShieldArea/CollisionShape2D
 
 func land():
 	spe_side_count = 1
@@ -77,4 +93,20 @@ func spe_up_start():
 		spe_up_count -= 1
 		unsnapped = true
 	else:
+		end_hit()
+
+func end_hit():
+	shieldBox.set_deferred("disabled", true)
+	.end_hit()
+
+func end_anim_fn():
+	if atk != "spe_down":
+		.end_anim_fn()
+	else:
+		play("spe_down_idle")
+		shieldBox.position.x = abs(shieldBox.position.x)*direction
+		shieldBox.set_deferred("disabled", false)
+
+func _input(event):
+	if event.is_action_released(ui_down) and atk == "spe_down" and hitting:
 		end_hit()

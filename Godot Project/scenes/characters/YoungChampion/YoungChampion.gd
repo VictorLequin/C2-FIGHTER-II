@@ -11,7 +11,8 @@ func _ready():
 		"up": Vector2(2.552, -20.704),
 		"spe_neutral": Vector2(0.524, 4.331),
 		"spe_side": Vector2(22.493, -1.742),
-		"spe_up": Vector2(2.577, -30.621)
+		"spe_up": Vector2(2.577, -30.621),
+		"spe_down": Vector2(0.514, -1.602)
 	}
 	walk_speed = 350
 	air_acc = 200
@@ -42,6 +43,10 @@ func _ready():
 			"locking": true
 		},
 		"spe_up": {
+			"cancelable": true,
+			"locking": false
+		},
+		"spe_down": {
 			"cancelable": true,
 			"locking": false
 		}

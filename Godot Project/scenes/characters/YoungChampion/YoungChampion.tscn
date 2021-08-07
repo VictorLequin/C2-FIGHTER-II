@@ -1,4 +1,4 @@
-[gd_scene load_steps=60 format=2]
+[gd_scene load_steps=67 format=2]
 
 [ext_resource path="res://scenes/characters/Character.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/characters/YoungChampion/YoungChampion.gd" type="Script" id=2]
@@ -57,9 +57,21 @@
 [ext_resource path="res://ressources/persos/YoungChampion/atkspeup/speup2.png" type="Texture" id=55]
 [ext_resource path="res://ressources/persos/YoungChampion/atkspeup/speup3.png" type="Texture" id=56]
 [ext_resource path="res://ressources/persos/YoungChampion/atkspeup/speup5.png" type="Texture" id=57]
+[ext_resource path="res://ressources/persos/YoungChampion/atkspedown/down6.png" type="Texture" id=58]
+[ext_resource path="res://ressources/persos/YoungChampion/atkspedown/down7.png" type="Texture" id=59]
+[ext_resource path="res://ressources/persos/YoungChampion/atkspedown/down1.png" type="Texture" id=60]
+[ext_resource path="res://ressources/persos/YoungChampion/atkspedown/down2.png" type="Texture" id=61]
+[ext_resource path="res://ressources/persos/YoungChampion/atkspedown/down3.png" type="Texture" id=62]
+[ext_resource path="res://ressources/persos/YoungChampion/atkspedown/down4.png" type="Texture" id=63]
+[ext_resource path="res://ressources/persos/YoungChampion/atkspedown/down5.png" type="Texture" id=64]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
+"frames": [ ExtResource( 60 ), ExtResource( 61 ), ExtResource( 62 ), ExtResource( 63 ), ExtResource( 64 ), ExtResource( 58 ), ExtResource( 59 ) ],
+"loop": false,
+"name": "spe_down",
+"speed": 8.0
+}, {
 "frames": [ ExtResource( 4 ), ExtResource( 8 ), ExtResource( 5 ), ExtResource( 7 ), ExtResource( 6 ) ],
 "loop": false,
 "name": "up",

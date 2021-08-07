@@ -1,14 +1,155 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=70 format=2]
 
 [ext_resource path="res://scenes/characters/Character.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/characters/Champion/Champion.gd" type="Script" id=2]
+[ext_resource path="res://ressources/persos/Champion/atkspedown/down2.png" type="Texture" id=3]
+[ext_resource path="res://ressources/persos/Champion/air/air4.png" type="Texture" id=4]
+[ext_resource path="res://ressources/persos/Champion/air/air3.png" type="Texture" id=5]
+[ext_resource path="res://ressources/persos/Champion/jump/jump1.png" type="Texture" id=6]
+[ext_resource path="res://ressources/persos/Champion/atkside/sid6.png" type="Texture" id=7]
+[ext_resource path="res://ressources/persos/Champion/idle/idle2.png" type="Texture" id=8]
+[ext_resource path="res://ressources/persos/Champion/walk/walk2.png" type="Texture" id=9]
+[ext_resource path="res://ressources/persos/Champion/idle/idle1.png" type="Texture" id=10]
+[ext_resource path="res://ressources/persos/Champion/atkspedown/down1.png" type="Texture" id=11]
+[ext_resource path="res://ressources/persos/Champion/atkspedown/down3.png" type="Texture" id=12]
+[ext_resource path="res://ressources/persos/Champion/idle/idle3.png" type="Texture" id=13]
+[ext_resource path="res://ressources/persos/Champion/walk/walk3.png" type="Texture" id=14]
+[ext_resource path="res://ressources/persos/Champion/walk/walk4.png" type="Texture" id=15]
+[ext_resource path="res://ressources/persos/Champion/walk/walk1.png" type="Texture" id=16]
+[ext_resource path="res://ressources/persos/Champion/air/air1.png" type="Texture" id=17]
+[ext_resource path="res://ressources/persos/Champion/air/air2.png" type="Texture" id=18]
+[ext_resource path="res://ressources/persos/Champion/atkneutral/neu4.png" type="Texture" id=19]
+[ext_resource path="res://ressources/persos/Champion/jump/jump3.png" type="Texture" id=20]
+[ext_resource path="res://ressources/persos/Champion/atkspeup/up6.png" type="Texture" id=21]
+[ext_resource path="res://ressources/persos/Champion/atkup/up8.png" type="Texture" id=22]
+[ext_resource path="res://ressources/persos/Champion/atkspeside/side4.png" type="Texture" id=23]
+[ext_resource path="res://ressources/persos/Champion/atkneutral/neu2.png" type="Texture" id=24]
+[ext_resource path="res://ressources/persos/Champion/atkspeneutral/speneu3.png" type="Texture" id=25]
+[ext_resource path="res://ressources/persos/Champion/atkside/sid8.png" type="Texture" id=26]
+[ext_resource path="res://ressources/persos/Champion/atkside/sid7.png" type="Texture" id=27]
+[ext_resource path="res://ressources/persos/Champion/atkneutral/neu1.png" type="Texture" id=28]
+[ext_resource path="res://ressources/persos/Champion/atkside/sid2.png" type="Texture" id=29]
+[ext_resource path="res://ressources/persos/Champion/atkspeneutral/speneu1.png" type="Texture" id=30]
+[ext_resource path="res://ressources/persos/Champion/atkup/up5.png" type="Texture" id=31]
+[ext_resource path="res://ressources/persos/Champion/atkspeside/side3.png" type="Texture" id=32]
+[ext_resource path="res://ressources/persos/Champion/atkup/up7.png" type="Texture" id=33]
+[ext_resource path="res://ressources/persos/Champion/atkspeside/side1.png" type="Texture" id=34]
+[ext_resource path="res://ressources/persos/Champion/atkspeup/up3.png" type="Texture" id=35]
+[ext_resource path="res://ressources/persos/Champion/atkspeup/up7.png" type="Texture" id=36]
+[ext_resource path="res://ressources/persos/Champion/atkup/up10.png" type="Texture" id=37]
+[ext_resource path="res://ressources/persos/Champion/atkside/sid3.png" type="Texture" id=38]
+[ext_resource path="res://ressources/persos/Champion/atkspeside/side2.png" type="Texture" id=39]
+[ext_resource path="res://ressources/persos/Champion/atkspeside/side5.png" type="Texture" id=40]
+[ext_resource path="res://ressources/persos/Champion/atkspeside/side7.png" type="Texture" id=41]
+[ext_resource path="res://ressources/persos/Champion/atkside/sid4.png" type="Texture" id=42]
+[ext_resource path="res://ressources/persos/Champion/atkspeup/up2.png" type="Texture" id=43]
+[ext_resource path="res://ressources/persos/Champion/jump/jump2.png" type="Texture" id=44]
+[ext_resource path="res://ressources/persos/Champion/atkneutral/neu6.png" type="Texture" id=45]
+[ext_resource path="res://ressources/persos/Champion/atkspeup/up1.png" type="Texture" id=46]
+[ext_resource path="res://ressources/persos/Champion/atkup/up6.png" type="Texture" id=47]
+[ext_resource path="res://ressources/persos/Champion/atkup/up11.png" type="Texture" id=48]
+[ext_resource path="res://ressources/persos/Champion/atkspeup/up5.png" type="Texture" id=49]
+[ext_resource path="res://ressources/persos/Champion/atkspeup/up8.png" type="Texture" id=50]
+[ext_resource path="res://ressources/persos/Champion/atkside/sid1.png" type="Texture" id=51]
+[ext_resource path="res://ressources/persos/Champion/atkspeneutral/speneu5.png" type="Texture" id=52]
+[ext_resource path="res://ressources/persos/Champion/atkspeup/up4.png" type="Texture" id=53]
+[ext_resource path="res://ressources/persos/Champion/atkspeneutral/speneu2.png" type="Texture" id=54]
+[ext_resource path="res://ressources/persos/Champion/atkspeneutral/speneu4.png" type="Texture" id=55]
+[ext_resource path="res://ressources/persos/Champion/atkside/sid5.png" type="Texture" id=56]
+[ext_resource path="res://ressources/persos/Champion/atkneutral/neu5.png" type="Texture" id=57]
+[ext_resource path="res://ressources/persos/Champion/atkspeside/side6.png" type="Texture" id=58]
+[ext_resource path="res://ressources/persos/Champion/atkup/up9.png" type="Texture" id=59]
+[ext_resource path="res://ressources/persos/Champion/atkneutral/neu3.png" type="Texture" id=60]
+[ext_resource path="res://ressources/persos/Champion/atkspedown/intro3.png" type="Texture" id=61]
+[ext_resource path="res://ressources/persos/Champion/atkspedown/intro4.png" type="Texture" id=62]
+[ext_resource path="res://ressources/persos/Champion/atkspedown/intro1.png" type="Texture" id=63]
+[ext_resource path="res://ressources/persos/Champion/atkspedown/intro2.png" type="Texture" id=64]
+[ext_resource path="res://ressources/persos/Champion/atkspedown/intro5.png" type="Texture" id=65]
+[ext_resource path="res://ressources/persos/Champion/atkspedown/intro6.png" type="Texture" id=66]
+
+[sub_resource type="SpriteFrames" id=2]
+animations = [ {
+"frames": [ ExtResource( 63 ), ExtResource( 64 ), ExtResource( 61 ), ExtResource( 62 ), ExtResource( 65 ), ExtResource( 66 ) ],
+"loop": false,
+"name": "spe_down",
+"speed": 10.0
+}, {
+"frames": [ ExtResource( 11 ), ExtResource( 3 ), ExtResource( 12 ) ],
+"loop": true,
+"name": "spe_down_idle",
+"speed": 3.0
+}, {
+"frames": [ ExtResource( 31 ), ExtResource( 47 ), ExtResource( 33 ), ExtResource( 22 ), ExtResource( 59 ), ExtResource( 37 ), ExtResource( 48 ) ],
+"loop": false,
+"name": "up",
+"speed": 15.0
+}, {
+"frames": [ ExtResource( 10 ), ExtResource( 8 ), ExtResource( 13 ) ],
+"loop": true,
+"name": "idle",
+"speed": 3.0
+}, {
+"frames": [ ExtResource( 51 ), ExtResource( 29 ), ExtResource( 38 ), ExtResource( 42 ), ExtResource( 56 ), ExtResource( 7 ), ExtResource( 27 ), ExtResource( 26 ) ],
+"loop": false,
+"name": "side",
+"speed": 10.0
+}, {
+"frames": [ ExtResource( 17 ), ExtResource( 18 ), ExtResource( 5 ), ExtResource( 4 ) ],
+"loop": true,
+"name": "air",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 6 ), ExtResource( 20 ), ExtResource( 44 ) ],
+"loop": false,
+"name": "jump",
+"speed": 8.0
+}, {
+"frames": [ ExtResource( 16 ), ExtResource( 9 ), ExtResource( 14 ), ExtResource( 15 ) ],
+"loop": true,
+"name": "walk",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 28 ), ExtResource( 24 ), ExtResource( 60 ), ExtResource( 19 ), ExtResource( 57 ), ExtResource( 45 ) ],
+"loop": false,
+"name": "neutral",
+"speed": 13.0
+}, {
+"frames": [ ExtResource( 30 ), ExtResource( 54 ), ExtResource( 25 ), ExtResource( 55 ), ExtResource( 52 ) ],
+"loop": false,
+"name": "spe_neutral",
+"speed": 10.0
+}, {
+"frames": [ ExtResource( 46 ), ExtResource( 43 ), ExtResource( 35 ), ExtResource( 53 ), ExtResource( 49 ), ExtResource( 21 ), ExtResource( 36 ), ExtResource( 50 ) ],
+"loop": false,
+"name": "spe_up",
+"speed": 10.0
+}, {
+"frames": [ ExtResource( 34 ), ExtResource( 39 ), ExtResource( 32 ), ExtResource( 23 ), ExtResource( 40 ), ExtResource( 58 ), ExtResource( 41 ) ],
+"loop": false,
+"name": "spe_side",
+"speed": 8.0
+} ]
 
 [sub_resource type="CapsuleShape2D" id=1]
 radius = 20.0
 height = 62.6851
 
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 4.45091, 36.5392 )
+
 [node name="Champion" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 
+[node name="AnimatedSprite" parent="." index="0"]
+frames = SubResource( 2 )
+
 [node name="CollisionShape2D" parent="." index="1"]
 shape = SubResource( 1 )
+
+[node name="ShieldArea" type="Area2D" parent="." index="3"]
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ShieldArea" index="0"]
+position = Vector2( 30.3407, -44.8221 )
+shape = SubResource( 3 )
+disabled = true

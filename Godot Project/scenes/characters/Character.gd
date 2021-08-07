@@ -25,7 +25,8 @@ var offsets = {
 	"up": Vector2(0.621, -25.622),
 	"spe_neutral": Vector2(-0.44, -2.713),
 	"spe_side": Vector2(25.579, -3.76),
-	"spe_up": Vector2(-0.499, 14.328)
+	"spe_up": Vector2(-0.499, 14.328),
+	"spe_down": Vector2(2.58, 0.226)
 }
 var attacks = {
 	"neutral": {
@@ -70,9 +71,12 @@ var dmgBox
 var atk_time
 var atk
 var holding_up
+var holding_down
 var unsnapped
 var players_hit
 var end_anim
+var pending_kbs
+var id
 
 var ui_jump: String = ""
 var ui_up: String = ""
@@ -80,6 +84,7 @@ var ui_action: String = ""
 var ui_right: String = ""
 var ui_left: String = ""
 var ui_spe: String = ""
+var ui_down: String = ""
 
 func play(anim):
 	playing = anim
@@ -101,12 +106,13 @@ func _ready():
 	hitting = false
 	siding = false
 	holding_up = false
+	holding_down = false
 	end_anim = false
 	playing = ""
 	atk = ""
 	atk_time = 0
 	unsnapped = false
-	players_hit = [ui_jump]
+	pending_kbs = []
 	sprite.connect("animation_finished", self, "animation_finished_handler")
 	$DamageArea.connect("body_entered", self, "enemy_hit")
 
@@ -117,23 +123,28 @@ func setup_id(k):
 	ui_right = "ui_right_{k}".format({"k": k})
 	ui_up = "ui_up_{k}".format({"k": k})
 	ui_spe = "ui_spe_{k}".format({"k": k})
+	ui_down = "ui_down_{k}".format({"k": k})
+	id = k
+	players_hit = [id]
 
 func enemy_hit(enemy):
 	if enemy.has_method("enemy_hit"): # Player object detection
-		if not players_hit.has(enemy.ui_jump):
-			players_hit.append(enemy.ui_jump)
-			enemy.velocity.x += attacks[atk].knockback.x*direction/enemy.mass
-			enemy.velocity.y -= attacks[atk].knockback.y/enemy.mass
-			enemy.unsnapped = true
+		if not players_hit.has(enemy.id):
+			players_hit.append(enemy.id)
+			enemy.pending_kbs.append({
+				"knockback": Vector2(attacks[atk].knockback.x*direction/enemy.mass, -attacks[atk].knockback.y/enemy.mass),
+				"dealer": id
+			})
 
 func end_hit():
 	hitting = false
+	atk = ""
 	dmgBox.scale.x = 1
 	dmgBox.scale.y = 1
 	dmgBox.set_deferred("disabled", true)
 	dmgBox.position.y = 0
 	dmgBox.position.x = 0
-	players_hit = [ui_jump]
+	players_hit = [id]
 
 func spe_up_start():
 	pass
@@ -142,6 +153,9 @@ func spe_neutral_start():
 	pass
 
 func spe_side_start():
+	pass
+
+func spe_down_start():
 	pass
 
 func spe_up_vel(delta):
@@ -153,6 +167,9 @@ func spe_neutral_vel(delta):
 func spe_side_vel(delta):
 	return Vector2()
 
+func spe_down_vel(delta):
+	return Vector2()
+
 func spe_up_acc(delta):
 	return Vector2()
 
@@ -160,6 +177,9 @@ func spe_neutral_acc(delta):
 	return Vector2()
 
 func spe_side_acc(delta):
+	return Vector2()
+
+func spe_down_acc(delta):
 	return Vector2()
 
 func _input(event):
@@ -189,6 +209,8 @@ func _input(event):
 			if attacks[atk].cancelable:
 				allowed_to_hit = true
 		if allowed_to_hit:
+			if hitting:
+				end_hit()
 			hitting = true
 			play(wanted_atk)
 			atk = wanted_atk
@@ -198,10 +220,16 @@ func _input(event):
 		holding_up = true
 	if event.is_action_released(ui_up):
 		holding_up = false
+	if event.is_action_pressed(ui_down):
+		holding_down = true
+	if event.is_action_released(ui_down):
+		holding_down = false
 	if event.is_action_pressed(ui_spe):
 		var wanted_atk
 		if holding_up:
 			wanted_atk = "spe_up"
+		elif holding_down:
+			wanted_atk = "spe_down"
 		else:
 			if not siding:
 				wanted_atk = "spe_neutral"
@@ -212,12 +240,16 @@ func _input(event):
 			if attacks[atk].cancelable:
 				allowed_to_hit = true
 		if allowed_to_hit:
+			if hitting:
+				end_hit()
 			hitting = true
 			atk = wanted_atk
 			play(wanted_atk)
 			atk_time = 0
 			if holding_up:
 				spe_up_start()
+			elif holding_down:
+				spe_down_start()
 			else:
 				if not siding:
 					spe_neutral_start()
@@ -278,13 +310,19 @@ func land():
 	jumping = false
 	velocity.x = 0
 
+func end_anim_fn():
+	playing = ""
+	jumping = false
+	end_hit()
+
 func _physics_process(delta):
 	if end_anim:
 		end_anim = false
-		playing = ""
-		jumping = false
-		end_hit()
+		end_anim_fn()
 	update_dmgBox(delta)
+	for boost in pending_kbs:
+		velocity += boost.knockback
+	pending_kbs = []
 	var vel_add = Vector2()
 	var force = Vector2()
 	if hitting:
@@ -297,6 +335,9 @@ func _physics_process(delta):
 		elif atk == "spe_up":
 			vel_add += spe_up_vel(delta)
 			force += spe_up_acc(delta)
+		elif atk == "spe_down":
+			vel_add += spe_down_vel(delta)
+			force += spe_down_acc(delta)
 	if not on_ground and is_on_floor():
 		land()
 	on_ground = is_on_floor()
