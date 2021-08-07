@@ -3,7 +3,7 @@
 [ext_resource path="res://scenes/characters/Character.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/characters/Champion/Champion.gd" type="Script" id=2]
 
-[sub_resource type="CapsuleShape2D" id=2]
+[sub_resource type="CapsuleShape2D" id=1]
 radius = 20.0
 height = 62.6851
 
@@ -11,4 +11,4 @@ height = 62.6851
 script = ExtResource( 2 )
 
 [node name="CollisionShape2D" parent="." index="1"]
-shape = SubResource( 2 )
+shape = SubResource( 1 )

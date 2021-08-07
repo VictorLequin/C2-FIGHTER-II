@@ -12,9 +12,9 @@ var air_frott_lin = 0.5
 var direction
 var jump_speed = 350
 var jump_count
-var air_speed = 100
+var air_speed = 170
 var gravity = 1500
-var mass = 1.6
+var mass = 1.4
 var offsets = {
 	"idle": Vector2(-2.336, -0.65),
 	"air": Vector2(-0.434, -0.65),
@@ -93,7 +93,6 @@ func _ready():
 	screen_size = get_viewport_rect().size
 	on_ground = false
 	sprite = $AnimatedSprite
-	get_node("DamageArea/CollisionShape2D").set_shape(preload("res://scenes/characters/DamageAreaShape.tres").duplicate())
 	dmgBox = $DamageArea/CollisionShape2D
 	velocity = Vector2()
 	direction = 1
@@ -129,11 +128,11 @@ func enemy_hit(enemy):
 
 func end_hit():
 	hitting = false
+	dmgBox.scale.x = 1
+	dmgBox.scale.y = 1
 	dmgBox.set_deferred("disabled", true)
 	dmgBox.position.y = 0
 	dmgBox.position.x = 0
-	dmgBox.shape.extents.x = 0
-	dmgBox.shape.extents.y = 0
 	players_hit = [ui_jump]
 
 func spe_up_start():
@@ -145,13 +144,22 @@ func spe_neutral_start():
 func spe_side_start():
 	pass
 
-func spe_up_tick(delta):
+func spe_up_vel(delta):
 	return Vector2()
 
-func spe_neutral_tick(delta):
+func spe_neutral_vel(delta):
 	return Vector2()
 
-func spe_side_tick(delta):
+func spe_side_vel(delta):
+	return Vector2()
+
+func spe_up_acc(delta):
+	return Vector2()
+
+func spe_neutral_acc(delta):
+	return Vector2()
+
+func spe_side_acc(delta):
 	return Vector2()
 
 func _input(event):
@@ -250,20 +258,20 @@ func update_dmgBox(delta):
 			var f = cst_sqrt_interpol(0.2, 1/2, 0.7, atk_time)
 			dmgBox.position.x = 61.714*f*direction
 			dmgBox.position.y = -52.384
-			dmgBox.shape.extents.x = 54.39*f
-			dmgBox.shape.extents.y = 10.347
+			dmgBox.scale.x = 54.39*f
+			dmgBox.scale.y = 10.347
 		if atk == "neutral":
 			var f = cst_interpol(3.0/13.0, atk_time)
 			dmgBox.position.x = 48*f*direction
 			dmgBox.position.y = -64*f
-			dmgBox.shape.extents.x = 33.936*f
-			dmgBox.shape.extents.y = 71.656*f
+			dmgBox.scale.x = 33.936*f
+			dmgBox.scale.y = 71.656*f
 		if atk == "up":
 			var f = cst_cst_interpol(2.0/15.0, 4.5/15.0, atk_time)
 			dmgBox.position.x = 9.27*f*direction
 			dmgBox.position.y = -119.19*f
-			dmgBox.shape.extents.x = 46.445*f
-			dmgBox.shape.extents.y = 37.715*f
+			dmgBox.scale.x = 46.445*f
+			dmgBox.scale.y = 37.715*f
 
 func land():
 	jump_count = 1
@@ -278,19 +286,22 @@ func _physics_process(delta):
 		end_hit()
 	update_dmgBox(delta)
 	var vel_add = Vector2()
+	var force = Vector2()
 	if hitting:
 		if atk == "spe_neutral":
-			vel_add += spe_neutral_tick(delta)
+			vel_add += spe_neutral_vel(delta)
+			force += spe_neutral_acc(delta)
 		elif atk == "spe_side":
-			vel_add += spe_side_tick(delta)
+			vel_add += spe_side_vel(delta)
+			force += spe_side_acc(delta)
 		elif atk == "spe_up":
-			vel_add += spe_up_tick(delta)
+			vel_add += spe_up_vel(delta)
+			force += spe_up_acc(delta)
 	if not on_ground and is_on_floor():
 		land()
 	on_ground = is_on_floor()
 	siding = false
 	var last_vel = velocity
-	var force = Vector2()
 	var vel_walk = Vector2()
 	var vel_air = Vector2()
 	if not on_ground:
