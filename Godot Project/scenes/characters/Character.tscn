@@ -80,15 +80,15 @@ animations = [ {
 "name": "spe_side",
 "speed": 8.0
 }, {
-"frames": [ ExtResource( 49 ), ExtResource( 52 ), ExtResource( 50 ), ExtResource( 51 ), ExtResource( 53 ), ExtResource( 56 ), ExtResource( 55 ), ExtResource( 54 ) ],
-"loop": false,
-"name": "spe_up",
-"speed": 8.0
-}, {
 "frames": [ ExtResource( 33 ), ExtResource( 35 ), ExtResource( 41 ), ExtResource( 40 ), ExtResource( 39 ) ],
 "loop": false,
 "name": "spe_neutral",
 "speed": 10.0
+}, {
+"frames": [ ExtResource( 49 ), ExtResource( 52 ), ExtResource( 50 ), ExtResource( 51 ), ExtResource( 53 ), ExtResource( 56 ), ExtResource( 55 ), ExtResource( 54 ) ],
+"loop": false,
+"name": "spe_up",
+"speed": 8.0
 }, {
 "frames": [ ExtResource( 9 ), ExtResource( 11 ), ExtResource( 10 ), ExtResource( 12 ) ],
 "loop": true,
@@ -100,15 +100,15 @@ animations = [ {
 "name": "jump",
 "speed": 8.0
 }, {
-"frames": [ ExtResource( 17 ), ExtResource( 21 ), ExtResource( 22 ), ExtResource( 18 ), ExtResource( 20 ), ExtResource( 19 ) ],
-"loop": false,
-"name": "neutral",
-"speed": 13.0
-}, {
 "frames": [ ExtResource( 8 ), ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ) ],
 "loop": true,
 "name": "walk",
 "speed": 5.0
+}, {
+"frames": [ ExtResource( 17 ), ExtResource( 21 ), ExtResource( 22 ), ExtResource( 18 ), ExtResource( 20 ), ExtResource( 19 ) ],
+"loop": false,
+"name": "neutral",
+"speed": 13.0
 } ]
 
 [sub_resource type="CapsuleShape2D" id=2]
@@ -116,6 +116,7 @@ radius = 20.0
 height = 62.685
 
 [node name="Character" type="KinematicBody2D"]
+collision_layer = 2
 script = ExtResource( 4 )
 __meta__ = {
 "_edit_group_": true
