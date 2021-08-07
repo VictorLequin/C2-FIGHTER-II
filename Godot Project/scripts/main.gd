@@ -312,9 +312,6 @@ class Players:
 		print("Active players: {t}".format({"t": t}))
 		
 	func get_characters():
-		var champion_scene = preload("res://scenes/characters/Champion/Champion.tscn")
-		var young_champion_scene = preload("res://scenes/characters/YoungChampion/YoungChampion.tscn")
-		var damage_area_shape = preload("res://scenes/characters/DamageAreaShape.tres")
 		var characters: Array = []
 		if len(_players) > 20:
 			print("Too many players! Expect collision problems.")
@@ -323,18 +320,7 @@ class Players:
 			
 			var character
 			character = _players[k].instance()
-
-			character.ui_jump = "ui_jump_{k}".format({"k": k})
-			character.ui_action = "ui_action_{k}".format({"k": k})
-			character.ui_left = "ui_left_{k}".format({"k": k})
-			character.ui_right = "ui_right_{k}".format({"k": k})
-			character.ui_up = "ui_up_{k}".format({"k": k})
-			character.ui_spe = "ui_spe_{k}".format({"k": k})
-			character.set_collision_layer_bit(0, false)
-			character.set_collision_mask_bit(0, false)
-			character.set_collision_layer_bit(k, true)
-			character.set_collision_mask_bit(k, true)
-			character.get_node("DamageArea/CollisionShape2D").set_shape(damage_area_shape.duplicate())
+			character.setup_id(k)
 			characters.append(character)
 		
 		return characters

@@ -103,6 +103,20 @@ func _ready():
 	sprite.connect("animation_finished", self, "animation_finished_handler")
 	$DamageArea.connect("body_entered", self, "enemy_hit")
 
+func setup_id(k):
+	set_collision_layer_bit(0, false)
+	set_collision_mask_bit(0, false)
+	set_collision_layer_bit(k, true)
+	set_collision_mask_bit(k, true)
+	get_node("DamageArea/CollisionShape2D").set_shape(preload("res://scenes/characters/DamageAreaShape.tres"))
+
+	ui_jump = "ui_jump_{k}".format({"k": k})
+	ui_action = "ui_action_{k}".format({"k": k})
+	ui_left = "ui_left_{k}".format({"k": k})
+	ui_right = "ui_right_{k}".format({"k": k})
+	ui_up = "ui_up_{k}".format({"k": k})
+	ui_spe = "ui_spe_{k}".format({"k": k})
+
 func enemy_hit(enemy):
 	if enemy.has_method("enemy_hit"): # Player object detection
 		if not players_hit.has(enemy.ui_jump):
