@@ -1,4 +1,4 @@
-[gd_scene load_steps=70 format=2]
+[gd_scene load_steps=78 format=2]
 
 [ext_resource path="res://scenes/characters/Character.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/characters/Champion/Champion.gd" type="Script" id=2]
@@ -66,6 +66,14 @@
 [ext_resource path="res://ressources/persos/Champion/atkspedown/intro2.png" type="Texture" id=64]
 [ext_resource path="res://ressources/persos/Champion/atkspedown/intro5.png" type="Texture" id=65]
 [ext_resource path="res://ressources/persos/Champion/atkspedown/intro6.png" type="Texture" id=66]
+[ext_resource path="res://ressources/persos/Champion/stun/stun1.png" type="Texture" id=67]
+[ext_resource path="res://ressources/persos/Champion/stun/stun3.png" type="Texture" id=68]
+[ext_resource path="res://ressources/persos/Champion/stun/stun4.png" type="Texture" id=69]
+[ext_resource path="res://ressources/persos/Champion/stun/stun2.png" type="Texture" id=70]
+[ext_resource path="res://ressources/persos/Champion/stun/stun5.png" type="Texture" id=71]
+[ext_resource path="res://ressources/persos/Champion/stun/stun6.png" type="Texture" id=72]
+[ext_resource path="res://ressources/persos/Champion/stun/stun7.png" type="Texture" id=73]
+[ext_resource path="res://ressources/persos/Champion/stun/stun8.png" type="Texture" id=74]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -83,6 +91,11 @@ animations = [ {
 "loop": false,
 "name": "side",
 "speed": 10.0
+}, {
+"frames": [ ExtResource( 67 ), ExtResource( 70 ), ExtResource( 68 ), ExtResource( 69 ), ExtResource( 71 ), ExtResource( 72 ), ExtResource( 73 ), ExtResource( 74 ) ],
+"loop": true,
+"name": "stun",
+"speed": 5.0
 }, {
 "frames": [ ExtResource( 63 ), ExtResource( 64 ), ExtResource( 61 ), ExtResource( 62 ), ExtResource( 65 ), ExtResource( 66 ) ],
 "loop": false,
