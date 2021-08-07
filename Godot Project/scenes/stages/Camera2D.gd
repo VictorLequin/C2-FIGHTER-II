@@ -1,7 +1,7 @@
 extends Camera2D
 
-const margins = 200
-const min_margins = 50
+const margins = 400
+const min_margins = margins / 2
 const cam_offset = 50*Vector2.UP
 const interp_speed = 2
 
@@ -33,8 +33,6 @@ func calc_end() -> Vector2:
 func _ready():
 	start = calc_start() - Vector2.ONE * margins * 5
 	end = calc_end() + Vector2.ONE * margins * 5
-	
-	print(start, end)
 
 func interpolate(a, b, delta):
 	var t = delta * interp_speed
