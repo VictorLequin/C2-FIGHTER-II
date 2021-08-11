@@ -9,6 +9,13 @@ var hitBox
 var percentsBlocked
 var maxPercentsBlocked = 30
 var stunBlockedTime = 2
+var waveRight
+var waveLeft
+var waveRightBox
+var waveLeftBox
+var timer
+var waveLeftBody
+var waveRightBody
 
 func update_dmgBox(delta):
 	if hitting:
@@ -66,12 +73,23 @@ func _ready():
 	hitBox = $CollisionShape2D
 	shieldBox = $ShieldArea/CollisionShape2D
 	$ShieldArea.connect("area_entered", self, "block")
+	waveLeft = $WaveLeftBody/WaveLeft
+	waveRight = $WaveRightBody/WaveRight
+	waveLeftBox = $WaveLeftBody/CollisionShape2D
+	waveRightBox = $WaveRightBody/CollisionShape2D
+	timer = $WaveDelay
+	timer.connect("timeout", self, "spe_neutral_land")
+	waveLeftBody = $WaveLeftBody
+	waveRightBody = $WaveRightBody
+	waveLeftBody.id = id
+	waveLeftBody.players_hit = [id]
+	waveRightBody.id = id
+	waveRightBody.players_hit = [id]
 
 func block(area):
-	var areaP = area.get_parent()
-	if areaP.has_method("enemy_hit"):
-		blocked.append(str(areaP.id) + "." + str(areaP.atk_id))
-		percentsBlocked += areaP.get_atk_percent()
+	if area.has_method("get_atk_percent"):
+		blocked.append(str(area.id) + "." + str(area.atk_id))
+		percentsBlocked += area.get_atk_percent()
 		if percentsBlocked >= maxPercentsBlocked:
 			end_hit()
 			stun(stunBlockedTime)
@@ -124,6 +142,27 @@ func end_hit():
 	blocked = []
 	.end_hit()
 
+func spe_neutral_land():
+	atk_id += 1
+	waveRightBody.visible = true
+	waveRight.set_frame(0)
+	waveRight.play()
+	waveRightBox.set_deferred("disabled", false)
+	waveRightBody.atk_id = atk_id
+	waveRightBody.moving = true
+	atk_id += 1
+	waveLeftBody.visible = true
+	waveLeft.set_frame(0)
+	waveLeft.play()
+	waveLeftBox.set_deferred("disabled", false)
+	waveLeftBody.atk_id = atk_id
+	waveLeftBody.moving = true
+
+func spe_neutral_start():
+	if on_ground and not waveRightBody.moving:
+		timer.set_wait_time(0.5)
+		timer.start()
+
 func end_anim_fn():
 	if atk != "spe_down":
 		.end_anim_fn()
@@ -135,3 +174,8 @@ func end_anim_fn():
 func _input(event):
 	if event.is_action_released(ui_down) and atk == "spe_down" and hitting:
 		end_hit()
+
+func _physics_process(delta):
+	if waveRightBody.moving:
+		waveRightBody.position += last_position-position
+		waveLeftBody.position += last_position-position

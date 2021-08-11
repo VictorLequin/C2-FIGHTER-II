@@ -50,7 +50,7 @@ var attacks = {
 	},
 	"spe_neutral": {
 		"cancelable": false,
-		"locking": true
+		"locking": false
 	},
 	"spe_side": {
 		"knockback": Vector2(700, 200),
@@ -88,6 +88,8 @@ var atk_id
 var percent
 var stunned
 var red_highlight_time
+var last_position
+var damageArea
 
 var ui_jump: String = ""
 var ui_up: String = ""
@@ -129,8 +131,12 @@ func _ready():
 	blocked = []
 	percent = 0
 	red_highlight_time = 0
+	last_position = position
 	sprite.connect("animation_finished", self, "animation_finished_handler")
-	$DamageArea.connect("body_entered", self, "enemy_hit")
+	damageArea = $DamageArea
+	damageArea.atk_id = 0
+	damageArea.connect("body_entered", self, "enemy_hit")
+	damageArea.id = id
 
 func setup_id(k):
 	ui_jump = "ui_jump_{k}".format({"k": k})
@@ -141,10 +147,10 @@ func setup_id(k):
 	ui_spe = "ui_spe_{k}".format({"k": k})
 	ui_down = "ui_down_{k}".format({"k": k})
 	id = k
-	players_hit = [id]
+	players_hit = [k]
 
 func enemy_hit(enemy):
-	if enemy.has_method("enemy_hit"): # Player object detection
+	if enemy.has_method("get_atk_percent"): # Player object detection
 		if not players_hit.has(enemy.id):
 			players_hit.append(enemy.id)
 			enemy.pending_hits.append({
@@ -227,6 +233,7 @@ func _input(event):
 				allowed_to_hit = true
 		if allowed_to_hit and stunned <= 0:
 			atk_id += 1
+			damageArea.atk_id += 1
 			if hitting:
 				end_hit()
 			hitting = true
@@ -259,6 +266,7 @@ func _input(event):
 				allowed_to_hit = true
 		if allowed_to_hit and stunned <= 0:
 			atk_id += 1
+			damageArea.atk_id += 1
 			if hitting:
 				end_hit()
 			hitting = true
@@ -334,7 +342,7 @@ func end_anim_fn():
 	jumping = false
 	end_hit()
 
-func get_atk_percent():
+func get_atk_percent_parent():
 	if atk == "":
 		return 0
 	else:
@@ -450,6 +458,7 @@ func _physics_process(delta):
 		snap = Vector2.ZERO
 	if not on_ground:
 		unsnapped = false
+	last_position = position
 	velocity = move_and_slide_with_snap((velocity + last_vel)/2.0 + vel_add, snap, Vector2(0, -1))
 	if abs(velocity.x) >= abs(vel_add.x):
 		velocity.x -= vel_add.x

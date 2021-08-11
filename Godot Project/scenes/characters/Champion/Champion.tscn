@@ -1,4 +1,4 @@
-[gd_scene load_steps=78 format=2]
+[gd_scene load_steps=89 format=2]
 
 [ext_resource path="res://scenes/characters/Character.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/characters/Champion/Champion.gd" type="Script" id=2]
@@ -74,6 +74,14 @@
 [ext_resource path="res://ressources/persos/Champion/stun/stun6.png" type="Texture" id=72]
 [ext_resource path="res://ressources/persos/Champion/stun/stun7.png" type="Texture" id=73]
 [ext_resource path="res://ressources/persos/Champion/stun/stun8.png" type="Texture" id=74]
+[ext_resource path="res://ressources/persos/Champion/atkspeneutral/onde5.png" type="Texture" id=75]
+[ext_resource path="res://ressources/persos/Champion/atkspeneutral/onde4.png" type="Texture" id=76]
+[ext_resource path="res://ressources/persos/Champion/atkspeneutral/onde3.png" type="Texture" id=77]
+[ext_resource path="res://ressources/persos/Champion/atkspeneutral/onde1.png" type="Texture" id=78]
+[ext_resource path="res://ressources/persos/Champion/atkspeneutral/onde2.png" type="Texture" id=79]
+[ext_resource path="res://ressources/persos/Champion/atkspeneutral/onde4.5.png" type="Texture" id=80]
+[ext_resource path="res://scenes/characters/Champion/WaveRight.gd" type="Script" id=81]
+[ext_resource path="res://scenes/characters/Champion/WaveLeft.gd" type="Script" id=82]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -150,6 +158,20 @@ height = 62.6851
 [sub_resource type="RectangleShape2D" id=3]
 extents = Vector2( 4.45091, 36.5392 )
 
+[sub_resource type="SpriteFrames" id=4]
+animations = [ {
+"frames": [ ExtResource( 78 ), ExtResource( 79 ), ExtResource( 77 ), ExtResource( 80 ), ExtResource( 76 ), ExtResource( 75 ) ],
+"loop": false,
+"name": "default",
+"speed": 15.0
+} ]
+
+[sub_resource type="RectangleShape2D" id=5]
+extents = Vector2( 54.0823, 16.372 )
+
+[sub_resource type="RectangleShape2D" id=6]
+extents = Vector2( 54.0823, 16.372 )
+
 [node name="Champion" instance=ExtResource( 1 )]
 position = Vector2( 0, 0.187286 )
 script = ExtResource( 2 )
@@ -167,4 +189,43 @@ collision_mask = 4
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ShieldArea" index="0"]
 position = Vector2( 30.3407, -44.8221 )
 shape = SubResource( 3 )
+disabled = true
+
+[node name="WaveDelay" type="Timer" parent="." index="5"]
+wait_time = 0.5
+one_shot = true
+
+[node name="WaveRightBody" type="Area2D" parent="." index="6"]
+visible = false
+position = Vector2( 57, 0 )
+collision_layer = 4
+collision_mask = 10
+script = ExtResource( 81 )
+
+[node name="WaveRight" type="AnimatedSprite" parent="WaveRightBody" index="0"]
+scale = Vector2( 3, 3 )
+frames = SubResource( 4 )
+offset = Vector2( 0, -14.098 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WaveRightBody" index="1"]
+position = Vector2( 0, -16.372 )
+shape = SubResource( 5 )
+disabled = true
+
+[node name="WaveLeftBody" type="Area2D" parent="." index="7"]
+visible = false
+position = Vector2( -57, 0 )
+collision_layer = 4
+collision_mask = 10
+script = ExtResource( 82 )
+
+[node name="WaveLeft" type="AnimatedSprite" parent="WaveLeftBody" index="0"]
+scale = Vector2( 3, 3 )
+frames = SubResource( 4 )
+offset = Vector2( 0, -14.098 )
+flip_h = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WaveLeftBody" index="1"]
+position = Vector2( 0, -16.372 )
+shape = SubResource( 6 )
 disabled = true
