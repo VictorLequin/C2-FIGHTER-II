@@ -143,25 +143,25 @@ func end_hit():
 	.end_hit()
 
 func spe_neutral_land():
-	atk_id += 1
-	waveRightBody.visible = true
-	waveRight.set_frame(0)
-	waveRight.play()
-	waveRightBox.set_deferred("disabled", false)
-	waveRightBody.atk_id = atk_id
-	waveRightBody.moving = true
-	atk_id += 1
-	waveLeftBody.visible = true
-	waveLeft.set_frame(0)
-	waveLeft.play()
-	waveLeftBox.set_deferred("disabled", false)
-	waveLeftBody.atk_id = atk_id
-	waveLeftBody.moving = true
+	if on_ground and not waveRightBody.moving:
+		atk_id += 1
+		waveRightBody.visible = true
+		waveRight.set_frame(0)
+		waveRight.play()
+		waveRightBox.set_deferred("disabled", false)
+		waveRightBody.atk_id = atk_id
+		waveRightBody.moving = true
+		atk_id += 1
+		waveLeftBody.visible = true
+		waveLeft.set_frame(0)
+		waveLeft.play()
+		waveLeftBox.set_deferred("disabled", false)
+		waveLeftBody.atk_id = atk_id
+		waveLeftBody.moving = true
 
 func spe_neutral_start():
-	if on_ground and not waveRightBody.moving:
-		timer.set_wait_time(0.5)
-		timer.start()
+	timer.set_wait_time(0.5)
+	timer.start()
 
 func end_anim_fn():
 	if atk != "spe_down":

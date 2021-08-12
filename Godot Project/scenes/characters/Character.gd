@@ -150,7 +150,7 @@ func setup_id(k):
 	players_hit = [k]
 
 func enemy_hit(enemy):
-	if enemy.has_method("get_atk_percent"): # Player object detection
+	if enemy.has_method("get_atk_percent_parent"): # Player object detection
 		if not players_hit.has(enemy.id):
 			players_hit.append(enemy.id)
 			enemy.pending_hits.append({
