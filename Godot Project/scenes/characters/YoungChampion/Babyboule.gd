@@ -17,10 +17,13 @@ func hit(enemy):
 	if enemy.has_method("enemy_hit"):
 		if not players_hit.has(enemy.id):
 			players_hit.append(enemy.id)
+			var kb = Vector2(parent.direction*500/enemy.mass*(1 + enemy.percent/100)*flip, -100/enemy.mass*(1 + enemy.percent/100))
+			if parent.atk == "spe_neutral":
+				kb = -enemy.velocity
 			enemy.pending_hits.append({
-				"knockback": Vector2(parent.direction*500/enemy.mass*(1 + enemy.percent/100)*flip, -100/enemy.mass*(1 + enemy.percent/100)),
+				"knockback": kb,
 				"dealer": str(id) + "." + str(atk_id),
-				"percent": 10/enemy.mass
+				"percent": get_atk_percent()/enemy.mass
 			})
 
 func get_atk_percent():
@@ -32,3 +35,5 @@ func vanish():
 	position.y = -42.25
 	players_hit = [id]
 	flip = 1
+	scale.x = 1
+	scale.y = 1

@@ -102,9 +102,12 @@ func update_dmgBox(delta):
 				atk_id += 1
 				baby.atk_id = atk_id
 				baby.players_hit = [id]
+		if atk == "spe_neutral":
+			if atk_time >= 5.0/15.0:
+				babyBox.set_deferred("disabled", false)
 
 func end_anim_fn():
-	if atk == "spe_side":
+	if atk == "spe_side" or atk == "spe_neutral":
 		baby.vanish()
 	if atk != "spe_down":
 		.end_anim_fn()
@@ -121,6 +124,12 @@ func spe_side_start():
 	babyBox.set_deferred("disabled", false)
 	baby.atk_id = atk_id
 	baby.position.x = direction*abs(baby.position.x)
+
+func spe_neutral_start():
+	baby.position.x = 0
+	baby.atk_id = atk_id
+	baby.scale.x = 22
+	baby.scale.y = 22
 
 func _input(event):
 	if event.is_action_released(ui_down) and atk == "spe_down" and hitting:
