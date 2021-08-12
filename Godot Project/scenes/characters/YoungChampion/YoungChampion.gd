@@ -1,6 +1,11 @@
 extends "res://scenes/characters/Character.gd"
 
+var healing
+var healingTime
+
 func _ready():
+	healing = false
+	healingTime = 0
 	offsets = {
 		"idle": Vector2(-2.629, -1.602),
 		"air": Vector2(-0.833, -2.744),
@@ -13,12 +18,14 @@ func _ready():
 		"spe_side": Vector2(22.493, -1.742),
 		"spe_up": Vector2(2.577, -30.621),
 		"spe_down": Vector2(0.514, -1.602),
+		"spe_down_idle": Vector2(0.514, -1.602),
 		"stun": Vector2(0.551, 2.318)
 	}
 	walk_speed = 350
 	air_acc = 200
 	jump_speed = 450
 	air_speed = 200
+	air_frott_lin = 0.7
 	attacks = {
 		"neutral": {
 			"knockback": Vector2(400, 200),
@@ -80,3 +87,29 @@ func update_dmgBox(delta):
 			dmgBox.position.y = -120.271*f
 			dmgBox.scale.x = 34.808*f
 			dmgBox.scale.y = 46.063*f
+
+func end_anim_fn():
+	if atk != "spe_down":
+		.end_anim_fn()
+	else:
+		healing = true
+		healingTime = 0
+		play("spe_down_idle")
+
+func end_hit():
+	healing = false
+	.end_hit()
+
+func _input(event):
+	if event.is_action_released(ui_down) and atk == "spe_down" and hitting:
+		end_hit()
+
+func _physics_process(delta):
+	if healing:
+		healingTime += delta
+		var bonus = healingTime
+		if bonus > 1:
+			bonus = 1
+		percent -= (3 + bonus)*delta
+		if percent < 0:
+			percent = 0
