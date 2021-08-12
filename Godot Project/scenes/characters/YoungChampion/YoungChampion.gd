@@ -2,6 +2,8 @@ extends "res://scenes/characters/Character.gd"
 
 var healing
 var healingTime
+var baby
+var babyBox
 
 func _ready():
 	healing = false
@@ -53,7 +55,7 @@ func _ready():
 		"spe_side": {
 			"cancelable": false,
 			"locking": true,
-			"percent": 7
+			"percent": 5
 		},
 		"spe_up": {
 			"cancelable": true,
@@ -65,6 +67,10 @@ func _ready():
 		}
 	}
 	mass = 1.1
+	baby = $Babyboule
+	baby.id = id
+	babyBox = $Babyboule/CollisionShape2D
+	baby.players_hit = [id]
 
 func update_dmgBox(delta):
 	if hitting:
@@ -87,8 +93,19 @@ func update_dmgBox(delta):
 			dmgBox.position.y = -120.271*f
 			dmgBox.scale.x = 34.808*f
 			dmgBox.scale.y = 46.063*f
+		if atk == "spe_side":
+			var f = cst_lin_interpol(0.1, 0, 1.0, atk_time)
+			f = 1 - abs(2*f - 1)
+			baby.position.x = direction*(28.25 + 171*f)
+			if baby.flip == 1 and atk_time >= 0.55:
+				baby.flip = -1
+				atk_id += 1
+				baby.atk_id = atk_id
+				baby.players_hit = [id]
 
 func end_anim_fn():
+	if atk == "spe_side":
+		baby.vanish()
 	if atk != "spe_down":
 		.end_anim_fn()
 	else:
@@ -99,6 +116,11 @@ func end_anim_fn():
 func end_hit():
 	healing = false
 	.end_hit()
+
+func spe_side_start():
+	babyBox.set_deferred("disabled", false)
+	baby.atk_id = atk_id
+	baby.position.x = direction*abs(baby.position.x)
 
 func _input(event):
 	if event.is_action_released(ui_down) and atk == "spe_down" and hitting:
