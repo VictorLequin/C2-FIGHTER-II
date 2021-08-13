@@ -27,7 +27,8 @@ var offsets = {
 	"spe_side": Vector2(25.579, -3.76),
 	"spe_up": Vector2(-0.499, 14.328),
 	"spe_down": Vector2(2.58, 0.226),
-	"stun": Vector2(0.528, -1.744)
+	"stun": Vector2(0.528, -1.744),
+	"ledge": Vector2(0.609, -3.412)
 }
 var attacks = {
 	"neutral": {
@@ -90,6 +91,11 @@ var stunned
 var red_highlight_time
 var last_position
 var damageArea
+var hitBox
+var ledging
+var ledgeShift = Vector2(26.3, 101.8)
+var allowed_to_ledge
+var ledgeTimer
 
 var ui_jump: String = ""
 var ui_up: String = ""
@@ -109,9 +115,12 @@ func animation_finished_handler():
 
 func _ready():
 	screen_size = get_viewport_rect().size
+	allowed_to_ledge = true
+	ledging = false
 	on_ground = false
 	sprite = $AnimatedSprite
 	dmgBox = $DamageArea/CollisionShape2D
+	hitBox = $CollisionShape2D
 	velocity = Vector2()
 	direction = 1
 	jump_count = 0
@@ -137,6 +146,11 @@ func _ready():
 	damageArea.atk_id = 0
 	damageArea.connect("body_entered", self, "enemy_hit")
 	damageArea.id = id
+	ledgeTimer = $LedgeTimer
+	ledgeTimer.connect("timeout", self, "allow_ledge")
+
+func allow_ledge():
+	allowed_to_ledge = true
 
 func setup_id(k):
 	ui_jump = "ui_jump_{k}".format({"k": k})
@@ -213,8 +227,10 @@ func _input(event):
 				allowed_to_jump = true
 		if allowed_to_jump and stunned <= 0:
 			velocity.y = -jump_speed
-			if not on_ground:
+			if not on_ground and not ledging:
 				jump_count -= 1
+			if ledging:
+				unledge()
 			jumping = true
 			end_hit()
 			play("jump")
@@ -232,6 +248,8 @@ func _input(event):
 			if attacks[atk].cancelable:
 				allowed_to_hit = true
 		if allowed_to_hit and stunned <= 0:
+			if ledging:
+				unledge()
 			atk_id += 1
 			damageArea.atk_id += 1
 			if hitting:
@@ -265,6 +283,8 @@ func _input(event):
 			if attacks[atk].cancelable:
 				allowed_to_hit = true
 		if allowed_to_hit and stunned <= 0:
+			if ledging:
+				unledge()
 			atk_id += 1
 			damageArea.atk_id += 1
 			if hitting:
@@ -354,6 +374,10 @@ func stun(time):
 	stunned = time
 	pass
 
+func unledge():
+	ledging = false
+	ledgeTimer.start(0.5)
+
 func _physics_process(delta):
 	if stunned > 0:
 		stunned -= delta
@@ -403,7 +427,7 @@ func _physics_process(delta):
 	var last_vel = velocity
 	var vel_walk = Vector2()
 	var vel_air = Vector2()
-	if not on_ground:
+	if not on_ground and not ledging:
 		force.y += gravity
 		force -= air_frott_lin*velocity
 	var direction_new = 0
@@ -412,14 +436,14 @@ func _physics_process(delta):
 		direction_new = 1
 		vel_walk.x += walk_speed
 		vel_air.x += air_speed
-		if not on_ground:
+		if not on_ground and not ledging:
 			force.x += air_acc/max(1, velocity.length()/200)
 	if Input.is_action_pressed(ui_left):
 		siding = true
 		vel_walk.x -= walk_speed
 		direction_new = -1
 		vel_air.x -= air_speed
-		if not on_ground:
+		if not on_ground and not ledging:
 			force.x -= air_acc/max(1, velocity.length()/200)
 	if on_ground:
 		force.x -= ground_frott_quad*velocity.x*abs(velocity.x)
@@ -429,7 +453,7 @@ func _physics_process(delta):
 	velocity += force*delta
 	if on_ground and velocity.x * prev_velx < 0:
 		velocity.x = 0
-	if direction * direction_new == -1:
+	if direction * direction_new == -1 and not ledging:
 		if not hitting:
 			direction = direction_new
 			sprite.scale.x = 3*direction
@@ -442,7 +466,11 @@ func _physics_process(delta):
 			vel_add += vel_walk
 		else:
 			vel_add += vel_air
-	if not jumping and not hitting and stunned <=0:
+	if ledging:
+		vel_add.x = direction*min(direction*vel_add.x, 0)
+		if vel_add.length() > 0:
+			unledge()
+	if not jumping and not hitting and stunned <= 0 and not ledging:
 		if on_ground:
 			if vel_walk.length() > 0:
 				play("walk")
@@ -467,3 +495,17 @@ func _physics_process(delta):
 	# TEMP
 	if position.y > 1000:
 		position = Vector2(0, 0)
+	if allowed_to_ledge:
+		var collision
+		for i in get_slide_count():
+			collision = get_slide_collision(i)
+			if collision.normal.y == 0 and not on_ground and collision.collider.has_method("is_platform") and position.y - hitBox.shape.radius - hitBox.shape.height/2 >= collision.collider.position.y - collision.collider.box.shape.extents.y:
+				land()
+				end_hit()
+				ledging = true
+				direction = -collision.normal.x
+				play("ledge")
+				velocity = Vector2.ZERO
+				position.x = collision.collider.position.x + collision.normal.x*(ledgeShift.x + collision.collider.box.shape.extents.x)
+				position.y = collision.collider.position.y - collision.collider.box.shape.extents.y + ledgeShift.y
+				allowed_to_ledge = false

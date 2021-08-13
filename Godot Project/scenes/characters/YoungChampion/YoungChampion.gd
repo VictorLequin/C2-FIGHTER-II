@@ -21,7 +21,8 @@ func _ready():
 		"spe_up": Vector2(2.577, -30.621),
 		"spe_down": Vector2(0.514, -1.602),
 		"spe_down_idle": Vector2(0.514, -1.602),
-		"stun": Vector2(0.551, 2.318)
+		"stun": Vector2(0.551, 2.318),
+		"ledge": Vector2(-2.629, -1.602)
 	}
 	walk_speed = 350
 	air_acc = 200
@@ -71,6 +72,7 @@ func _ready():
 	baby.id = id
 	babyBox = $Babyboule/CollisionShape2D
 	baby.players_hit = [id]
+	ledgeShift = Vector2(25.11, 98.87)
 
 func update_dmgBox(delta):
 	if hitting:

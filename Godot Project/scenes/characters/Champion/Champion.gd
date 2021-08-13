@@ -5,7 +5,6 @@ var spe_side_count
 var spe_up_count
 var spe_up_speed = 300
 var shieldBox
-var hitBox
 var percentsBlocked
 var maxPercentsBlocked = 30
 var stunBlockedTime = 2
@@ -67,10 +66,10 @@ func _ready():
 		"spe_up": Vector2(-0.499, 14.328),
 		"spe_down": Vector2(2.58, 0.226),
 		"spe_down_idle": Vector2(2.58, 0.226),
-		"stun": Vector2(0.528, -1.744)
+		"stun": Vector2(0.528, -1.744),
+		"ledge": Vector2(0.609, -3.412)
 	}
 	percentsBlocked = 0
-	hitBox = $CollisionShape2D
 	shieldBox = $ShieldArea/CollisionShape2D
 	$ShieldArea.connect("area_entered", self, "block")
 	waveLeft = $WaveLeftBody/WaveLeft
@@ -160,8 +159,7 @@ func spe_neutral_land():
 		waveLeftBody.moving = true
 
 func spe_neutral_start():
-	timer.set_wait_time(0.5)
-	timer.start()
+	timer.start(0.5)
 
 func end_anim_fn():
 	if atk != "spe_down":

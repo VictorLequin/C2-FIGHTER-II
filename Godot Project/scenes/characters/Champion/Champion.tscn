@@ -1,4 +1,4 @@
-[gd_scene load_steps=89 format=2]
+[gd_scene load_steps=92 format=2]
 
 [ext_resource path="res://scenes/characters/Character.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/characters/Champion/Champion.gd" type="Script" id=2]
@@ -82,6 +82,9 @@
 [ext_resource path="res://ressources/persos/Champion/atkspeneutral/onde4.5.png" type="Texture" id=80]
 [ext_resource path="res://scenes/characters/Champion/WaveRight.gd" type="Script" id=81]
 [ext_resource path="res://scenes/characters/Champion/WaveLeft.gd" type="Script" id=82]
+[ext_resource path="res://ressources/persos/Champion/ledge/grab1.png" type="Texture" id=83]
+[ext_resource path="res://ressources/persos/Champion/ledge/grab2.png" type="Texture" id=84]
+[ext_resource path="res://ressources/persos/Champion/ledge/grab3.png" type="Texture" id=85]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -105,15 +108,35 @@ animations = [ {
 "name": "stun",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 63 ), ExtResource( 64 ), ExtResource( 61 ), ExtResource( 62 ), ExtResource( 65 ), ExtResource( 66 ) ],
+"frames": [ ExtResource( 30 ), ExtResource( 54 ), ExtResource( 25 ), ExtResource( 55 ), ExtResource( 52 ) ],
 "loop": false,
-"name": "spe_down",
+"name": "spe_neutral",
 "speed": 10.0
+}, {
+"frames": [ ExtResource( 17 ), ExtResource( 18 ), ExtResource( 5 ), ExtResource( 4 ) ],
+"loop": true,
+"name": "air",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 83 ), ExtResource( 84 ), ExtResource( 85 ) ],
+"loop": true,
+"name": "ledge",
+"speed": 3.0
+}, {
+"frames": [ ExtResource( 16 ), ExtResource( 9 ), ExtResource( 14 ), ExtResource( 15 ) ],
+"loop": true,
+"name": "walk",
+"speed": 5.0
 }, {
 "frames": [ ExtResource( 11 ), ExtResource( 3 ), ExtResource( 12 ) ],
 "loop": true,
 "name": "spe_down_idle",
 "speed": 3.0
+}, {
+"frames": [ ExtResource( 46 ), ExtResource( 43 ), ExtResource( 35 ), ExtResource( 53 ), ExtResource( 49 ), ExtResource( 21 ), ExtResource( 36 ), ExtResource( 50 ) ],
+"loop": false,
+"name": "spe_up",
+"speed": 10.0
 }, {
 "frames": [ ExtResource( 6 ), ExtResource( 20 ), ExtResource( 44 ) ],
 "loop": false,
@@ -125,30 +148,15 @@ animations = [ {
 "name": "spe_side",
 "speed": 8.0
 }, {
-"frames": [ ExtResource( 30 ), ExtResource( 54 ), ExtResource( 25 ), ExtResource( 55 ), ExtResource( 52 ) ],
-"loop": false,
-"name": "spe_neutral",
-"speed": 10.0
-}, {
-"frames": [ ExtResource( 46 ), ExtResource( 43 ), ExtResource( 35 ), ExtResource( 53 ), ExtResource( 49 ), ExtResource( 21 ), ExtResource( 36 ), ExtResource( 50 ) ],
-"loop": false,
-"name": "spe_up",
-"speed": 10.0
-}, {
-"frames": [ ExtResource( 17 ), ExtResource( 18 ), ExtResource( 5 ), ExtResource( 4 ) ],
-"loop": true,
-"name": "air",
-"speed": 5.0
-}, {
 "frames": [ ExtResource( 28 ), ExtResource( 24 ), ExtResource( 60 ), ExtResource( 19 ), ExtResource( 57 ), ExtResource( 45 ) ],
 "loop": false,
 "name": "neutral",
 "speed": 13.0
 }, {
-"frames": [ ExtResource( 16 ), ExtResource( 9 ), ExtResource( 14 ), ExtResource( 15 ) ],
-"loop": true,
-"name": "walk",
-"speed": 5.0
+"frames": [ ExtResource( 63 ), ExtResource( 64 ), ExtResource( 61 ), ExtResource( 62 ), ExtResource( 65 ), ExtResource( 66 ) ],
+"loop": false,
+"name": "spe_down",
+"speed": 10.0
 } ]
 
 [sub_resource type="CapsuleShape2D" id=2]
