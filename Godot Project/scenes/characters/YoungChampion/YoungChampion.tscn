@@ -184,3 +184,17 @@ script = ExtResource( 79 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Babyboule" index="0"]
 shape = SubResource( 3 )
 disabled = true
+
+[node name="GrapplingTimer" type="Timer" parent="." index="6"]
+wait_time = 0.225
+one_shot = true
+
+[node name="Babilboquet" type="Line2D" parent="." index="7"]
+visible = false
+z_as_relative = false
+points = PoolVector2Array( 28.25, -42.25, 28.25, -42.25 )
+width = 5.0
+default_color = Color( 0, 0, 0, 1 )
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2

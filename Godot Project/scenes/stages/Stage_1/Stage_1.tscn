@@ -6,10 +6,10 @@
 [node name="Stage" instance=ExtResource( 1 )]
 
 [node name="Plateforme 1" parent="." index="1" instance=ExtResource( 3 )]
-position = Vector2( -0.102478, 361.644 )
+position = Vector2( 3.07233, 572.768 )
 
 [node name="Plateforme 2" parent="." index="2" instance=ExtResource( 3 )]
-position = Vector2( 357.634, 471.101 )
+position = Vector2( 543.36, 425.066 )
 
 [node name="Plateforme 3" parent="." index="3" instance=ExtResource( 3 )]
-position = Vector2( -325.251, 474.625 )
+position = Vector2( -539.55, 431.765 )

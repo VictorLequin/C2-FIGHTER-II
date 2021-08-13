@@ -98,13 +98,13 @@ func land():
 	spe_up_count = 1
 	.land()
 
-func spe_side_acc(delta):
+func spe_side_acc():
 	var acc = Vector2()
 	if not on_ground:
 		acc.y -= gravity
 	return acc
 
-func spe_side_vel(delta):
+func spe_side_vel():
 	return Vector2(spe_side_speed*direction, 0)
 
 func spe_side_start():
@@ -117,7 +117,7 @@ func spe_side_start():
 	else:
 		end_hit()
 
-func spe_up_vel(delta):
+func spe_up_vel():
 	return Vector2(0, -spe_up_speed)
 
 func spe_up_start():

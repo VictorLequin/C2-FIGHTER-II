@@ -7,7 +7,9 @@
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 191.989, 23.9745 )
 
-[node name="Plateform" type="StaticBody2D"]
+[node name="Plateform" type="StaticBody2D" groups=[
+"platform",
+]]
 z_index = -1
 collision_mask = 3
 physics_material_override = ExtResource( 2 )

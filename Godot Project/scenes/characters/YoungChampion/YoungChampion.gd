@@ -4,6 +4,12 @@ var healing
 var healingTime
 var baby
 var babyBox
+var platforms
+var grappling_distance = 500
+var target
+var grappling_timer
+var grappling
+var babilboquet
 
 func _ready():
 	healing = false
@@ -73,6 +79,11 @@ func _ready():
 	babyBox = $Babyboule/CollisionShape2D
 	baby.players_hit = [id]
 	ledgeShift = Vector2(25.11, 98.87)
+	platforms = get_tree().get_nodes_in_group("platform")
+	grappling_timer = $GrapplingTimer
+	grappling_timer.connect("timeout", self, "grappling")
+	grappling = false
+	babilboquet = $Babilboquet
 
 func update_dmgBox(delta):
 	if hitting:
@@ -111,15 +122,20 @@ func update_dmgBox(delta):
 func end_anim_fn():
 	if atk == "spe_side" or atk == "spe_neutral":
 		baby.vanish()
-	if atk != "spe_down":
-		.end_anim_fn()
-	else:
+	if atk == "spe_down":
 		healing = true
 		healingTime = 0
 		play("spe_down_idle")
+	elif atk == "spe_up":
+		play("idle")
+		playing = "idle"
+	else:
+		.end_anim_fn()
 
 func end_hit():
 	healing = false
+	grappling = false
+	babilboquet.visible = false
 	.end_hit()
 
 func spe_side_start():
@@ -132,6 +148,49 @@ func spe_neutral_start():
 	baby.atk_id = atk_id
 	baby.scale.x = 22
 	baby.scale.y = 22
+
+func grappling():
+	if atk == "spe_up" and hitting:
+		var closest_edge
+		var min_distance = INF
+		var edge
+		var distance
+		for i in platforms.size():
+			edge = Vector2(platforms[i].position.x - platforms[i].get_node("CollisionShape2D").shape.extents.x*platforms[i].scale.x, platforms[i].position.y - platforms[i].get_node("CollisionShape2D").shape.extents.y*platforms[i].scale.y)
+			distance = (position - edge).length()
+			if distance < min_distance:
+				closest_edge = edge
+				min_distance = distance
+			edge = Vector2(platforms[i].position.x + platforms[i].get_node("CollisionShape2D").shape.extents.x*platforms[i].scale.x, platforms[i].position.y - platforms[i].get_node("CollisionShape2D").shape.extents.y*platforms[i].scale.y)
+			distance = (position - edge).length()
+			if distance < min_distance:
+				closest_edge = edge
+				min_distance = distance
+		if min_distance <= grappling_distance:
+			target = closest_edge
+			velocity = Vector2.ZERO
+			grappling = true
+			babilboquet.visible = true
+
+func spe_up_start():
+	grappling_timer.start(0.225)
+
+func spe_up_vel():
+	if grappling:
+		babilboquet.points[0].x = direction*abs(babilboquet.points[0].x)
+		babilboquet.points[1] = target - position
+		if (target - position).length() >= 50:
+			return air_speed*((target - position).normalized())
+		else:
+			end_hit()
+	return Vector2.ZERO
+
+func spe_up_acc():
+	if grappling:
+		if not on_ground:
+			return 2*air_acc*((target - position).normalized()) + Vector2(0, -gravity)
+		return 2*air_acc*((target - position).normalized())
+	return Vector2.ZERO
 
 func _input(event):
 	if event.is_action_released(ui_down) and atk == "spe_down" and hitting:

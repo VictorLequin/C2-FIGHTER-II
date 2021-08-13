@@ -195,29 +195,29 @@ func spe_side_start():
 func spe_down_start():
 	pass
 
-func spe_up_vel(delta):
-	return Vector2()
+func spe_up_vel():
+	return Vector2.ZERO
 
-func spe_neutral_vel(delta):
-	return Vector2()
+func spe_neutral_vel():
+	return Vector2.ZERO
 
-func spe_side_vel(delta):
-	return Vector2()
+func spe_side_vel():
+	return Vector2.ZERO
 
-func spe_down_vel(delta):
-	return Vector2()
+func spe_down_vel():
+	return Vector2.ZERO
 
-func spe_up_acc(delta):
-	return Vector2()
+func spe_up_acc():
+	return Vector2.ZERO
 
-func spe_neutral_acc(delta):
-	return Vector2()
+func spe_neutral_acc():
+	return Vector2.ZERO
 
-func spe_side_acc(delta):
-	return Vector2()
+func spe_side_acc():
+	return Vector2.ZERO
 
-func spe_down_acc(delta):
-	return Vector2()
+func spe_down_acc():
+	return Vector2.ZERO
 
 func _input(event):
 	if event.is_action_pressed(ui_jump) and (on_ground or jump_count > 0):
@@ -394,6 +394,8 @@ func _physics_process(delta):
 		if not hit.dealer in blocked:
 			is_hit = true
 	if is_hit:
+		if ledging:
+			unledge()
 		velocity /= 2
 		sprite.set_modulate(Color(2,1,1,1))
 		red_highlight_time = 0.1
@@ -407,17 +409,17 @@ func _physics_process(delta):
 	var force = Vector2()
 	if hitting:
 		if atk == "spe_neutral":
-			vel_add += spe_neutral_vel(delta)
-			force += spe_neutral_acc(delta)
+			vel_add += spe_neutral_vel()
+			force += spe_neutral_acc()
 		elif atk == "spe_side":
-			vel_add += spe_side_vel(delta)
-			force += spe_side_acc(delta)
+			vel_add += spe_side_vel()
+			force += spe_side_acc()
 		elif atk == "spe_up":
-			vel_add += spe_up_vel(delta)
-			force += spe_up_acc(delta)
+			vel_add += spe_up_vel()
+			force += spe_up_acc()
 		elif atk == "spe_down":
-			vel_add += spe_down_vel(delta)
-			force += spe_down_acc(delta)
+			vel_add += spe_down_vel()
+			force += spe_down_acc()
 	if not on_ground and is_on_floor():
 		land()
 	on_ground = is_on_floor()
@@ -453,6 +455,13 @@ func _physics_process(delta):
 	velocity += force*delta
 	if on_ground and velocity.x * prev_velx < 0:
 		velocity.x = 0
+	if not hitting and stunned <= 0:
+		if on_ground:
+			vel_add += vel_walk
+		else:
+			vel_add += vel_air
+	if abs(vel_add.x) > 0:
+		direction_new = vel_add.x/abs(vel_add.x)
 	if direction * direction_new == -1 and not ledging:
 		if not hitting:
 			direction = direction_new
@@ -461,11 +470,6 @@ func _physics_process(delta):
 			if not attacks[atk].locking:
 				direction = direction_new
 				sprite.scale.x = 3*direction
-	if not hitting and stunned <= 0:
-		if on_ground:
-			vel_add += vel_walk
-		else:
-			vel_add += vel_air
 	if ledging:
 		vel_add.x = direction*min(direction*vel_add.x, 0)
 		if vel_add.length() > 0:
@@ -492,9 +496,6 @@ func _physics_process(delta):
 		velocity.x -= vel_add.x
 	if abs(velocity.y) >= abs(vel_add.y):
 		velocity.y -= vel_add.y
-	# TEMP
-	if position.y > 1000:
-		position = Vector2(0, 0)
 	if allowed_to_ledge:
 		var collision
 		for i in get_slide_count():
@@ -509,3 +510,7 @@ func _physics_process(delta):
 				position.x = collision.collider.position.x + collision.normal.x*(ledgeShift.x + collision.collider.box.shape.extents.x)
 				position.y = collision.collider.position.y - collision.collider.box.shape.extents.y + ledgeShift.y
 				allowed_to_ledge = false
+	# TEMP
+	if position.y > 1000:
+		position = Vector2(0, 0)
+		end_hit()
