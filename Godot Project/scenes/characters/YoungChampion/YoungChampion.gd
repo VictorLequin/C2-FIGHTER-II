@@ -120,6 +120,10 @@ func update_dmgBox(delta):
 		if atk == "spe_neutral":
 			if atk_time >= 5.0/15.0:
 				babyBox.set_deferred("disabled", false)
+		if atk == "spe_up" and grappling:
+			babilboquet.points[0].x = direction*abs(babilboquet.points[0].x)
+			babilboquet.points[1] = target - position
+			babysprite.position = target - position
 
 func end_anim_fn():
 	if atk == "spe_side" or atk == "spe_neutral":
@@ -186,9 +190,6 @@ func spe_up_start():
 
 func spe_up_vel():
 	if grappling:
-		babilboquet.points[0].x = direction*abs(babilboquet.points[0].x)
-		babilboquet.points[1] = target - position
-		babysprite.position = target - position
 		if (target - position).length() >= 50:
 			return air_speed*((target - position).normalized())
 		else:
