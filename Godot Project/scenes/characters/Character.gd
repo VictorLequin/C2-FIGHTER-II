@@ -378,6 +378,13 @@ func unledge():
 	ledging = false
 	ledgeTimer.start(0.5)
 
+func take_hit():
+	if ledging:
+		unledge()
+	velocity /= 2
+	sprite.set_modulate(Color(2,1,1,1))
+	red_highlight_time = 0.1
+
 func _physics_process(delta):
 	if stunned > 0:
 		stunned -= delta
@@ -394,11 +401,7 @@ func _physics_process(delta):
 		if not hit.dealer in blocked:
 			is_hit = true
 	if is_hit:
-		if ledging:
-			unledge()
-		velocity /= 2
-		sprite.set_modulate(Color(2,1,1,1))
-		red_highlight_time = 0.1
+		take_hit()
 	for hit in pending_hits:
 		if not hit.dealer in blocked:
 			velocity += hit.knockback
