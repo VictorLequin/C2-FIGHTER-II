@@ -5,7 +5,7 @@ var ui_left: String
 var ui_right: String
 
 onready var lastUpdate = OS.get_ticks_msec()
-const input_delay = 100 # ms
+const input_delay = 200 # ms
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
