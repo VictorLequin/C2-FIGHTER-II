@@ -10,6 +10,9 @@ var select_box_scene = preload("res://scenes/menus/CharacterSelect/SelectBox.tsc
 onready var main = get_node("/root/Node")
 
 func recreate_boxes():
+	call_deferred("_recreate_boxes")
+
+func _recreate_boxes():
 	var grid = get_child(0)
 	
 	for box in grid.get_children():
