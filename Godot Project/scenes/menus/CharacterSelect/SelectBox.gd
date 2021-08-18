@@ -12,11 +12,11 @@ func _ready():
 	reload()
 
 func _input(event):
-	if event.is_action_pressed(ui_left) and lastUpdate + input_delay < OS.get_ticks_msec():
+	if Input.is_action_pressed(ui_left) and lastUpdate + input_delay < OS.get_ticks_msec():
 		player.prevCharacter()
 		lastUpdate = OS.get_ticks_msec()
 		reload()
-	if event.is_action_pressed(ui_right) and lastUpdate + input_delay < OS.get_ticks_msec():
+	if Input.is_action_pressed(ui_right) and lastUpdate + input_delay < OS.get_ticks_msec():
 		player.nextCharacter()
 		lastUpdate = OS.get_ticks_msec()
 		reload()
