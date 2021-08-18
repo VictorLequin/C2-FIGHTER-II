@@ -109,7 +109,7 @@ func update_dmgBox(delta):
 			dmgBox.scale.x = 34.808*f
 			dmgBox.scale.y = 46.063*f
 		if atk == "spe_side":
-			var f = cst_lin_interpol(0.1, 0, 1.0, atk_time)
+			var f = cst_lin_interpol(0.1, 0.0, 1.0, atk_time)
 			f = 1 - abs(2*f - 1)
 			baby.position.x = direction*(28.25 + 171*f)
 			if baby.flip == 1 and atk_time >= 0.55:
@@ -121,9 +121,10 @@ func update_dmgBox(delta):
 			if atk_time >= 5.0/15.0:
 				babyBox.set_deferred("disabled", false)
 		if atk == "spe_up" and grappling:
+			var f = min(cst_lin_interpol(0.25, 0.0, 0.35, atk_time), 1)
 			babilboquet.points[0].x = direction*abs(babilboquet.points[0].x)
-			babilboquet.points[1] = target - position
-			babysprite.position = target - position
+			babilboquet.points[1] = babilboquet.points[0] + (target - position - babilboquet.points[0])*f
+			babysprite.position = babilboquet.points[0] + (target - position - babilboquet.points[0])*f
 
 func end_anim_fn():
 	if atk == "spe_side" or atk == "spe_neutral":
@@ -165,12 +166,12 @@ func grappling():
 		for i in platforms.size():
 			edge = Vector2(platforms[i].position.x - platforms[i].get_node("CollisionShape2D").shape.extents.x*platforms[i].scale.x, platforms[i].position.y - platforms[i].get_node("CollisionShape2D").shape.extents.y*platforms[i].scale.y)
 			distance = (position - edge).length()
-			if distance < min_distance:
+			if distance < min_distance and edge.y <= position.y:
 				closest_edge = edge
 				min_distance = distance
 			edge = Vector2(platforms[i].position.x + platforms[i].get_node("CollisionShape2D").shape.extents.x*platforms[i].scale.x, platforms[i].position.y - platforms[i].get_node("CollisionShape2D").shape.extents.y*platforms[i].scale.y)
 			distance = (position - edge).length()
-			if distance < min_distance:
+			if distance < min_distance and edge.y <= position.y:
 				closest_edge = edge
 				min_distance = distance
 		if min_distance <= grappling_distance:
@@ -179,6 +180,8 @@ func grappling():
 			grappling = true
 			babilboquet.visible = true
 			babysprite.visible = true
+		else:
+			end_hit()
 
 func take_hit():
 	if grappling:
