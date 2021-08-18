@@ -172,6 +172,11 @@ func grappling():
 			grappling = true
 			babilboquet.visible = true
 
+func take_hit():
+	if grappling:
+		end_hit()
+	.take_hit()
+
 func spe_up_start():
 	grappling_timer.start(0.225)
 
