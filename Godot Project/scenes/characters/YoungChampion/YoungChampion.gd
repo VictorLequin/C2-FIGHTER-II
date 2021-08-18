@@ -10,6 +10,7 @@ var target
 var grappling_timer
 var grappling
 var babilboquet
+var babysprite
 
 func _ready():
 	healing = false
@@ -84,6 +85,7 @@ func _ready():
 	grappling_timer.connect("timeout", self, "grappling")
 	grappling = false
 	babilboquet = $Babilboquet
+	babysprite = $BabybouleSprite
 
 func update_dmgBox(delta):
 	if hitting:
@@ -136,6 +138,7 @@ func end_hit():
 	healing = false
 	grappling = false
 	babilboquet.visible = false
+	babysprite.visible = false
 	.end_hit()
 
 func spe_side_start():
@@ -171,6 +174,7 @@ func grappling():
 			velocity = Vector2.ZERO
 			grappling = true
 			babilboquet.visible = true
+			babysprite.visible = true
 
 func take_hit():
 	if grappling:
@@ -184,6 +188,7 @@ func spe_up_vel():
 	if grappling:
 		babilboquet.points[0].x = direction*abs(babilboquet.points[0].x)
 		babilboquet.points[1] = target - position
+		babysprite.position = target - position
 		if (target - position).length() >= 50:
 			return air_speed*((target - position).normalized())
 		else:
