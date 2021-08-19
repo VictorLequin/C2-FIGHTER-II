@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/ouch1.wav-d4d04a4a7d7ad3fc048c7110d1a67382.sample"
+
+[deps]
+
+source_file="res://ressources/persos/Champion/sounds/ouch1.wav"
+dest_files=[ "res://.import/ouch1.wav-d4d04a4a7d7ad3fc048c7110d1a67382.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

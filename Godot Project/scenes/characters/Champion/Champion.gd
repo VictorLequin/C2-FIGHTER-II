@@ -85,7 +85,9 @@ func _ready():
 	waveRightBody.id = id
 	waveRightBody.players_hit = [id]
 	sounds = {
-		"jump": [$hop1, $hop2, $hop3]
+		"jump": [$hop1, $hop2, $hop3],
+		"oskour": [$oskour1, $oskour2],
+		"ouch": [$ouch1, $ouch2, $ouch3]
 	}
 	ready_sounds()
 

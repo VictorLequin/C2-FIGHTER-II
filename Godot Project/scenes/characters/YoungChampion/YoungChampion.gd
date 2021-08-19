@@ -86,6 +86,13 @@ func _ready():
 	grappling = false
 	babilboquet = $Babilboquet
 	babysprite = $BabybouleSprite
+	sounds = {
+		"jump": [$hop1, $hop2, $hop3],
+		"baby": [$babyboule1, $babyboule2],
+		"oskour": [$oskour1, $oskour2],
+		"ouch": [$ouch1, $ouch2, $ouch3]
+	}
+	ready_sounds()
 
 func update_dmgBox(delta):
 	if hitting:
@@ -147,6 +154,7 @@ func end_hit():
 	.end_hit()
 
 func spe_side_start():
+	play_sound("baby")
 	babyBox.set_deferred("disabled", false)
 	baby.atk_id = atk_id
 	baby.position.x = direction*abs(baby.position.x)

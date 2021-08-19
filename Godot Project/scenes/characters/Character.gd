@@ -4,6 +4,7 @@ var screen_size
 var on_ground
 var sprite
 var velocity
+var last_vel
 var walk_speed = 200
 var air_acc = 100
 var ground_frott_quad = 0.3
@@ -138,6 +139,7 @@ func _ready():
 	dmgBox = $DamageArea/CollisionShape2D
 	hitBox = $CollisionShape2D
 	velocity = Vector2()
+	last_vel = Vector2()
 	direction = 1
 	jump_count = 0
 	jumping = false
@@ -379,6 +381,10 @@ func end_anim_fn():
 	jumping = false
 	end_hit()
 
+func change_direction(new_direction):
+	direction = new_direction
+	sprite.scale.x = 3*direction
+
 func get_atk_percent_parent():
 	if atk == "":
 		return 0
@@ -401,8 +407,10 @@ func take_hit():
 	velocity /= 2
 	sprite.set_modulate(Color(2,1,1,1))
 	red_highlight_time = 0.1
+	play_sound("ouch")
 
 func _physics_process(delta):
+	last_vel = velocity
 	if stunned > 0:
 		stunned -= delta
 	if red_highlight_time > 0:
@@ -488,8 +496,7 @@ func _physics_process(delta):
 			sprite.scale.x = 3*direction
 		else:
 			if not attacks[atk].locking:
-				direction = direction_new
-				sprite.scale.x = 3*direction
+				change_direction(direction_new)
 	if ledging:
 		vel_add.x = direction*min(direction*vel_add.x, 0)
 		if vel_add.length() > 0:
@@ -516,6 +523,8 @@ func _physics_process(delta):
 		velocity.x -= vel_add.x
 	if abs(velocity.y) >= abs(vel_add.y):
 		velocity.y -= vel_add.y
+	if velocity.length() >= 450 and last_vel.length() < 450:
+		play_sound("oskour")
 	if allowed_to_ledge:
 		var collision
 		for i in get_slide_count():
@@ -524,7 +533,7 @@ func _physics_process(delta):
 				land()
 				end_hit()
 				ledging = true
-				direction = -collision.normal.x
+				change_direction(-collision.normal.x)
 				play("ledge")
 				velocity = Vector2.ZERO
 				position.x = collision.collider.position.x + collision.normal.x*(ledgeShift.x + collision.collider.box.shape.extents.x)
