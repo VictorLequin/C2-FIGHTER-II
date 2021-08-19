@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/hop3.wav-5281a1040aa1c03f3056bfb57fa8c199.sample"
+
+[deps]
+
+source_file="res://ressources/persos/Champion/sounds/hop3.wav"
+dest_files=[ "res://.import/hop3.wav-5281a1040aa1c03f3056bfb57fa8c199.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

@@ -55,8 +55,8 @@ func _process(delta):
 	var size = (end-start)
 	
 	var screen_size = OS.window_size
-	print(screen_size)
+	# print(screen_size)
 	var tmp = size/screen_size
-	print((screen_size.x/screen_size.y)/(16.0/9.0))
+	# print((screen_size.x/screen_size.y)/(16.0/9.0))
 	zoom = Vector2(1, (16.0/9.0)/(screen_size.x/screen_size.y)) * max(tmp.x, tmp.y)
 	position = center

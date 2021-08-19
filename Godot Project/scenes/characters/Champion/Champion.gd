@@ -84,6 +84,10 @@ func _ready():
 	waveLeftBody.players_hit = [id]
 	waveRightBody.id = id
 	waveRightBody.players_hit = [id]
+	sounds = {
+		"jump": [$hop1, $hop2, $hop3]
+	}
+	ready_sounds()
 
 func block(area):
 	if area.has_method("get_atk_percent"):

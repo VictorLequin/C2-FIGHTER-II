@@ -96,6 +96,8 @@ var ledging
 var ledgeShift = Vector2(26.3, 101.8)
 var allowed_to_ledge
 var ledgeTimer
+var sounds = {}
+var playing_sound
 
 var ui_jump: String = ""
 var ui_up: String = ""
@@ -110,12 +112,26 @@ func play(anim):
 	sprite.play(anim)
 	sprite.offset = offsets[anim]
 
+func play_sound(sound):
+	if sounds.has(sound) and not playing_sound:
+		sounds[sound][randi() % sounds[sound].size()].play()
+		playing_sound = true
+
+func end_sound():
+	playing_sound = false
+
+func ready_sounds():
+	for s in sounds:
+		for so in sounds[s]:
+			so.connect("finished", self, "end_sound")
+
 func animation_finished_handler():
 	end_anim = true
 
 func _ready():
 	screen_size = get_viewport_rect().size
 	allowed_to_ledge = true
+	playing_sound = false
 	ledging = false
 	on_ground = false
 	sprite = $AnimatedSprite
@@ -234,6 +250,7 @@ func _input(event):
 			jumping = true
 			end_hit()
 			play("jump")
+			play_sound("jump")
 	if event.is_action_pressed(ui_action):
 		var wanted_atk
 		if holding_up:
