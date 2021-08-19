@@ -13,7 +13,7 @@ func recreate_boxes():
 	call_deferred("_recreate_boxes")
 
 func _recreate_boxes():
-	var grid = get_child(0)
+	var grid = get_child(1)
 	
 	for box in grid.get_children():
 		grid.remove_child(box)

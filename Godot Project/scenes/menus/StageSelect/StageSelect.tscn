@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://ressources/polices/Merriweather-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://scenes/menus/StageSelect/StageSelect.gd" type="Script" id=2]
 [ext_resource path="res://ressources/polices/PoliceSousMenu.tres" type="DynamicFont" id=3]
+[ext_resource path="res://ressources/menus/bg.PNG" type="Texture" id=4]
 
 [sub_resource type="DynamicFont" id=1]
 size = 50
@@ -17,6 +18,13 @@ script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Background" type="TextureRect" parent="."]
+margin_right = 1920.0
+margin_bottom = 1080.0
+texture = ExtResource( 4 )
+expand = true
+stretch_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 margin_right = 1920.0
