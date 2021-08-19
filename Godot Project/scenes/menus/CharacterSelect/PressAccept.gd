@@ -1,4 +1,4 @@
-extends HBoxContainer
+extends AspectRatioContainer
 
 onready var main = get_node("/root/Node")
 
@@ -15,10 +15,10 @@ func load_items():
 			if controller.id == main.KeyboardLayouts.arrows:
 				arrows = true
 		else:
-			add_child(load("res://scenes/menus/CharacterSelect/joypad.tscn").instance())
+			$ARGRid.add_child(load("res://scenes/menus/CharacterSelect/joypad.tscn").instance())
 	if wasd and arrows:
-		add_child(load("res://scenes/menus/CharacterSelect/clavier.tscn").instance())
+		$ARGRid.add_child(load("res://scenes/menus/CharacterSelect/clavier.tscn").instance())
 	elif wasd:
-		add_child(load("res://scenes/menus/CharacterSelect/wasd.tscn").instance())
+		$ARGRid.add_child(load("res://scenes/menus/CharacterSelect/wasd.tscn").instance())
 	elif arrows:
-		add_child(load("res://scenes/menus/CharacterSelect/arrows.tscn").instance())
+		$ARGRid.add_child(load("res://scenes/menus/CharacterSelect/arrows.tscn").instance())
