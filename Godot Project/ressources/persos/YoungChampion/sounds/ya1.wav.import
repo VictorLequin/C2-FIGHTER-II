@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/ya1.wav-caa8d4af49a7e3429437a3d2b2e5cafa.sample"
+
+[deps]
+
+source_file="res://ressources/persos/YoungChampion/sounds/ya1.wav"
+dest_files=[ "res://.import/ya1.wav-caa8d4af49a7e3429437a3d2b2e5cafa.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

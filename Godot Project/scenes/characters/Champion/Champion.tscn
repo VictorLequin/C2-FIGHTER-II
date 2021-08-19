@@ -1,4 +1,4 @@
-[gd_scene load_steps=100 format=2]
+[gd_scene load_steps=104 format=2]
 
 [ext_resource path="res://scenes/characters/Character.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/characters/Champion/Champion.gd" type="Script" id=2]
@@ -93,6 +93,10 @@
 [ext_resource path="res://ressources/persos/Champion/sounds/ouch1.wav" type="AudioStream" id=91]
 [ext_resource path="res://ressources/persos/Champion/sounds/ouch2.wav" type="AudioStream" id=92]
 [ext_resource path="res://ressources/persos/Champion/sounds/ouch3.wav" type="AudioStream" id=93]
+[ext_resource path="res://ressources/persos/Champion/sounds/tiens1.wav" type="AudioStream" id=94]
+[ext_resource path="res://ressources/persos/Champion/sounds/tiens2.wav" type="AudioStream" id=95]
+[ext_resource path="res://ressources/persos/Champion/sounds/sakamerde1.wav" type="AudioStream" id=96]
+[ext_resource path="res://ressources/persos/Champion/sounds/sakamerde2.wav" type="AudioStream" id=97]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -276,4 +280,20 @@ pitch_scale = 0.9
 
 [node name="ouch3" type="AudioStreamPlayer2D" parent="." index="16"]
 stream = ExtResource( 93 )
+pitch_scale = 0.9
+
+[node name="tiens1" type="AudioStreamPlayer2D" parent="." index="17"]
+stream = ExtResource( 94 )
+pitch_scale = 0.9
+
+[node name="tiens2" type="AudioStreamPlayer2D" parent="." index="18"]
+stream = ExtResource( 95 )
+pitch_scale = 0.9
+
+[node name="saka1" type="AudioStreamPlayer2D" parent="." index="19"]
+stream = ExtResource( 96 )
+pitch_scale = 0.9
+
+[node name="saka2" type="AudioStreamPlayer2D" parent="." index="20"]
+stream = ExtResource( 97 )
 pitch_scale = 0.9

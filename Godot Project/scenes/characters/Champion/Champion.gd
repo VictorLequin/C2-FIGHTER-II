@@ -87,7 +87,8 @@ func _ready():
 	sounds = {
 		"jump": [$hop1, $hop2, $hop3],
 		"oskour": [$oskour1, $oskour2],
-		"ouch": [$ouch1, $ouch2, $ouch3]
+		"ouch": [$ouch1, $ouch2, $ouch3, $saka1, $saka2],
+		"tiens": [$tiens1, $tiens2]
 	}
 	ready_sounds()
 

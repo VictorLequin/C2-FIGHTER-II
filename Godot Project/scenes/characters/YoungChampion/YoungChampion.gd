@@ -11,9 +11,11 @@ var grappling_timer
 var grappling
 var babilboquet
 var babysprite
+var allowed_to_grap
 
 func _ready():
 	healing = false
+	allowed_to_grap = false
 	healingTime = 0
 	offsets = {
 		"idle": Vector2(-2.629, -1.602),
@@ -90,7 +92,9 @@ func _ready():
 		"jump": [$hop1, $hop2, $hop3],
 		"baby": [$babyboule1, $babyboule2],
 		"oskour": [$oskour1, $oskour2],
-		"ouch": [$ouch1, $ouch2, $ouch3]
+		"ouch": [$ouch1, $ouch2, $ouch3],
+		"ya": [$ya1, $ya2],
+		"tiens": [$tiens1, $tiens2]
 	}
 	ready_sounds()
 
@@ -159,14 +163,20 @@ func spe_side_start():
 	baby.atk_id = atk_id
 	baby.position.x = direction*abs(baby.position.x)
 
+func land():
+	allowed_to_grap = true
+	.land()
+
 func spe_neutral_start():
 	baby.position.x = 0
 	baby.atk_id = atk_id
 	baby.scale.x = 22
 	baby.scale.y = 22
+	play_sound("ya")
 
 func grappling():
 	if atk == "spe_up" and hitting:
+		allowed_to_grap = false
 		var closest_edge
 		var min_distance = INF
 		var edge
@@ -197,7 +207,8 @@ func take_hit():
 	.take_hit()
 
 func spe_up_start():
-	grappling_timer.start(0.225)
+	if allowed_to_grap:
+		grappling_timer.start(0.225)
 
 func spe_up_vel():
 	if grappling:

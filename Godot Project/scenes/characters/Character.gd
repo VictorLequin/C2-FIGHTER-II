@@ -190,6 +190,7 @@ func enemy_hit(enemy):
 				"dealer": str(id) + "." + str(atk_id),
 				"percent": attacks[atk].percent/enemy.mass
 			})
+			play_sound("tiens")
 
 func end_hit():
 	hitting = false
@@ -523,7 +524,7 @@ func _physics_process(delta):
 		velocity.x -= vel_add.x
 	if abs(velocity.y) >= abs(vel_add.y):
 		velocity.y -= vel_add.y
-	if velocity.length() >= 450 and last_vel.length() < 450:
+	if velocity.length() >= 450 and velocity.y >= 0 and (last_vel.length() < 450 or last_vel.y < 0):
 		play_sound("oskour")
 	if allowed_to_ledge:
 		var collision
