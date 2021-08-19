@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://ressources/menus/bg.PNG" type="Texture" id=1]
+[ext_resource path="res://scenes/menus/ARGrid.tscn" type="PackedScene" id=2]
 [ext_resource path="res://scenes/menus/CharacterSelect/CharacterSelect.gd" type="Script" id=3]
 
 [node name="Control" type="Control"]
@@ -17,11 +18,13 @@ margin_bottom = 1080.0
 texture = ExtResource( 1 )
 expand = true
 stretch_mode = 2
-
-[node name="GridContainer" type="GridContainer" parent="."]
-anchor_right = 1.0
-anchor_bottom = 1.0
-columns = 3
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="ARGrid" parent="." instance=ExtResource( 2 )]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = 0.0
+margin_bottom = 0.0
+child_ar = 1.1

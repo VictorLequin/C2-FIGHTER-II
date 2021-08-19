@@ -54,7 +54,9 @@ func _process(delta):
 	var center = (start+end)/2 + cam_offset
 	var size = (end-start)
 	
-	var screen_size = get_viewport_rect().size
+	var screen_size = OS.window_size
+	print(screen_size)
 	var tmp = size/screen_size
-	zoom = Vector2.ONE * max(tmp.x, tmp.y)
+	print((screen_size.x/screen_size.y)/(16.0/9.0))
+	zoom = Vector2(1, (16.0/9.0)/(screen_size.x/screen_size.y)) * max(tmp.x, tmp.y)
 	position = center

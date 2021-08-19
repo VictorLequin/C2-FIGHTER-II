@@ -23,11 +23,6 @@ func _recreate_boxes():
 	var some_inactive = !main.list_inactive().empty()
 	if some_inactive: item_count += 1
 	
-	if item_count < 10 :
-		grid.columns = [1,1,2,3,2,3,3,4,4,3][item_count]
-	else:
-		grid.columns = 4
-	
 	for k in range(main.players.count()):
 		var box = select_box_scene.instance()
 		box.player = main.players._players[k]
