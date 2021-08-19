@@ -114,12 +114,15 @@ func play(anim):
 	sprite.offset = offsets[anim]
 
 func play_sound(sound):
-	if sounds.has(sound) and not playing_sound:
+	if sounds.has(sound):
+		if playing_sound.size() > 1:
+			sounds[playing_sound[0]][playing_sound[1]].stop()
+		var i = randi() % sounds[sound].size()
 		sounds[sound][randi() % sounds[sound].size()].play()
-		playing_sound = true
+		playing_sound = [sound, i]
 
 func end_sound():
-	playing_sound = false
+	playing_sound = [""]
 
 func ready_sounds():
 	for s in sounds:
@@ -132,7 +135,7 @@ func animation_finished_handler():
 func _ready():
 	screen_size = get_viewport_rect().size
 	allowed_to_ledge = true
-	playing_sound = false
+	playing_sound = [""]
 	ledging = false
 	on_ground = false
 	sprite = $AnimatedSprite
@@ -526,6 +529,9 @@ func _physics_process(delta):
 		velocity.y -= vel_add.y
 	if velocity.length() >= 450 and velocity.y >= 0 and (last_vel.length() < 450 or last_vel.y < 0):
 		play_sound("oskour")
+	if (velocity.length() < 450 or velocity.y < 0) and playing_sound[0] == "oskour":
+		sounds[playing_sound[0]][playing_sound[1]].stop()
+		playing_sound = [""]
 	if allowed_to_ledge:
 		var collision
 		for i in get_slide_count():
