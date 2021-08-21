@@ -104,6 +104,7 @@ class APlayer:
 	var controller: ControllerRef = ControllerRef.new()
 	var characterID: int = CharacterIDs.champion
 	var color: Color
+	var score: int = 0
 	
 	func nextCharacter():
 		characterID += 1
@@ -358,13 +359,19 @@ class Players:
 var keyboard: Keyboard = Keyboard.new()
 var joypads: Joypads = Joypads.new()
 var players: Players = Players.new(self)
+var dead_players: int = 0
 
+func kill_player(id):
+	dead_players += 1
+	players._players[id].score = dead_players
+	if dead_players >= players._players.size() - 1:
+		load_menu("res://scenes/menus/MainMenu/MainMenu.tscn")
 
 func joypad_plug(device: int) -> void:
 	if DEBUG: print("Connected joypads: {j}".format({"j": Input.get_connected_joypads()}))
 	
 	if joypads.is_plugged(device):
-		print("Trying to plug twice !")
+		print("Trying to plug twice!")
 		return
 	
 	joypads.plug(device)
@@ -379,7 +386,7 @@ func joypad_unplug(device: int) -> void:
 	if DEBUG: print("Connected joypads: {j}".format({"j": Input.get_connected_joypads()}))
 	
 	if not joypads.is_plugged(device):
-		print("Trying to unplug twice !")
+		print("Trying to unplug twice!")
 		return
 	
 	if joypads.is_active(device):

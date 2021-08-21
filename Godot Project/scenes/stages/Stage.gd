@@ -17,6 +17,8 @@ func _create_portraits():
 		ui.add_child(portrait)
 		characters[k].portrait = portrait
 		characters[k].update_color(0)
+		characters[k].lives_text = portrait.get_node("Control/Lives")
+		characters[k].percent_text = portrait.get_node("Control/Percent")
 
 func create_portraits():
 	call_deferred("_create_portraits")

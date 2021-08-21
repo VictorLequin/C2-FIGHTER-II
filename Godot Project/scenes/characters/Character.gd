@@ -100,6 +100,9 @@ var ledgeTimer
 var sounds = {}
 var playing_sound
 var portrait
+var lives
+var lives_text
+var percent_text
 
 var ui_jump: String = ""
 var ui_up: String = ""
@@ -133,8 +136,19 @@ func ready_sounds():
 func animation_finished_handler():
 	end_anim = true
 
+func die():
+	percent = 0
+	percent_text.text = "0%"
+	lives -= 1
+	lives_text.text = str(lives) + " vies" if lives != 1 and lives != 0 else str(lives) + " vie"
+	if lives <= 0:
+		portrait.get_node("Control/PortraitDePhaseLol").set_modulate(Color(0.1, 0.1, 0.1))
+		get_node("/root/Node").kill_player(id)
+		queue_free()
+
 func _ready():
 	screen_size = get_viewport_rect().size
+	lives = 3
 	allowed_to_ledge = true
 	playing_sound = [""]
 	ledging = false
@@ -445,7 +459,7 @@ func _physics_process(delta):
 			velocity += hit.knockback
 			percent += hit.percent
 	pending_hits = []
-	portrait.get_node("Control/Percent").text = str(int(percent)) + "%"
+	percent_text.text = str(int(percent)) + "%"
 	var vel_add = Vector2()
 	var force = Vector2()
 	if hitting:
@@ -559,3 +573,4 @@ func _physics_process(delta):
 	if position.y > 1000:
 		position = Vector2(0, 0)
 		end_hit()
+		die()
