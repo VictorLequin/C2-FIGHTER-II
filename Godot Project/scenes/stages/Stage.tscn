@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://scenes/stages/Stage.gd" type="Script" id=1]
 [ext_resource path="res://scenes/stages/Camera2D.gd" type="Script" id=2]
+[ext_resource path="res://scenes/menus/ARGrid.tscn" type="PackedScene" id=3]
 
 [node name="Stage" type="TileMap"]
 format = 1
@@ -13,3 +14,12 @@ script = ExtResource( 1 )
 position = Vector2( 0.570297, 459.185 )
 current = true
 script = ExtResource( 2 )
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="ARGRid" parent="CanvasLayer" instance=ExtResource( 3 )]
+anchor_top = 0.8
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = 0.0
+margin_bottom = 0.0

@@ -1,11 +1,12 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://scenes/menus/CharacterSelect/SelectBox.gd" type="Script" id=1]
-[ext_resource path="res://ressources/persos/Champion/idle/idle1.png" type="Texture" id=2]
+[ext_resource path="res://ressources/persos/Champion/Portrait.png" type="Texture" id=2]
 [ext_resource path="res://ressources/menus/Right.png" type="Texture" id=3]
 [ext_resource path="res://ressources/menus/Left.png" type="Texture" id=4]
 [ext_resource path="res://scenes/menus/CharacterSelect/Right.gd" type="Script" id=5]
 [ext_resource path="res://scenes/menus/CharacterSelect/Left.gd" type="Script" id=6]
+[ext_resource path="res://ressources/menus/Joypad.png" type="Texture" id=7]
 
 [node name="Container" type="AspectRatioContainer"]
 anchor_right = 1.0
@@ -27,8 +28,9 @@ __meta__ = {
 }
 
 [node name="CharacterPic" type="TextureRect" parent="Control"]
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchor_left = 0.1
+anchor_right = 0.9
+anchor_bottom = 0.8
 texture = ExtResource( 2 )
 expand = true
 stretch_mode = 6
@@ -39,7 +41,7 @@ __meta__ = {
 [node name="Left" type="TextureRect" parent="Control"]
 anchor_left = 0.08
 anchor_right = 0.2
-anchor_bottom = 1.0
+anchor_bottom = 0.8
 texture = ExtResource( 4 )
 expand = true
 stretch_mode = 6
@@ -55,7 +57,7 @@ one_shot = true
 [node name="Right" type="TextureRect" parent="Control"]
 anchor_left = 0.8
 anchor_right = 0.92
-anchor_bottom = 1.0
+anchor_bottom = 0.8
 texture = ExtResource( 3 )
 expand = true
 stretch_mode = 6
@@ -67,3 +69,13 @@ __meta__ = {
 [node name="Timer" type="Timer" parent="Control/Right"]
 wait_time = 0.1
 one_shot = true
+
+[node name="Controller" type="TextureRect" parent="Control"]
+anchor_top = 0.75
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource( 7 )
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}

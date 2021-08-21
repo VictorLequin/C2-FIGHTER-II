@@ -1,10 +1,5 @@
 extends Control
 
-
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
-
 var select_box_scene = preload("res://scenes/menus/CharacterSelect/SelectBox.tscn")
 
 onready var main = get_node("/root/Node")
@@ -13,7 +8,7 @@ func recreate_boxes():
 	call_deferred("_recreate_boxes")
 
 func _recreate_boxes():
-	var grid = get_child(1)
+	var grid = $ARGrid
 	
 	for box in grid.get_children():
 		grid.remove_child(box)
@@ -33,7 +28,6 @@ func _recreate_boxes():
 	if some_inactive:
 		grid.add_child(preload("res://scenes/menus/CharacterSelect/PressAccept.tscn").instance())
 
-# Called when the node enters the scene tree for the first time.
 func _ready():
 	recreate_boxes()
 

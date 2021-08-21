@@ -85,8 +85,8 @@ class APlayer:
 	const nbCharacters = 2
 	enum CharacterIDs {champion=0, young=1}
 	const characterPics = {
-		CharacterIDs.champion: "res://ressources/persos/Champion/idle/idle1.png",
-		CharacterIDs.young: "res://ressources/persos/YoungChampion/idle/idle1.png"
+		CharacterIDs.champion: "res://ressources/persos/Champion/Portrait.png",
+		CharacterIDs.young: "res://ressources/persos/YoungChampion/Portrait.png"
 		}
 	
 	const characterScenes = {

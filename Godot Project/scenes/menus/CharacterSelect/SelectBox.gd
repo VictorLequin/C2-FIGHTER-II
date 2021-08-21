@@ -13,6 +13,15 @@ const input_delay = 200 # ms
 func _ready():
 	left_arrow = $Control/Left
 	right_arrow = $Control/Right
+	var path
+	if player.controller.type == 1:
+		path = "res://ressources/menus/Joypad.png"
+	else:
+		if player.controller.id == 1:
+			path = "res://ressources/menus/wasd.png"
+		else:
+			path = "res://ressources/menus/arrows.png"
+	$Control/Controller.texture = load(path)
 	reload()
 
 func _input(event):

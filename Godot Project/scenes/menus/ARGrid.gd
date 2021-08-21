@@ -1,11 +1,7 @@
 extends GridContainer
 
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
-
-export var child_ar: float
+export var child_ar: float = 1
 
 func calc_col(n, ar):
 	# find a col that minimizes min(1/col, ar/ceil(n/col)), allowing for maximal content size
@@ -21,15 +17,12 @@ func calc_col(n, ar):
 	else: return col2
 
 func update():
-	if get_size().x == 0 : return
-	var ar = (get_size().x/get_size().y) / child_ar
+	if get_size().x == 0 or get_size().y == 0: return
+	var ar = (float(get_size().x)/float(get_size().y)) / child_ar
 	columns = calc_col(get_child_count(), ar)
 
-# Called when the node enters the scene tree for the first time.
 func _ready():
 	call_deferred("update")
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	call_deferred("update")
