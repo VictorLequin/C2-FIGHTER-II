@@ -17,6 +17,13 @@ enum ControllerType {keyboard, joypad}
 func playersLocked() -> bool:
 	return gamestate == GameState.stage
 
+# Color generation
+var color: int = 0
+var colors = [Color("f62929"), Color("31ae20"), Color("1e55d3"), Color("ffcb0e"), Color("ff95cf"), Color("ff6600"), Color("9203ff"), Color("80eaff"), Color("146200"), Color("ff0066"), Color("2084f7"), Color("afcd19"), Color("8f1010"), Color("f1c651"), Color("06e1a0"), Color("fb00ff")]
+
+func next_color():
+	color += 1
+	return colors[(color - 1) % colors.size()]
 
 class Keyboard:
 	var _active: Dictionary
@@ -96,6 +103,7 @@ class APlayer:
 	
 	var controller: ControllerRef = ControllerRef.new()
 	var characterID: int = CharacterIDs.champion
+	var color: Color
 	
 	func nextCharacter():
 		characterID += 1
@@ -137,6 +145,7 @@ class Players:
 	func create_player(playerID: int) -> void:
 		while !exists(playerID):
 			_players.append(APlayer.new())
+			_players[_players.size() - 1].color = main.next_color()
 			set_bindings(playerID)
 	
 	# WARNING: invalidates all greater playerIDs

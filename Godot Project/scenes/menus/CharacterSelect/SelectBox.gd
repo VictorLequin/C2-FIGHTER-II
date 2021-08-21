@@ -5,12 +5,16 @@ var ui_left: String
 var ui_right: String
 var left_arrow
 var right_arrow
+var portrait
+var cadre
 
 onready var lastUpdate = OS.get_ticks_msec()
 const input_delay = 200 # ms
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	portrait = $Control/CharacterPic
+	cadre = $Control/Cadre
 	left_arrow = $Control/Left
 	right_arrow = $Control/Right
 	var path
@@ -37,4 +41,9 @@ func _input(event):
 		reload()
 
 func reload():
-	get_node("Control/CharacterPic").texture = load(player.picPath())
+	portrait.texture = load(player.picPath())
+	var color = player.color
+	color.r = 1 - (1 - color.r)*2/3
+	color.g = 1 - (1 - color.g)*2/3
+	color.b = 1 - (1 - color.b)*2/3
+	cadre.set_modulate(color)

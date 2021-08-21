@@ -99,6 +99,7 @@ var allowed_to_ledge
 var ledgeTimer
 var sounds = {}
 var playing_sound
+var portrait
 
 var ui_jump: String = ""
 var ui_up: String = ""
@@ -169,6 +170,14 @@ func _ready():
 	damageArea.id = id
 	ledgeTimer = $LedgeTimer
 	ledgeTimer.connect("timeout", self, "allow_ledge")
+
+func update_color(r):
+	var color = portrait.player.color
+	color.r = r + 1 - (1 - color.r)*2/3
+	color.g = 1 - (1 - color.g)*2/3
+	color.b = 1 - (1 - color.b)*2/3
+	color.v *= 1.1
+	sprite.set_modulate(color)
 
 func allow_ledge():
 	allowed_to_ledge = true
@@ -409,7 +418,7 @@ func take_hit():
 	if ledging:
 		unledge()
 	velocity /= 2
-	sprite.set_modulate(Color(2,1,1,1))
+	update_color(1)
 	red_highlight_time = 0.1
 	play_sound("ouch")
 
@@ -420,7 +429,7 @@ func _physics_process(delta):
 	if red_highlight_time > 0:
 		red_highlight_time -= delta
 		if red_highlight_time <= 0:
-			sprite.set_modulate(Color(1,1,1,1))
+			update_color(0)
 	if end_anim:
 		end_anim = false
 		end_anim_fn()
@@ -436,7 +445,7 @@ func _physics_process(delta):
 			velocity += hit.knockback
 			percent += hit.percent
 	pending_hits = []
-	$Percent.text = str(int(percent)) + "%"
+	portrait.get_node("Control/Percent").text = str(int(percent)) + "%"
 	var vel_add = Vector2()
 	var force = Vector2()
 	if hitting:

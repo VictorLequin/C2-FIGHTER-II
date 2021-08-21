@@ -178,19 +178,6 @@ script = ExtResource( 72 )
 shape = ExtResource( 57 )
 disabled = true
 
-[node name="Percent" type="Label" parent="."]
-anchor_left = 0.5
-anchor_right = 0.5
-margin_left = -20.0
-margin_top = -134.0
-margin_right = 20.0
-margin_bottom = -120.0
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="LedgeTimer" type="Timer" parent="."]
 wait_time = 0.5
 one_shot = true

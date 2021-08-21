@@ -15,6 +15,8 @@ func _create_portraits():
 		var portrait = portrait_scene.instance()
 		portrait.player = main.players._players[k]
 		ui.add_child(portrait)
+		characters[k].portrait = portrait
+		characters[k].update_color(0)
 
 func create_portraits():
 	call_deferred("_create_portraits")
