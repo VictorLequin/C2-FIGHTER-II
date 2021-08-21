@@ -5,6 +5,7 @@ onready var boutStage2 = $VBoxContainer/HBoxContainer/BoutStage2
 onready var boutStage3 = $VBoxContainer/HBoxContainer/BoutStage3
 onready var boutStage4 = $VBoxContainer/HBoxContainer/BoutStage4
 
+onready var main = get_node("/root/Node")
 
 func _ready() :
 	boutStage1.grab_focus()
@@ -55,3 +56,7 @@ func _on_BoutStage4_focus_entered():
 
 func _on_BoutStage4_focus_exited():
 	boutStage4.size_flags_horizontal = boutStage4.SIZE_EXPAND_FILL
+
+func _input(event):
+	if event.is_action_pressed("ui_cancel"):
+		main.load_menu("res://scenes/menus/CharacterSelect/CharacterSelect.tscn")

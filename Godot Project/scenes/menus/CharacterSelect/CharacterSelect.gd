@@ -56,6 +56,18 @@ func _input(event):
 			if main.keyboard_join(layout): get_tree().set_input_as_handled()
 	
 	
+	if event.is_action_pressed("ui_cancel"):
+		if event is InputEventJoypadButton and event.button_index == JOY_BUTTON_1 and !main.joypads.is_active(event.device):
+			main.load_menu("res://scenes/menus/MainMenu/MainMenu.tscn")
+		elif event is InputEventKey:
+			var layout = main.KeyboardLayouts.none
+			if event.scancode == KEY_ESCAPE:
+				layout = main.KeyboardLayouts.wasd
+			elif event.scancode == KEY_KP_PERIOD:
+				layout = main.KeyboardLayouts.arrows
+			if layout != main.KeyboardLayouts.none and !main.keyboard.is_active(layout):
+				main.load_menu("res://scenes/menus/MainMenu/MainMenu.tscn")
+	
 	if event is InputEventJoypadButton and event.button_index == JOY_BUTTON_1 :
 		if main.joypad_leave(event.device): get_tree().set_input_as_handled()
 	
@@ -68,7 +80,4 @@ func _input(event):
 		
 		if layout != main.KeyboardLayouts.none:
 			if main.keyboard_leave(layout): get_tree().set_input_as_handled()
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+			
