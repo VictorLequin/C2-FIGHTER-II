@@ -213,7 +213,7 @@ func enemy_hit(enemy):
 			players_hit.append(enemy.id)
 			enemy.pending_hits.append({
 				"knockback": Vector2(attacks[atk].knockback.x*direction/enemy.mass*(1 + enemy.percent/100), -attacks[atk].knockback.y/enemy.mass*(1 + enemy.percent/100)),
-				"dealer": str(id) + "." + str(atk_id),
+				"dealer": str(damageArea.id) + "." + str(damageArea.atk_id),
 				"percent": attacks[atk].percent/enemy.mass
 			})
 			play_sound("tiens")
@@ -575,5 +575,6 @@ func _physics_process(delta):
 	# TEMP
 	if position.y > 1000:
 		position = Vector2(0, 0)
+		velocity = Vector2.ZERO
 		end_hit()
 		die()
