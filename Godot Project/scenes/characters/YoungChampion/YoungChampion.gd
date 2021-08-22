@@ -150,6 +150,10 @@ func update_dmgBox(delta):
 			dmgBox.scale.x = 64.245*f
 			dmgBox.scale.y = 39.541*f
 
+func die():
+	grappling_timer.stop()
+	.die()
+
 func end_anim_fn():
 	if atk == "spe_side" or atk == "spe_neutral":
 		baby.vanish()
