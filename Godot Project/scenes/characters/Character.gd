@@ -402,6 +402,9 @@ func land():
 	jump_count = 1
 	jumping = false
 	velocity.x = 0
+	if playing_sound[0] == "oskour":
+		sounds[playing_sound[0]][playing_sound[1]].stop()
+		playing_sound = [""]
 
 func end_anim_fn():
 	playing = ""
