@@ -120,24 +120,19 @@ animations = [ {
 "name": "spe_neutral",
 "speed": 10.0
 }, {
-"frames": [ ExtResource( 16 ), ExtResource( 9 ), ExtResource( 14 ), ExtResource( 15 ) ],
+"frames": [ ExtResource( 17 ), ExtResource( 18 ), ExtResource( 5 ), ExtResource( 4 ) ],
 "loop": true,
-"name": "walk",
+"name": "air",
 "speed": 5.0
+}, {
+"frames": [ ExtResource( 63 ), ExtResource( 64 ), ExtResource( 61 ), ExtResource( 62 ), ExtResource( 65 ), ExtResource( 66 ) ],
+"loop": false,
+"name": "spe_down",
+"speed": 10.0
 }, {
 "frames": [ ExtResource( 11 ), ExtResource( 3 ), ExtResource( 12 ) ],
 "loop": true,
 "name": "spe_down_idle",
-"speed": 3.0
-}, {
-"frames": [ ExtResource( 34 ), ExtResource( 39 ), ExtResource( 32 ), ExtResource( 23 ), ExtResource( 40 ), ExtResource( 58 ), ExtResource( 41 ) ],
-"loop": false,
-"name": "spe_side",
-"speed": 8.0
-}, {
-"frames": [ ExtResource( 83 ), ExtResource( 84 ), ExtResource( 85 ) ],
-"loop": true,
-"name": "ledge",
 "speed": 3.0
 }, {
 "frames": [ ExtResource( 6 ), ExtResource( 20 ), ExtResource( 44 ) ],
@@ -145,25 +140,30 @@ animations = [ {
 "name": "jump",
 "speed": 8.0
 }, {
-"frames": [ ExtResource( 46 ), ExtResource( 43 ), ExtResource( 35 ), ExtResource( 53 ), ExtResource( 49 ), ExtResource( 21 ), ExtResource( 36 ), ExtResource( 50 ) ],
+"frames": [ ExtResource( 34 ), ExtResource( 39 ), ExtResource( 32 ), ExtResource( 23 ), ExtResource( 40 ), ExtResource( 58 ), ExtResource( 41 ) ],
 "loop": false,
-"name": "spe_up",
-"speed": 10.0
-}, {
-"frames": [ ExtResource( 63 ), ExtResource( 64 ), ExtResource( 61 ), ExtResource( 62 ), ExtResource( 65 ), ExtResource( 66 ) ],
-"loop": false,
-"name": "spe_down",
-"speed": 10.0
+"name": "spe_side",
+"speed": 8.0
 }, {
 "frames": [ ExtResource( 28 ), ExtResource( 24 ), ExtResource( 60 ), ExtResource( 19 ), ExtResource( 57 ), ExtResource( 45 ) ],
 "loop": false,
 "name": "neutral",
 "speed": 13.0
 }, {
-"frames": [ ExtResource( 17 ), ExtResource( 18 ), ExtResource( 5 ), ExtResource( 4 ) ],
+"frames": [ ExtResource( 16 ), ExtResource( 9 ), ExtResource( 14 ), ExtResource( 15 ) ],
 "loop": true,
-"name": "air",
+"name": "walk",
 "speed": 5.0
+}, {
+"frames": [ ExtResource( 83 ), ExtResource( 84 ), ExtResource( 85 ) ],
+"loop": true,
+"name": "ledge",
+"speed": 3.0
+}, {
+"frames": [ ExtResource( 46 ), ExtResource( 43 ), ExtResource( 35 ), ExtResource( 53 ), ExtResource( 49 ), ExtResource( 21 ), ExtResource( 36 ), ExtResource( 50 ) ],
+"loop": false,
+"name": "spe_up",
+"speed": 10.0
 }, {
 "frames": [ ExtResource( 67 ), ExtResource( 70 ), ExtResource( 68 ), ExtResource( 69 ), ExtResource( 71 ), ExtResource( 72 ), ExtResource( 73 ), ExtResource( 74 ) ],
 "loop": true,
@@ -250,50 +250,50 @@ position = Vector2( 0, -16.372 )
 shape = SubResource( 6 )
 disabled = true
 
-[node name="hop1" type="AudioStreamPlayer2D" parent="." index="9"]
+[node name="hop1" type="AudioStreamPlayer2D" parent="." index="8"]
 stream = ExtResource( 86 )
 pitch_scale = 0.9
 
-[node name="hop2" type="AudioStreamPlayer2D" parent="." index="10"]
+[node name="hop2" type="AudioStreamPlayer2D" parent="." index="9"]
 stream = ExtResource( 87 )
 pitch_scale = 0.9
 
-[node name="hop3" type="AudioStreamPlayer2D" parent="." index="11"]
+[node name="hop3" type="AudioStreamPlayer2D" parent="." index="10"]
 stream = ExtResource( 88 )
 pitch_scale = 0.9
 
-[node name="oskour1" type="AudioStreamPlayer2D" parent="." index="12"]
+[node name="oskour1" type="AudioStreamPlayer2D" parent="." index="11"]
 stream = ExtResource( 90 )
 pitch_scale = 0.9
 
-[node name="oskour2" type="AudioStreamPlayer2D" parent="." index="13"]
+[node name="oskour2" type="AudioStreamPlayer2D" parent="." index="12"]
 stream = ExtResource( 89 )
 pitch_scale = 0.9
 
-[node name="ouch1" type="AudioStreamPlayer2D" parent="." index="14"]
+[node name="ouch1" type="AudioStreamPlayer2D" parent="." index="13"]
 stream = ExtResource( 91 )
 pitch_scale = 0.9
 
-[node name="ouch2" type="AudioStreamPlayer2D" parent="." index="15"]
+[node name="ouch2" type="AudioStreamPlayer2D" parent="." index="14"]
 stream = ExtResource( 92 )
 pitch_scale = 0.9
 
-[node name="ouch3" type="AudioStreamPlayer2D" parent="." index="16"]
+[node name="ouch3" type="AudioStreamPlayer2D" parent="." index="15"]
 stream = ExtResource( 93 )
 pitch_scale = 0.9
 
-[node name="tiens1" type="AudioStreamPlayer2D" parent="." index="17"]
+[node name="tiens1" type="AudioStreamPlayer2D" parent="." index="16"]
 stream = ExtResource( 94 )
 pitch_scale = 0.9
 
-[node name="tiens2" type="AudioStreamPlayer2D" parent="." index="18"]
+[node name="tiens2" type="AudioStreamPlayer2D" parent="." index="17"]
 stream = ExtResource( 95 )
 pitch_scale = 0.9
 
-[node name="saka1" type="AudioStreamPlayer2D" parent="." index="19"]
+[node name="saka1" type="AudioStreamPlayer2D" parent="." index="18"]
 stream = ExtResource( 96 )
 pitch_scale = 0.9
 
-[node name="saka2" type="AudioStreamPlayer2D" parent="." index="20"]
+[node name="saka2" type="AudioStreamPlayer2D" parent="." index="19"]
 stream = ExtResource( 97 )
 pitch_scale = 0.9
