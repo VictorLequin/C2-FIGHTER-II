@@ -1,4 +1,4 @@
-[gd_scene load_steps=104 format=2]
+[gd_scene load_steps=115 format=2]
 
 [ext_resource path="res://scenes/characters/Character.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/characters/Champion/Champion.gd" type="Script" id=2]
@@ -97,6 +97,17 @@
 [ext_resource path="res://ressources/persos/Champion/sounds/tiens2.wav" type="AudioStream" id=95]
 [ext_resource path="res://ressources/persos/Champion/sounds/sakamerde1.wav" type="AudioStream" id=96]
 [ext_resource path="res://ressources/persos/Champion/sounds/sakamerde2.wav" type="AudioStream" id=97]
+[ext_resource path="res://ressources/persos/Champion/atkdown/down7.png" type="Texture" id=98]
+[ext_resource path="res://ressources/persos/Champion/atkdown/down6.png" type="Texture" id=99]
+[ext_resource path="res://ressources/persos/Champion/atkdown/down9.png" type="Texture" id=100]
+[ext_resource path="res://ressources/persos/Champion/atkdown/down10.png" type="Texture" id=101]
+[ext_resource path="res://ressources/persos/Champion/atkdown/down1.png" type="Texture" id=102]
+[ext_resource path="res://ressources/persos/Champion/atkdown/down11.png" type="Texture" id=103]
+[ext_resource path="res://ressources/persos/Champion/atkdown/down2.png" type="Texture" id=104]
+[ext_resource path="res://ressources/persos/Champion/atkdown/down3.png" type="Texture" id=105]
+[ext_resource path="res://ressources/persos/Champion/atkdown/down5.png" type="Texture" id=106]
+[ext_resource path="res://ressources/persos/Champion/atkdown/down8.png" type="Texture" id=107]
+[ext_resource path="res://ressources/persos/Champion/atkdown/down4.png" type="Texture" id=108]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -115,24 +126,14 @@ animations = [ {
 "name": "side",
 "speed": 10.0
 }, {
-"frames": [ ExtResource( 67 ), ExtResource( 70 ), ExtResource( 68 ), ExtResource( 69 ), ExtResource( 71 ), ExtResource( 72 ), ExtResource( 73 ), ExtResource( 74 ) ],
-"loop": true,
-"name": "stun",
-"speed": 5.0
-}, {
 "frames": [ ExtResource( 30 ), ExtResource( 54 ), ExtResource( 25 ), ExtResource( 55 ), ExtResource( 52 ) ],
 "loop": false,
 "name": "spe_neutral",
 "speed": 10.0
 }, {
-"frames": [ ExtResource( 16 ), ExtResource( 9 ), ExtResource( 14 ), ExtResource( 15 ) ],
+"frames": [ ExtResource( 11 ), ExtResource( 3 ), ExtResource( 12 ) ],
 "loop": true,
-"name": "walk",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 83 ), ExtResource( 84 ), ExtResource( 85 ) ],
-"loop": true,
-"name": "ledge",
+"name": "spe_down_idle",
 "speed": 3.0
 }, {
 "frames": [ ExtResource( 46 ), ExtResource( 43 ), ExtResource( 35 ), ExtResource( 53 ), ExtResource( 49 ), ExtResource( 21 ), ExtResource( 36 ), ExtResource( 50 ) ],
@@ -140,14 +141,9 @@ animations = [ {
 "name": "spe_up",
 "speed": 10.0
 }, {
-"frames": [ ExtResource( 63 ), ExtResource( 64 ), ExtResource( 61 ), ExtResource( 62 ), ExtResource( 65 ), ExtResource( 66 ) ],
-"loop": false,
-"name": "spe_down",
-"speed": 10.0
-}, {
-"frames": [ ExtResource( 17 ), ExtResource( 18 ), ExtResource( 5 ), ExtResource( 4 ) ],
+"frames": [ ExtResource( 16 ), ExtResource( 9 ), ExtResource( 14 ), ExtResource( 15 ) ],
 "loop": true,
-"name": "air",
+"name": "walk",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 28 ), ExtResource( 24 ), ExtResource( 60 ), ExtResource( 19 ), ExtResource( 57 ), ExtResource( 45 ) ],
@@ -160,15 +156,35 @@ animations = [ {
 "name": "spe_side",
 "speed": 8.0
 }, {
-"frames": [ ExtResource( 11 ), ExtResource( 3 ), ExtResource( 12 ) ],
-"loop": true,
-"name": "spe_down_idle",
-"speed": 3.0
-}, {
 "frames": [ ExtResource( 6 ), ExtResource( 20 ), ExtResource( 44 ) ],
 "loop": false,
 "name": "jump",
 "speed": 8.0
+}, {
+"frames": [ ExtResource( 17 ), ExtResource( 18 ), ExtResource( 5 ), ExtResource( 4 ) ],
+"loop": true,
+"name": "air",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 102 ), ExtResource( 104 ), ExtResource( 105 ), ExtResource( 108 ), ExtResource( 106 ), ExtResource( 99 ), ExtResource( 98 ), ExtResource( 107 ), ExtResource( 100 ), ExtResource( 101 ), ExtResource( 103 ) ],
+"loop": false,
+"name": "down",
+"speed": 13.0
+}, {
+"frames": [ ExtResource( 83 ), ExtResource( 84 ), ExtResource( 85 ) ],
+"loop": true,
+"name": "ledge",
+"speed": 3.0
+}, {
+"frames": [ ExtResource( 63 ), ExtResource( 64 ), ExtResource( 61 ), ExtResource( 62 ), ExtResource( 65 ), ExtResource( 66 ) ],
+"loop": false,
+"name": "spe_down",
+"speed": 10.0
+}, {
+"frames": [ ExtResource( 67 ), ExtResource( 70 ), ExtResource( 68 ), ExtResource( 69 ), ExtResource( 71 ), ExtResource( 72 ), ExtResource( 73 ), ExtResource( 74 ) ],
+"loop": true,
+"name": "stun",
+"speed": 5.0
 } ]
 
 [sub_resource type="CapsuleShape2D" id=2]

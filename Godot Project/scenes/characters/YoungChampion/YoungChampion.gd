@@ -31,7 +31,8 @@ func _ready():
 		"spe_down": Vector2(0.514, -1.602),
 		"spe_down_idle": Vector2(0.514, -1.602),
 		"stun": Vector2(0.551, 2.318),
-		"ledge": Vector2(-2.629, -1.602)
+		"ledge": Vector2(-2.629, -1.602),
+		"down": Vector2(-0.454, 11.392)
 	}
 	walk_speed = 350
 	air_acc = 200
@@ -53,6 +54,12 @@ func _ready():
 		},
 		"up": {
 			"knockback": Vector2(0, 300),
+			"cancelable": true,
+			"locking": false,
+			"percent": 3
+		},
+		"down": {
+			"knockback": Vector2(0, -200),
 			"cancelable": true,
 			"locking": false,
 			"percent": 3
@@ -136,6 +143,12 @@ func update_dmgBox(delta):
 			babilboquet.points[0].x = direction*abs(babilboquet.points[0].x)
 			babilboquet.points[1] = babilboquet.points[0] + (target - position - babilboquet.points[0])*f
 			babysprite.position = babilboquet.points[0] + (target - position - babilboquet.points[0])*f
+		if atk == "down":
+			var f = cst_cst_interpol(4.0/12.0, 5.5/12.0, atk_time)
+			dmgBox.position.x = -6.402*f*direction
+			dmgBox.position.y = 25.59*f
+			dmgBox.scale.x = 64.245*f
+			dmgBox.scale.y = 39.541*f
 
 func end_anim_fn():
 	if atk == "spe_side" or atk == "spe_neutral":

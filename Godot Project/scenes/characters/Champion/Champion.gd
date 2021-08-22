@@ -49,6 +49,12 @@ func update_dmgBox(delta):
 			dmgBox.position.y = -77.076*f
 			dmgBox.scale.x = 10*f
 			dmgBox.scale.y = 39.953*f
+		if atk == "down":
+			var f = cst_cst_interpol(5.0/13.0, 7.5/13.0, atk_time)
+			dmgBox.position.x = 12.978*f*direction
+			dmgBox.position.y = 26.193*f
+			dmgBox.scale.x = 50*f
+			dmgBox.scale.y = 30*f
 
 func _ready():
 	spe_side_count = 0
@@ -67,7 +73,8 @@ func _ready():
 		"spe_down": Vector2(2.58, 0.226),
 		"spe_down_idle": Vector2(2.58, 0.226),
 		"stun": Vector2(0.528, -1.744),
-		"ledge": Vector2(0.609, -3.412)
+		"ledge": Vector2(0.609, -3.412),
+		"down": Vector2(4.616, 6.292)
 	}
 	percentsBlocked = 0
 	shieldBox = $ShieldArea/CollisionShape2D

@@ -29,7 +29,8 @@ var offsets = {
 	"spe_up": Vector2(-0.499, 14.328),
 	"spe_down": Vector2(2.58, 0.226),
 	"stun": Vector2(0.528, -1.744),
-	"ledge": Vector2(0.609, -3.412)
+	"ledge": Vector2(0.609, -3.412),
+	"down": Vector2(4.616, 6.292)
 }
 var attacks = {
 	"neutral": {
@@ -49,6 +50,12 @@ var attacks = {
 		"cancelable": true,
 		"locking": false,
 		"percent": 6
+	},
+	"down": {
+		"knockback": Vector2(0, -400),
+		"cancelable": false,
+		"locking": false,
+		"percent": 5
 	},
 	"spe_neutral": {
 		"cancelable": false,
@@ -284,6 +291,8 @@ func _input(event):
 		var wanted_atk
 		if holding_up:
 			wanted_atk = "up"
+		elif holding_down:
+			wanted_atk = "down"
 		else:
 			if not siding:
 				wanted_atk = "neutral"
@@ -397,6 +406,12 @@ func update_dmgBox(delta):
 			dmgBox.position.y = -119.19*f
 			dmgBox.scale.x = 46.445*f
 			dmgBox.scale.y = 37.715*f
+		if atk == "down":
+			var f = cst_cst_interpol(5.0/13.0, 7.5/13.0, atk_time)
+			dmgBox.position.x = 12.978*f*direction
+			dmgBox.position.y = 26.193*f
+			dmgBox.scale.x = 50*f
+			dmgBox.scale.y = 30*f
 
 func land():
 	jump_count = 1
