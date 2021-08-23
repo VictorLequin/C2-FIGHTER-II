@@ -30,7 +30,8 @@ var offsets = {
 	"spe_down": Vector2(2.58, 0.226),
 	"stun": Vector2(0.528, -1.744),
 	"ledge": Vector2(0.609, -3.412),
-	"down": Vector2(4.616, 6.292)
+	"down": Vector2(4.616, 6.292),
+	"roll": Vector2(30.553, -2.73)
 }
 var attacks = {
 	"neutral": {
@@ -110,6 +111,9 @@ var portrait
 var lives
 var lives_text
 var percent_text
+var invincible
+var rolling
+var roll_distance
 
 var ui_jump: String = ""
 var ui_up: String = ""
@@ -155,7 +159,10 @@ func die():
 
 func _ready():
 	screen_size = get_viewport_rect().size
+	roll_distance = 200
+	invincible = false
 	lives = 3
+	rolling = false
 	allowed_to_ledge = true
 	playing_sound = [""]
 	ledging = false
@@ -271,9 +278,16 @@ func spe_side_acc():
 func spe_down_acc():
 	return Vector2.ZERO
 
+func roll():
+	invincible = true
+	rolling = true
+	atk_time = 0
+	play("roll")
+	play_sound("jump")
+
 func _input(event):
 	if event.is_action_pressed(ui_jump) and (on_ground or jump_count > 0):
-		var allowed_to_jump = not hitting
+		var allowed_to_jump = not hitting and not rolling
 		if hitting:
 			if attacks[atk].cancelable:
 				allowed_to_jump = true
@@ -283,6 +297,9 @@ func _input(event):
 				jump_count -= 1
 			if ledging:
 				unledge()
+				if (Input.is_action_pressed(ui_right) and direction == 1) or (Input.is_action_pressed(ui_left) and direction == -1):
+					roll()
+					return
 			jumping = true
 			end_hit()
 			play("jump")
@@ -298,7 +315,7 @@ func _input(event):
 				wanted_atk = "neutral"
 			else:
 				wanted_atk = "side"
-		var allowed_to_hit = not hitting
+		var allowed_to_hit = not hitting and not rolling
 		if hitting and wanted_atk != atk:
 			if attacks[atk].cancelable:
 				allowed_to_hit = true
@@ -333,7 +350,7 @@ func _input(event):
 				wanted_atk = "spe_neutral"
 			else:
 				wanted_atk = "spe_side"
-		var allowed_to_hit = not hitting
+		var allowed_to_hit = not hitting and not rolling
 		if hitting and wanted_atk != atk:
 			if attacks[atk].cancelable:
 				allowed_to_hit = true
@@ -424,6 +441,9 @@ func land():
 func end_anim_fn():
 	playing = ""
 	jumping = false
+	if rolling:
+		rolling = false
+		atk_time = 0
 	end_hit()
 
 func change_direction(new_direction):
@@ -466,16 +486,17 @@ func _physics_process(delta):
 		end_anim = false
 		end_anim_fn()
 	update_dmgBox(delta)
-	var is_hit = false
-	for hit in pending_hits:
-		if not hit.dealer in blocked:
-			is_hit = true
-	if is_hit:
-		take_hit()
-	for hit in pending_hits:
-		if not hit.dealer in blocked:
-			velocity += hit.knockback
-			percent += hit.percent
+	if not invincible:
+		var is_hit = false
+		for hit in pending_hits:
+			if not hit.dealer in blocked:
+				is_hit = true
+		if is_hit:
+			take_hit()
+		for hit in pending_hits:
+			if not hit.dealer in blocked:
+				velocity += hit.knockback
+				percent += hit.percent
 	pending_hits = []
 	percent_text.text = str(int(percent)) + "%"
 	var vel_add = Vector2()
@@ -506,14 +527,14 @@ func _physics_process(delta):
 		force.y += gravity
 		force -= air_frott_lin*velocity
 	var direction_new = 0
-	if Input.is_action_pressed(ui_right):
+	if Input.is_action_pressed(ui_right) and not rolling:
 		siding = true
 		direction_new = 1
 		vel_walk.x += walk_speed
 		vel_air.x += air_speed
 		if not on_ground and not ledging:
 			force.x += air_acc/max(1, velocity.length()/200)
-	if Input.is_action_pressed(ui_left):
+	if Input.is_action_pressed(ui_left) and not rolling:
 		siding = true
 		vel_walk.x -= walk_speed
 		direction_new = -1
@@ -546,7 +567,7 @@ func _physics_process(delta):
 		vel_add.x = direction*min(direction*vel_add.x, 0)
 		if vel_add.length() > 0:
 			unledge()
-	if not jumping and not hitting and stunned <= 0 and not ledging:
+	if not jumping and not hitting and stunned <= 0 and not ledging and not rolling:
 		if on_ground:
 			if vel_walk.length() > 0:
 				play("walk")
@@ -563,16 +584,21 @@ func _physics_process(delta):
 	if not on_ground:
 		unsnapped = false
 	last_position = position
-	velocity = move_and_slide_with_snap((velocity + last_vel)/2.0 + vel_add, snap, Vector2(0, -1))
-	if abs(velocity.x) >= abs(vel_add.x):
-		velocity.x -= vel_add.x
-	if abs(velocity.y) >= abs(vel_add.y):
-		velocity.y -= vel_add.y
-	if velocity.length() >= 450 and velocity.y >= 0 and (last_vel.length() < 450 or last_vel.y < 0):
-		play_sound("oskour")
-	if (velocity.length() < 450 or velocity.y < 0) and playing_sound[0] == "oskour":
-		sounds[playing_sound[0]][playing_sound[1]].stop()
-		playing_sound = [""]
+	if not rolling:
+		velocity = move_and_slide_with_snap((velocity + last_vel)/2.0 + vel_add, snap, Vector2(0, -1))
+		if abs(velocity.x) >= abs(vel_add.x):
+			velocity.x -= vel_add.x
+		if abs(velocity.y) >= abs(vel_add.y):
+			velocity.y -= vel_add.y
+		if velocity.length() >= 450 and velocity.y >= 0 and (last_vel.length() < 450 or last_vel.y < 0):
+			play_sound("oskour")
+		if (velocity.length() < 450 or velocity.y < 0) and playing_sound[0] == "oskour":
+			sounds[playing_sound[0]][playing_sound[1]].stop()
+			playing_sound = [""]
+	else:
+		atk_time += delta
+		velocity = Vector2(direction*(roll_distance + ledgeShift.x)*(1 + 0.875*exp(-atk_time/0.050) + 1.875*exp(-atk_time/0.25)), -ledgeShift.y*1.3298270197*(cos(5.4322*atk_time-0.719739456936)/0.21+5.173*sin(5.4322*atk_time-0.719739456936))*exp(-atk_time/0.21))
+		move_and_slide_with_snap(velocity, snap, Vector2(0, -1))
 	if allowed_to_ledge:
 		var collision
 		for i in get_slide_count():

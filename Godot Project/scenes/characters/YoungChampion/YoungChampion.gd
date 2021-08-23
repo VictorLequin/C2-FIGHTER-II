@@ -32,7 +32,8 @@ func _ready():
 		"spe_down_idle": Vector2(0.514, -1.602),
 		"stun": Vector2(0.551, 2.318),
 		"ledge": Vector2(-2.629, -1.602),
-		"down": Vector2(-0.454, 11.392)
+		"down": Vector2(-0.454, 11.392),
+		"roll": Vector2(28.585, -1.602)
 	}
 	walk_speed = 350
 	air_acc = 200

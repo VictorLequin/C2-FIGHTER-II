@@ -74,7 +74,8 @@ func _ready():
 		"spe_down_idle": Vector2(2.58, 0.226),
 		"stun": Vector2(0.528, -1.744),
 		"ledge": Vector2(0.609, -3.412),
-		"down": Vector2(4.616, 6.292)
+		"down": Vector2(4.616, 6.292),
+		"roll": Vector2(30.553, -2.73)
 	}
 	percentsBlocked = 0
 	shieldBox = $ShieldArea/CollisionShape2D
