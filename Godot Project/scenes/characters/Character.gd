@@ -226,7 +226,7 @@ func enemy_hit(enemy):
 		if not players_hit.has(enemy.id):
 			players_hit.append(enemy.id)
 			enemy.pending_hits.append({
-				"knockback": Vector2(attacks[atk].knockback.x*direction/enemy.mass*(1 + enemy.percent/100), -attacks[atk].knockback.y/enemy.mass*(1 + enemy.percent/100)),
+				"knockback": Vector2(attacks[atk].knockback.x*direction/enemy.mass*(1 + enemy.percent/100.0), -attacks[atk].knockback.y/enemy.mass*(1 + enemy.percent/100)),
 				"dealer": str(damageArea.id) + "." + str(damageArea.atk_id),
 				"percent": attacks[atk].percent/enemy.mass
 			})
@@ -444,6 +444,7 @@ func end_anim_fn():
 	if rolling:
 		rolling = false
 		atk_time = 0
+		invincible = false
 	end_hit()
 
 func change_direction(new_direction):
