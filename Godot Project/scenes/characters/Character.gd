@@ -612,6 +612,7 @@ func _physics_process(delta):
 				velocity = Vector2.ZERO
 				position.x = collision.collider.position.x + collision.normal.x*(ledgeShift.x + collision.collider.box.shape.extents.x)
 				position.y = collision.collider.position.y - collision.collider.box.shape.extents.y + ledgeShift.y
+				jump_count = 1
 				allowed_to_ledge = false
 	# TEMP
 	if position.y > 1000:

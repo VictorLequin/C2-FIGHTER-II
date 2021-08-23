@@ -8,13 +8,11 @@ var shieldBox
 var percentsBlocked
 var maxPercentsBlocked = 30
 var stunBlockedTime = 2
-var waveRight
-var waveLeft
-var waveRightBox
-var waveLeftBox
 var timer
-var waveLeftBody
-var waveRightBody
+var waving
+var waveLeftElt
+var waveRightElt
+var propRoaster
 
 func update_dmgBox(delta):
 	if hitting:
@@ -57,6 +55,7 @@ func update_dmgBox(delta):
 			dmgBox.scale.y = 30*f
 
 func _ready():
+	waving = false
 	spe_side_count = 0
 	spe_up_count = 0
 	offsets = {
@@ -77,21 +76,14 @@ func _ready():
 		"down": Vector2(4.616, 6.292),
 		"roll": Vector2(30.553, -2.73)
 	}
+	waveLeftElt = preload("res://scenes/characters/Champion/WaveLeft.tscn")
+	waveRightElt = preload("res://scenes/characters/Champion/WaveRight.tscn")
 	percentsBlocked = 0
+	propRoaster = get_node("/root/Node").child.get_node("PropsRoaster")
 	shieldBox = $ShieldArea/CollisionShape2D
 	$ShieldArea.connect("area_entered", self, "block")
-	waveLeft = $WaveLeftBody/WaveLeft
-	waveRight = $WaveRightBody/WaveRight
-	waveLeftBox = $WaveLeftBody/CollisionShape2D
-	waveRightBox = $WaveRightBody/CollisionShape2D
 	timer = $WaveDelay
 	timer.connect("timeout", self, "spe_neutral_land")
-	waveLeftBody = $WaveLeftBody
-	waveRightBody = $WaveRightBody
-	waveLeftBody.id = id
-	waveLeftBody.players_hit = [id]
-	waveRightBody.id = id
-	waveRightBody.players_hit = [id]
 	sounds = {
 		"jump": [$hop1, $hop2, $hop3],
 		"oskour": [$oskour1, $oskour2],
@@ -157,21 +149,28 @@ func end_hit():
 	.end_hit()
 
 func spe_neutral_land():
-	if on_ground and not waveRightBody.moving:
+	if on_ground and not waving:
+		var waveLeft = waveLeftElt.instance()
+		var waveRight = waveRightElt.instance()
+		waveLeft.name = "WaveLeft_" + str(id)
+		waveRight.name = "WaveRight_" + str(id)
+		propRoaster.add_child(waveLeft)
+		propRoaster.add_child(waveRight)
+		waveLeft.id = id
+		waveLeft.players_hit = [id]
+		waveLeft.parent = self
+		waveRight.id = id
+		waveRight.players_hit = [id]
+		waveRight.parent = self
+		waveLeft.position = position - Vector2(50, 0)
+		waveRight.position = position + Vector2(50, 0)
 		atk_id += 1
-		waveRightBody.visible = true
-		waveRight.set_frame(0)
-		waveRight.play()
-		waveRightBox.set_deferred("disabled", false)
-		waveRightBody.atk_id = atk_id
-		waveRightBody.moving = true
+		waveRight.get_node("WaveRight").play()
+		waveRight.atk_id = atk_id
 		atk_id += 1
-		waveLeftBody.visible = true
-		waveLeft.set_frame(0)
-		waveLeft.play()
-		waveLeftBox.set_deferred("disabled", false)
-		waveLeftBody.atk_id = atk_id
-		waveLeftBody.moving = true
+		waveLeft.get_node("WaveLeft").play()
+		waveLeft.atk_id = atk_id
+		waving = true
 
 func spe_neutral_start():
 	timer.start(0.5)
@@ -187,8 +186,3 @@ func end_anim_fn():
 func _input(event):
 	if event.is_action_released(ui_down) and atk == "spe_down" and hitting:
 		end_hit()
-
-func _physics_process(delta):
-	if waveRightBody.moving:
-		waveRightBody.position += last_position-position
-		waveLeftBody.position += last_position-position

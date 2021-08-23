@@ -1,4 +1,4 @@
-[gd_scene load_steps=133 format=2]
+[gd_scene load_steps=122 format=2]
 
 [ext_resource path="res://scenes/characters/Character.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/characters/Champion/Champion.gd" type="Script" id=2]
@@ -74,14 +74,6 @@
 [ext_resource path="res://ressources/persos/Champion/stun/stun6.png" type="Texture" id=72]
 [ext_resource path="res://ressources/persos/Champion/stun/stun7.png" type="Texture" id=73]
 [ext_resource path="res://ressources/persos/Champion/stun/stun8.png" type="Texture" id=74]
-[ext_resource path="res://ressources/persos/Champion/atkspeneutral/onde5.png" type="Texture" id=75]
-[ext_resource path="res://ressources/persos/Champion/atkspeneutral/onde4.png" type="Texture" id=76]
-[ext_resource path="res://ressources/persos/Champion/atkspeneutral/onde3.png" type="Texture" id=77]
-[ext_resource path="res://ressources/persos/Champion/atkspeneutral/onde1.png" type="Texture" id=78]
-[ext_resource path="res://ressources/persos/Champion/atkspeneutral/onde2.png" type="Texture" id=79]
-[ext_resource path="res://ressources/persos/Champion/atkspeneutral/onde4.5.png" type="Texture" id=80]
-[ext_resource path="res://scenes/characters/Champion/WaveRight.gd" type="Script" id=81]
-[ext_resource path="res://scenes/characters/Champion/WaveLeft.gd" type="Script" id=82]
 [ext_resource path="res://ressources/persos/Champion/ledge/grab1.png" type="Texture" id=83]
 [ext_resource path="res://ressources/persos/Champion/ledge/grab2.png" type="Texture" id=84]
 [ext_resource path="res://ressources/persos/Champion/ledge/grab3.png" type="Texture" id=85]
@@ -217,27 +209,12 @@ height = 62.6851
 [sub_resource type="RectangleShape2D" id=3]
 extents = Vector2( 4.45091, 36.5392 )
 
-[sub_resource type="SpriteFrames" id=4]
-animations = [ {
-"frames": [ ExtResource( 78 ), ExtResource( 79 ), ExtResource( 77 ), ExtResource( 80 ), ExtResource( 76 ), ExtResource( 75 ) ],
-"loop": false,
-"name": "default",
-"speed": 15.0
-} ]
-
-[sub_resource type="RectangleShape2D" id=5]
-extents = Vector2( 54.0823, 16.372 )
-
-[sub_resource type="RectangleShape2D" id=6]
-extents = Vector2( 54.0823, 16.372 )
-
 [node name="Champion" instance=ExtResource( 1 )]
 position = Vector2( 0, 0.187286 )
 script = ExtResource( 2 )
 
 [node name="AnimatedSprite" parent="." index="0"]
 frames = SubResource( 1 )
-animation = "roll"
 
 [node name="CollisionShape2D" parent="." index="1"]
 shape = SubResource( 2 )
@@ -255,85 +232,50 @@ disabled = true
 wait_time = 0.5
 one_shot = true
 
-[node name="WaveRightBody" type="Area2D" parent="." index="6"]
-visible = false
-position = Vector2( 57, 0 )
-collision_layer = 4
-collision_mask = 10
-script = ExtResource( 81 )
-
-[node name="WaveRight" type="AnimatedSprite" parent="WaveRightBody" index="0"]
-scale = Vector2( 3, 3 )
-frames = SubResource( 4 )
-offset = Vector2( 0, -14.098 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="WaveRightBody" index="1"]
-position = Vector2( 0, -16.372 )
-shape = SubResource( 5 )
-disabled = true
-
-[node name="WaveLeftBody" type="Area2D" parent="." index="7"]
-visible = false
-position = Vector2( -57, 0 )
-collision_layer = 4
-collision_mask = 10
-script = ExtResource( 82 )
-
-[node name="WaveLeft" type="AnimatedSprite" parent="WaveLeftBody" index="0"]
-scale = Vector2( 3, 3 )
-frames = SubResource( 4 )
-offset = Vector2( 0, -14.098 )
-flip_h = true
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="WaveLeftBody" index="1"]
-position = Vector2( 0, -16.372 )
-shape = SubResource( 6 )
-disabled = true
-
-[node name="hop1" type="AudioStreamPlayer2D" parent="." index="8"]
+[node name="hop1" type="AudioStreamPlayer2D" parent="." index="6"]
 stream = ExtResource( 86 )
 pitch_scale = 0.9
 
-[node name="hop2" type="AudioStreamPlayer2D" parent="." index="9"]
+[node name="hop2" type="AudioStreamPlayer2D" parent="." index="7"]
 stream = ExtResource( 87 )
 pitch_scale = 0.9
 
-[node name="hop3" type="AudioStreamPlayer2D" parent="." index="10"]
+[node name="hop3" type="AudioStreamPlayer2D" parent="." index="8"]
 stream = ExtResource( 88 )
 pitch_scale = 0.9
 
-[node name="oskour1" type="AudioStreamPlayer2D" parent="." index="11"]
+[node name="oskour1" type="AudioStreamPlayer2D" parent="." index="9"]
 stream = ExtResource( 90 )
 pitch_scale = 0.9
 
-[node name="oskour2" type="AudioStreamPlayer2D" parent="." index="12"]
+[node name="oskour2" type="AudioStreamPlayer2D" parent="." index="10"]
 stream = ExtResource( 89 )
 pitch_scale = 0.9
 
-[node name="ouch1" type="AudioStreamPlayer2D" parent="." index="13"]
+[node name="ouch1" type="AudioStreamPlayer2D" parent="." index="11"]
 stream = ExtResource( 91 )
 pitch_scale = 0.9
 
-[node name="ouch2" type="AudioStreamPlayer2D" parent="." index="14"]
+[node name="ouch2" type="AudioStreamPlayer2D" parent="." index="12"]
 stream = ExtResource( 92 )
 pitch_scale = 0.9
 
-[node name="ouch3" type="AudioStreamPlayer2D" parent="." index="15"]
+[node name="ouch3" type="AudioStreamPlayer2D" parent="." index="13"]
 stream = ExtResource( 93 )
 pitch_scale = 0.9
 
-[node name="tiens1" type="AudioStreamPlayer2D" parent="." index="16"]
+[node name="tiens1" type="AudioStreamPlayer2D" parent="." index="14"]
 stream = ExtResource( 94 )
 pitch_scale = 0.9
 
-[node name="tiens2" type="AudioStreamPlayer2D" parent="." index="17"]
+[node name="tiens2" type="AudioStreamPlayer2D" parent="." index="15"]
 stream = ExtResource( 95 )
 pitch_scale = 0.9
 
-[node name="saka1" type="AudioStreamPlayer2D" parent="." index="18"]
+[node name="saka1" type="AudioStreamPlayer2D" parent="." index="16"]
 stream = ExtResource( 96 )
 pitch_scale = 0.9
 
-[node name="saka2" type="AudioStreamPlayer2D" parent="." index="19"]
+[node name="saka2" type="AudioStreamPlayer2D" parent="." index="17"]
 stream = ExtResource( 97 )
 pitch_scale = 0.9

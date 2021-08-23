@@ -2,13 +2,12 @@ extends Area2D
 
 var id
 var atk_id
-var moving
 var speed = 500
 var box
 var players_hit
+var parent
 
 func _ready():
-	moving = false
 	box = $CollisionShape2D
 	$WaveRight.connect("animation_finished", self, "vanish")
 	connect("body_entered", self, "hit")
@@ -27,13 +26,8 @@ func get_atk_percent():
 	return 10
 
 func vanish():
-	visible = false
-	moving = false
-	box.set_deferred("disabled", true)
-	position.x = 57
-	position.y = 0
-	players_hit = [id]
+	parent.waving = false
+	queue_free()
 
 func _physics_process(delta):
-	if moving:
-		position.x += speed*delta
+	position.x += speed*delta

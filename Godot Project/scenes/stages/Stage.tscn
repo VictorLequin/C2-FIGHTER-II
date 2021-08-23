@@ -10,6 +10,8 @@ script = ExtResource( 1 )
 
 [node name="PlayerRoaster" type="Node" parent="."]
 
+[node name="PropsRoaster" type="Node" parent="."]
+
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2( 0.570297, 459.185 )
 current = true
