@@ -1,13 +1,13 @@
 extends "res://scenes/characters/Character.gd"
 
-var spe_side_speed = 300
+var spe_side_speed = 300.0
 var spe_side_count
 var spe_up_count
-var spe_up_speed = 300
+var spe_up_speed = 300.0
 var shieldBox
 var percentsBlocked
-var maxPercentsBlocked = 40
-var stunBlockedTime = 2
+var maxPercentsBlocked = 40.0
+var stunBlockedTime = 2.0
 var timer
 var waving
 var waveLeftElt
@@ -15,7 +15,7 @@ var waveRightElt
 var propRoaster
 
 func update_dmgBox(delta):
-	if hitting:
+	if state == STATE.HITTING:
 		atk_time += delta
 		if atk == "side":
 			var f = cst_sqrt_interpol(0.2, 1/2, 0.7, atk_time)
@@ -165,8 +165,8 @@ func spe_neutral_land():
 		waveRight.id = id
 		waveRight.players_hit = [id]
 		waveRight.parent = self
-		waveLeft.position = position - Vector2(50, 0)
-		waveRight.position = position + Vector2(50, 0)
+		waveLeft.position = position - Vector2(50.0, 0.0)
+		waveRight.position = position + Vector2(50.0, 0.0)
 		atk_id += 1
 		waveRight.get_node("WaveRight").play()
 		waveRight.atk_id = atk_id
@@ -187,5 +187,5 @@ func end_anim_fn():
 		shieldBox.set_deferred("disabled", false)
 
 func _input(event):
-	if event.is_action_released(ui_down) and atk == "spe_down" and hitting:
+	if event.is_action_released(ui_down) and atk == "spe_down" and state == STATE.HITTING:
 		end_hit()

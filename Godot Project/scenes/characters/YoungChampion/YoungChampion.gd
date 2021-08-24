@@ -5,7 +5,7 @@ var healingTime
 var baby
 var babyBox
 var platforms
-var grappling_distance = 500
+var grappling_distance = 800.0
 var target
 var grappling_timer
 var grappling
@@ -42,25 +42,25 @@ func _ready():
 	air_frott_lin = 0.7
 	attacks = {
 		"neutral": {
-			"knockback": Vector2(200, 100),
+			"knockback": Vector2(200.0, 100.0),
 			"cancelable": true,
 			"locking": true,
 			"percent": 3
 		},
 		"side": {
-			"knockback": Vector2(300, 100),
+			"knockback": Vector2(300.0, 100.0),
 			"cancelable": false,
 			"locking": true,
 			"percent": 3
 		},
 		"up": {
-			"knockback": Vector2(0, 150),
+			"knockback": Vector2(0, 150.0),
 			"cancelable": true,
 			"locking": false,
 			"percent": 3
 		},
 		"down": {
-			"knockback": Vector2(0, -100),
+			"knockback": Vector2(0, -100.0),
 			"cancelable": true,
 			"locking": false,
 			"percent": 3
@@ -107,7 +107,7 @@ func _ready():
 	ready_sounds()
 
 func update_dmgBox(delta):
-	if hitting:
+	if state == STATE.HITTING:
 		atk_time += delta
 		if atk == "side":
 			var f = cst_interpol(1.0/15.0, atk_time)
@@ -193,7 +193,7 @@ func spe_neutral_start():
 	play_sound("ya")
 
 func grappling():
-	if atk == "spe_up" and hitting:
+	if atk == "spe_up" and state == STATE.HITTING:
 		allowed_to_grap = false
 		var closest_edge
 		var min_distance = INF
@@ -230,7 +230,7 @@ func spe_up_start():
 
 func spe_up_vel():
 	if grappling:
-		if (target - position).length() >= 50:
+		if (target - position).length() >= 50.0:
 			return air_speed*((target - position).normalized())
 		else:
 			end_hit()
@@ -244,7 +244,7 @@ func spe_up_acc():
 	return Vector2.ZERO
 
 func _input(event):
-	if event.is_action_released(ui_down) and atk == "spe_down" and hitting:
+	if event.is_action_released(ui_down) and atk == "spe_down" and state == STATE.HITTING:
 		end_hit()
 
 func _physics_process(delta):
@@ -252,7 +252,7 @@ func _physics_process(delta):
 		healingTime += delta
 		var bonus = healingTime
 		if bonus > 1:
-			bonus = 1
-		percent -= (3 + bonus)*delta
-		if percent < 0:
-			percent = 0
+			bonus = 1.0
+		percent -= (3.0 + bonus)*delta
+		if percent < 0.0:
+			percent = 0.0
