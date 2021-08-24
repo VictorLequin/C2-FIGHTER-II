@@ -6,7 +6,7 @@ var spe_up_count
 var spe_up_speed = 300
 var shieldBox
 var percentsBlocked
-var maxPercentsBlocked = 30
+var maxPercentsBlocked = 40
 var stunBlockedTime = 2
 var timer
 var waving
@@ -126,6 +126,9 @@ func spe_side_start():
 
 func spe_up_vel():
 	return Vector2(0, -spe_up_speed)
+
+func spe_up_acc():
+	return Vector2(0, -gravity)
 
 func spe_up_start():
 	if spe_up_count > 0:

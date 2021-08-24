@@ -42,25 +42,25 @@ func _ready():
 	air_frott_lin = 0.7
 	attacks = {
 		"neutral": {
-			"knockback": Vector2(400, 200),
+			"knockback": Vector2(200, 100),
 			"cancelable": true,
 			"locking": true,
 			"percent": 3
 		},
 		"side": {
-			"knockback": Vector2(600, 200),
+			"knockback": Vector2(300, 100),
 			"cancelable": false,
 			"locking": true,
 			"percent": 3
 		},
 		"up": {
-			"knockback": Vector2(0, 300),
+			"knockback": Vector2(0, 150),
 			"cancelable": true,
 			"locking": false,
 			"percent": 3
 		},
 		"down": {
-			"knockback": Vector2(0, -200),
+			"knockback": Vector2(0, -100),
 			"cancelable": true,
 			"locking": false,
 			"percent": 3

@@ -7,14 +7,12 @@ var velocity
 var last_vel
 var walk_speed = 200
 var air_acc = 100
-var ground_frott_quad = 0.3
-var ground_frott_stat = 1
 var air_frott_lin = 0.5
 var direction
 var jump_speed = 350
 var jump_count
 var air_speed = 170
-var gravity = 1500
+var gravity = 750
 var mass = 1.4
 var offsets = {
 	"idle": Vector2(-2.336, -0.65),
@@ -35,25 +33,25 @@ var offsets = {
 }
 var attacks = {
 	"neutral": {
-		"knockback": Vector2(600, 300),
+		"knockback": Vector2(300, 150),
 		"cancelable": true,
 		"locking": true, # peut-on tourner pdt l'attaque ?
 		"percent": 6
 	},
 	"side": {
-		"knockback": Vector2(900, 300),
+		"knockback": Vector2(450, 150),
 		"cancelable": false,
 		"locking": true,
 		"percent": 6
 	},
 	"up": {
-		"knockback": Vector2(0, 500),
+		"knockback": Vector2(0, 250),
 		"cancelable": true,
 		"locking": false,
 		"percent": 6
 	},
 	"down": {
-		"knockback": Vector2(0, -400),
+		"knockback": Vector2(0, -200),
 		"cancelable": false,
 		"locking": false,
 		"percent": 5
@@ -63,13 +61,13 @@ var attacks = {
 		"locking": false
 	},
 	"spe_side": {
-		"knockback": Vector2(700, 200),
+		"knockback": Vector2(350, 100),
 		"cancelable": false,
 		"locking": true,
 		"percent": 9
 	},
 	"spe_up": {
-		"knockback": Vector2(0, 300),
+		"knockback": Vector2(0, 150),
 		"cancelable": true,
 		"locking": false,
 		"percent": 9
@@ -114,6 +112,7 @@ var percent_text
 var invincible
 var rolling
 var roll_distance
+var walking
 
 var ui_jump: String = ""
 var ui_up: String = ""
@@ -159,6 +158,7 @@ func die():
 
 func _ready():
 	screen_size = get_viewport_rect().size
+	walking = false
 	roll_distance = 200
 	invincible = false
 	lives = 3
@@ -475,18 +475,92 @@ func take_hit():
 	red_highlight_time = 0.1
 	play_sound("ouch")
 
+func test_collisions():
+	var collision
+	for i in get_slide_count():
+		collision = get_slide_collision(i)
+		if collision.normal.y == 0 and not on_ground and collision.collider.has_method("is_platform") and position.y - hitBox.shape.radius - hitBox.shape.height/2 >= collision.collider.position.y - collision.collider.box.shape.extents.y:
+			land()
+			end_hit()
+			ledging = true
+			change_direction(-collision.normal.x)
+			play("ledge")
+			velocity = Vector2.ZERO
+			position.x = collision.collider.position.x + collision.normal.x*(ledgeShift.x + collision.collider.box.shape.extents.x)
+			position.y = collision.collider.position.y - collision.collider.box.shape.extents.y + ledgeShift.y
+			jump_count = 1
+			allowed_to_ledge = false
+
+func calc_vel_add():
+	var vel_add = Vector2()
+	if hitting:
+		if atk == "spe_neutral":
+			vel_add += spe_neutral_vel()
+		elif atk == "spe_side":
+			vel_add += spe_side_vel()
+		elif atk == "spe_up":
+			vel_add += spe_up_vel()
+		elif atk == "spe_down":
+			vel_add += spe_down_vel()
+	var vel_walk = Vector2()
+	var vel_air = Vector2()
+	if Input.is_action_pressed(ui_right) and not rolling:
+		vel_walk.x += walk_speed
+		vel_air.x += air_speed
+	if Input.is_action_pressed(ui_left) and not rolling:
+		vel_walk.x -= walk_speed
+		vel_air.x -= air_speed
+	walking = false
+	if vel_walk.length() > 0:
+		walking = true
+	if not hitting and stunned <= 0:
+		if on_ground:
+			vel_add += vel_walk
+		else:
+			vel_add += vel_air
+	if ledging:
+		vel_add.x = direction*min(direction*vel_add.x, 0)
+		if vel_add.length() > 0:
+			unledge()
+	return vel_add
+
+func calc_force():
+	var force = Vector2()
+	if hitting:
+		if atk == "spe_neutral":
+			force += spe_neutral_acc()
+		elif atk == "spe_side":
+			force += spe_side_acc()
+		elif atk == "spe_up":
+			force += spe_up_acc()
+		elif atk == "spe_down":
+			force += spe_down_acc()
+	if not on_ground and not ledging and not rolling:
+		force.y += gravity
+		force -= air_frott_lin*velocity
+		if Input.is_action_pressed(ui_right):
+			force.x += air_acc/max(1, velocity.length()/200)
+		if Input.is_action_pressed(ui_left):
+			force.x -= air_acc/max(1, velocity.length()/200)
+	return force
+
 func _physics_process(delta):
 	last_vel = velocity
+	last_position = position
+	
 	if stunned > 0:
 		stunned -= delta
 	if red_highlight_time > 0:
 		red_highlight_time -= delta
 		if red_highlight_time <= 0:
 			update_color(0)
+	
 	if end_anim:
 		end_anim = false
 		end_anim_fn()
+	
 	update_dmgBox(delta)
+	
 	if not invincible:
 		var is_hit = false
 		for hit in pending_hits:
@@ -500,77 +574,38 @@ func _physics_process(delta):
 				percent += hit.percent
 	pending_hits = []
 	percent_text.text = str(int(percent)) + "%"
-	var vel_add = Vector2()
-	var force = Vector2()
-	if hitting:
-		if atk == "spe_neutral":
-			vel_add += spe_neutral_vel()
-			force += spe_neutral_acc()
-		elif atk == "spe_side":
-			vel_add += spe_side_vel()
-			force += spe_side_acc()
-		elif atk == "spe_up":
-			vel_add += spe_up_vel()
-			force += spe_up_acc()
-		elif atk == "spe_down":
-			vel_add += spe_down_vel()
-			force += spe_down_acc()
+	
 	if not on_ground and is_on_floor():
 		land()
 	on_ground = is_on_floor()
 	if on_ground and abs(velocity.x) <= 10:
 		velocity.x = 0
+	
 	siding = false
-	var last_vel = velocity
-	var vel_walk = Vector2()
-	var vel_air = Vector2()
-	if not on_ground and not ledging:
-		force.y += gravity
-		force -= air_frott_lin*velocity
 	var direction_new = 0
 	if Input.is_action_pressed(ui_right) and not rolling:
 		siding = true
 		direction_new = 1
-		vel_walk.x += walk_speed
-		vel_air.x += air_speed
-		if not on_ground and not ledging:
-			force.x += air_acc/max(1, velocity.length()/200)
 	if Input.is_action_pressed(ui_left) and not rolling:
 		siding = true
-		vel_walk.x -= walk_speed
 		direction_new = -1
-		vel_air.x -= air_speed
-		if not on_ground and not ledging:
-			force.x -= air_acc/max(1, velocity.length()/200)
-	if on_ground:
-		force.x -= ground_frott_quad*velocity.x*abs(velocity.x)
-		if velocity.x != 0:
-			force.x -= ground_frott_stat*velocity.x/abs(velocity.x)
-	var prev_velx = velocity.x
-	velocity += force*delta
-	if on_ground and velocity.x * prev_velx < 0:
-		velocity.x = 0
-	if not hitting and stunned <= 0:
-		if on_ground:
-			vel_add += vel_walk
-		else:
-			vel_add += vel_air
+	var vel_add = calc_vel_add()
 	if abs(vel_add.x) > 0:
 		direction_new = vel_add.x/abs(vel_add.x)
 	if direction * direction_new == -1 and not ledging:
 		if not hitting:
-			direction = direction_new
-			sprite.scale.x = 3*direction
+			change_direction(direction_new)
 		else:
 			if not attacks[atk].locking:
 				change_direction(direction_new)
-	if ledging:
-		vel_add.x = direction*min(direction*vel_add.x, 0)
-		if vel_add.length() > 0:
-			unledge()
+	
+	if not rolling:
+		var force = calc_force()
+		velocity += force*delta
+				
 	if not jumping and not hitting and stunned <= 0 and not ledging and not rolling:
 		if on_ground:
-			if vel_walk.length() > 0:
+			if walking:
 				play("walk")
 			else:
 				play("idle")
@@ -579,42 +614,30 @@ func _physics_process(delta):
 				play("air")
 			else:
 				play("idle")
+	
 	var snap = Vector2(0, 1)
 	if jumping or unsnapped:
 		snap = Vector2.ZERO
 	if not on_ground:
 		unsnapped = false
-	last_position = position
 	if not rolling:
-		velocity = move_and_slide_with_snap((velocity + last_vel)/2.0 + vel_add, snap, Vector2(0, -1))
-		if abs(velocity.x) >= abs(vel_add.x):
-			velocity.x -= vel_add.x
-		if abs(velocity.y) >= abs(vel_add.y):
-			velocity.y -= vel_add.y
+		velocity = move_and_slide_with_snap(velocity, snap, Vector2(0, -1))
+		if allowed_to_ledge:
+			test_collisions()
 		if velocity.length() >= 450 and velocity.y >= 0 and (last_vel.length() < 450 or last_vel.y < 0):
 			play_sound("oskour")
 		if (velocity.length() < 450 or velocity.y < 0) and playing_sound[0] == "oskour":
 			sounds[playing_sound[0]][playing_sound[1]].stop()
 			playing_sound = [""]
+		move_and_slide_with_snap(vel_add, snap, Vector2(0, -1))
 	else:
 		atk_time += delta
 		velocity = Vector2(direction*(roll_distance + ledgeShift.x)*(1 + 0.875*exp(-atk_time/0.050) + 1.875*exp(-atk_time/0.25)), -ledgeShift.y*1.3298270197*(cos(5.4322*atk_time-0.719739456936)/0.21+5.173*sin(5.4322*atk_time-0.719739456936))*exp(-atk_time/0.21))
 		move_and_slide_with_snap(velocity, snap, Vector2(0, -1))
+		
 	if allowed_to_ledge:
-		var collision
-		for i in get_slide_count():
-			collision = get_slide_collision(i)
-			if collision.normal.y == 0 and not on_ground and collision.collider.has_method("is_platform") and position.y - hitBox.shape.radius - hitBox.shape.height/2 >= collision.collider.position.y - collision.collider.box.shape.extents.y:
-				land()
-				end_hit()
-				ledging = true
-				change_direction(-collision.normal.x)
-				play("ledge")
-				velocity = Vector2.ZERO
-				position.x = collision.collider.position.x + collision.normal.x*(ledgeShift.x + collision.collider.box.shape.extents.x)
-				position.y = collision.collider.position.y - collision.collider.box.shape.extents.y + ledgeShift.y
-				jump_count = 1
-				allowed_to_ledge = false
+		test_collisions()
+	
 	# TEMP
 	if position.y > 1000:
 		position = Vector2(0, 0)
