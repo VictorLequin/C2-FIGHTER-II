@@ -228,7 +228,7 @@ func spe_up_start():
 	if allowed_to_grap:
 		grappling_timer.start(0.225)
 
-func spe_up_vel():
+func spe_up_vel(delta):
 	if grappling:
 		if (target - position).length() >= 50.0:
 			return air_speed*((target - position).normalized())

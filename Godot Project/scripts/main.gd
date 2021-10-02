@@ -89,16 +89,18 @@ class ControllerRef:
 		return ""
 
 class APlayer:
-	const nbCharacters = 2
-	enum CharacterIDs {champion=0, young=1}
+	const nbCharacters = 3
+	enum CharacterIDs {champion=0, young=1, ygor=2}
 	const characterPics = {
 		CharacterIDs.champion: "res://ressources/persos/Champion/Portrait.png",
-		CharacterIDs.young: "res://ressources/persos/YoungChampion/Portrait.png"
+		CharacterIDs.young: "res://ressources/persos/YoungChampion/Portrait.png",
+		CharacterIDs.ygor: "res://ressources/persos/Ygor/refYgor.jpg",
 		}
 	
 	const characterScenes = {
 		CharacterIDs.champion: preload("res://scenes/characters/Champion/Champion.tscn"),
 		CharacterIDs.young: preload("res://scenes/characters/YoungChampion/YoungChampion.tscn"),
+		CharacterIDs.ygor: preload("res://scenes/characters/Ygor/Ygor.tscn")
 		}
 	
 	var controller: ControllerRef = ControllerRef.new()

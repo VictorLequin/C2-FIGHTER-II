@@ -12,7 +12,6 @@ var timer
 var waving
 var waveLeftElt
 var waveRightElt
-var propRoaster
 
 func update_dmgBox(delta):
 	if state == STATE.HITTING:
@@ -79,7 +78,6 @@ func _ready():
 	waveLeftElt = preload("res://scenes/characters/Champion/WaveLeft.tscn")
 	waveRightElt = preload("res://scenes/characters/Champion/WaveRight.tscn")
 	percentsBlocked = 0
-	propRoaster = get_node("/root/Node").child.get_node("PropsRoaster")
 	shieldBox = $ShieldArea/CollisionShape2D
 	$ShieldArea.connect("area_entered", self, "block")
 	timer = $WaveDelay
@@ -111,7 +109,7 @@ func spe_side_acc():
 		acc.y -= gravity
 	return acc
 
-func spe_side_vel():
+func spe_side_vel(delta):
 	return Vector2(spe_side_speed*direction, 0)
 
 func spe_side_start():
@@ -124,7 +122,7 @@ func spe_side_start():
 	else:
 		end_hit()
 
-func spe_up_vel():
+func spe_up_vel(delta):
 	return Vector2(0, -spe_up_speed)
 
 func spe_up_acc():

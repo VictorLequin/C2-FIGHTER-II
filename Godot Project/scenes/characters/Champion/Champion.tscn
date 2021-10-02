@@ -136,6 +136,16 @@ animations = [ {
 "name": "side",
 "speed": 10.0
 }, {
+"frames": [ ExtResource( 67 ), ExtResource( 70 ), ExtResource( 68 ), ExtResource( 69 ), ExtResource( 71 ), ExtResource( 72 ), ExtResource( 73 ), ExtResource( 74 ) ],
+"loop": true,
+"name": "stun",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 117 ), ExtResource( 120 ), ExtResource( 115 ), ExtResource( 116 ), ExtResource( 125 ), ExtResource( 121 ), ExtResource( 126 ), ExtResource( 124 ), ExtResource( 122 ), ExtResource( 118 ), ExtResource( 119 ), ExtResource( 114 ), ExtResource( 123 ), ExtResource( 109 ), ExtResource( 110 ), ExtResource( 111 ), ExtResource( 112 ), ExtResource( 113 ) ],
+"loop": false,
+"name": "roll",
+"speed": 18.0
+}, {
 "frames": [ ExtResource( 30 ), ExtResource( 54 ), ExtResource( 25 ), ExtResource( 55 ), ExtResource( 52 ) ],
 "loop": false,
 "name": "spe_neutral",
@@ -145,11 +155,6 @@ animations = [ {
 "loop": true,
 "name": "spe_down_idle",
 "speed": 3.0
-}, {
-"frames": [ ExtResource( 46 ), ExtResource( 43 ), ExtResource( 35 ), ExtResource( 53 ), ExtResource( 49 ), ExtResource( 21 ), ExtResource( 36 ), ExtResource( 50 ) ],
-"loop": false,
-"name": "spe_up",
-"speed": 10.0
 }, {
 "frames": [ ExtResource( 16 ), ExtResource( 9 ), ExtResource( 14 ), ExtResource( 15 ) ],
 "loop": true,
@@ -161,25 +166,10 @@ animations = [ {
 "name": "neutral",
 "speed": 13.0
 }, {
-"frames": [ ExtResource( 34 ), ExtResource( 39 ), ExtResource( 32 ), ExtResource( 23 ), ExtResource( 40 ), ExtResource( 58 ), ExtResource( 41 ) ],
-"loop": false,
-"name": "spe_side",
-"speed": 8.0
-}, {
 "frames": [ ExtResource( 6 ), ExtResource( 20 ), ExtResource( 44 ) ],
 "loop": false,
 "name": "jump",
 "speed": 8.0
-}, {
-"frames": [ ExtResource( 17 ), ExtResource( 18 ), ExtResource( 5 ), ExtResource( 4 ) ],
-"loop": true,
-"name": "air",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 102 ), ExtResource( 104 ), ExtResource( 105 ), ExtResource( 108 ), ExtResource( 106 ), ExtResource( 99 ), ExtResource( 98 ), ExtResource( 107 ), ExtResource( 100 ), ExtResource( 101 ), ExtResource( 103 ) ],
-"loop": false,
-"name": "down",
-"speed": 13.0
 }, {
 "frames": [ ExtResource( 83 ), ExtResource( 84 ), ExtResource( 85 ) ],
 "loop": true,
@@ -191,14 +181,24 @@ animations = [ {
 "name": "spe_down",
 "speed": 10.0
 }, {
-"frames": [ ExtResource( 117 ), ExtResource( 120 ), ExtResource( 115 ), ExtResource( 116 ), ExtResource( 125 ), ExtResource( 121 ), ExtResource( 126 ), ExtResource( 124 ), ExtResource( 122 ), ExtResource( 118 ), ExtResource( 119 ), ExtResource( 114 ), ExtResource( 123 ), ExtResource( 109 ), ExtResource( 110 ), ExtResource( 111 ), ExtResource( 112 ), ExtResource( 113 ) ],
+"frames": [ ExtResource( 46 ), ExtResource( 43 ), ExtResource( 35 ), ExtResource( 53 ), ExtResource( 49 ), ExtResource( 21 ), ExtResource( 36 ), ExtResource( 50 ) ],
 "loop": false,
-"name": "roll",
-"speed": 18.0
+"name": "spe_up",
+"speed": 10.0
 }, {
-"frames": [ ExtResource( 67 ), ExtResource( 70 ), ExtResource( 68 ), ExtResource( 69 ), ExtResource( 71 ), ExtResource( 72 ), ExtResource( 73 ), ExtResource( 74 ) ],
+"frames": [ ExtResource( 34 ), ExtResource( 39 ), ExtResource( 32 ), ExtResource( 23 ), ExtResource( 40 ), ExtResource( 58 ), ExtResource( 41 ) ],
+"loop": false,
+"name": "spe_side",
+"speed": 8.0
+}, {
+"frames": [ ExtResource( 102 ), ExtResource( 104 ), ExtResource( 105 ), ExtResource( 108 ), ExtResource( 106 ), ExtResource( 99 ), ExtResource( 98 ), ExtResource( 107 ), ExtResource( 100 ), ExtResource( 101 ), ExtResource( 103 ) ],
+"loop": false,
+"name": "down",
+"speed": 13.0
+}, {
+"frames": [ ExtResource( 17 ), ExtResource( 18 ), ExtResource( 5 ), ExtResource( 4 ) ],
 "loop": true,
-"name": "stun",
+"name": "air",
 "speed": 5.0
 } ]
 

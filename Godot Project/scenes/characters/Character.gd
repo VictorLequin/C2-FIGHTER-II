@@ -113,6 +113,9 @@ var roll_distance
 var walking
 var stun_time
 var state
+var porte
+var propRoaster
+var door
 
 var ui_jump: String = ""
 var ui_up: String = ""
@@ -147,10 +150,19 @@ func animation_finished_handler():
 	end_anim = true
 
 func die():
+	position = Vector2(0, 0)
+	velocity = Vector2.ZERO
+	land()
+	end_hit()
 	percent = 0
 	percent_text.text = "0%"
 	lives -= 1
 	lives_text.text = str(lives) + " vies" if lives != 1 and lives != 0 else str(lives) + " vie"
+	door = porte.instance()
+	door.name = "porte_" + str(id)
+	propRoaster.add_child(door)
+	door.set_collision_layer_bit(5 + id, true)
+	door.play("open")
 	if lives <= 0:
 		portrait.get_node("Control/PortraitDePhaseLol").set_modulate(Color(0.1, 0.1, 0.1))
 		get_node("/root/Node").kill_player(id)
@@ -158,6 +170,7 @@ func die():
 
 func _ready():
 	screen_size = get_viewport_rect().size
+	propRoaster = get_node("/root/Node").child.get_node("PropsRoaster")
 	state = STATE.IDLE
 	walking = false
 	roll_distance = 200
@@ -185,6 +198,7 @@ func _ready():
 	unsnapped = false
 	pending_hits = []
 	blocked = []
+	door = {"real": "false"}
 	percent = 0
 	red_highlight_time = 0
 	last_position = position
@@ -195,6 +209,7 @@ func _ready():
 	damageArea.id = id
 	ledgeTimer = $LedgeTimer
 	ledgeTimer.connect("timeout", self, "allow_ledge")
+	porte = preload("res://scenes/stages/Porte.tscn")
 
 func update_color(r):
 	var color = portrait.player.color
@@ -217,11 +232,14 @@ func setup_id(k):
 	ui_down = "ui_down_{k}".format({"k": k})
 	id = k
 	players_hit = [k]
+	set_collision_mask_bit(5 + k, true)
 
 func enemy_hit(enemy):
 	if enemy.has_method("get_atk_percent_parent"): # Player object detection
 		if not players_hit.has(enemy.id):
 			players_hit.append(enemy.id)
+			if atk == "down":
+				velocity.y += attacks[atk].knockback.y/mass*(1 + enemy.percent/100)*2;
 			enemy.pending_hits.append({
 				"knockback": Vector2(attacks[atk].knockback.x*direction/enemy.mass*(1 + enemy.percent/100.0), -attacks[atk].knockback.y/enemy.mass*(1 + enemy.percent/100)),
 				"dealer": str(damageArea.id) + "." + str(damageArea.atk_id),
@@ -252,16 +270,16 @@ func spe_side_start():
 func spe_down_start():
 	pass
 
-func spe_up_vel():
+func spe_up_vel(delta):
 	return Vector2.ZERO
 
-func spe_neutral_vel():
+func spe_neutral_vel(delta):
 	return Vector2.ZERO
 
-func spe_side_vel():
+func spe_side_vel(delta):
 	return Vector2.ZERO
 
-func spe_down_vel():
+func spe_down_vel(delta):
 	return Vector2.ZERO
 
 func spe_up_acc():
@@ -394,6 +412,15 @@ func cst_lin_interpol(step_t, step, total, time):
 		res = step + (1 - step)*(time-step_t)/(total-step_t)
 	return res
 
+func cst_lin_cst_interpol(step1_t, step1, step2_t, step2, time):
+	var res = 0
+	if time >= step1_t:
+		if time >= step2_t:
+			res = 1
+		else:
+			res = step1 + (step2 - step1)*(time-step1_t)/(step2_t-step1_t)
+	return res
+
 func cst_sqrt_interpol(step_t, step, total, time):
 	var res = 0
 	if time >= step_t:
@@ -492,17 +519,17 @@ func test_collisions():
 			jump_count = 1
 			allowed_to_ledge = false
 
-func calc_vel_add():
+func calc_vel_add(delta):
 	var vel_add = Vector2()
 	if state == STATE.HITTING:
 		if atk == "spe_neutral":
-			vel_add += spe_neutral_vel()
+			vel_add += spe_neutral_vel(delta)
 		elif atk == "spe_side":
-			vel_add += spe_side_vel()
+			vel_add += spe_side_vel(delta)
 		elif atk == "spe_up":
-			vel_add += spe_up_vel()
+			vel_add += spe_up_vel(delta)
 		elif atk == "spe_down":
-			vel_add += spe_down_vel()
+			vel_add += spe_down_vel(delta)
 	var vel_walk = Vector2()
 	var vel_air = Vector2()
 	if Input.is_action_pressed(ui_right) and state != STATE.ROLLING:
@@ -585,6 +612,11 @@ func _physics_process(delta):
 	pending_hits = []
 	percent_text.text = str(int(percent)) + "%"
 	
+	if on_ground and not is_on_floor():
+		if door.real == "true":
+			door.play("close")
+			door.set_collision_layer_bit(5 + id, false)
+			door = {"real": "false"}
 	if not on_ground and is_on_floor():
 		land()
 	on_ground = is_on_floor()
@@ -601,7 +633,7 @@ func _physics_process(delta):
 	if Input.is_action_pressed(ui_left) and state != STATE.ROLLING:
 		siding = true
 		direction_new = -1
-	var vel_add = calc_vel_add()
+	var vel_add = calc_vel_add(delta)
 	if abs(vel_add.x) > 0:
 		direction_new = vel_add.x/abs(vel_add.x)
 	if direction * direction_new == -1 and state != STATE.LEDGING:
@@ -652,8 +684,4 @@ func _physics_process(delta):
 	
 	# TEMP
 	if position.y > 1000:
-		position = Vector2(0, 0)
-		velocity = Vector2.ZERO
-		land()
-		end_hit()
 		die()
